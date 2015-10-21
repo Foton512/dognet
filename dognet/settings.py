@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "dog",
+    "social.apps.django_app.default",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -66,6 +67,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "social.apps.django_app.context_processors.backends",
+                "social.apps.django_app.context_processors.login_redirect",
             ],
         },
     },
@@ -103,3 +106,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = "/static/"
+
+AUTHENTICATION_BACKENDS = (
+    'social.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = "5115660"
+SOCIAL_AUTH_VK_OAUTH2_SECRET = "Ur4cnXX6z7RA52hfpLk6"
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
