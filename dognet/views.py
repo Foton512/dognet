@@ -46,7 +46,7 @@ def editDog(request):
     dog = models.Dog.objects.get(id=fields["id"])
     if "nick" in fields:
         dog.nick = fields["nick"]
-    if "birthDate" in fields:
+    if "birth_date" in fields:
         birthDate = datetime.strptime(fields["birth_date"], "%Y%m%d")
         dog.birthDate = birthDate
     if "weight" in fields:
