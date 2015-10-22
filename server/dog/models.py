@@ -11,6 +11,7 @@ class Dog(models.Model):
     nick = models.CharField(max_length=100)
     birthDate = models.DateField(null=True)
     weight = models.IntegerField(null=True)
+    user = models.ForeignKey(User)
 
     def toDict(self):
         return {

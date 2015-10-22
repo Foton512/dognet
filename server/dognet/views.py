@@ -54,7 +54,12 @@ def dog(request, dogId):
 def addDog(request):
     fields = request.GET
     birthDate = datetime.strptime(fields["birth_date"], "%Y%m%d") if "birth_date" in fields else None
-    dog = models.Dog.objects.create(nick=fields["nick"], birthDate=birthDate, weight=fields.get("weight", None))
+    dog = models.Dog.objects.create(
+        nick=fields["nick"],
+        birthDate=birthDate,
+        weight=fields.get("weight", None),
+        user=request.user
+    )
     return JsonResponse(dog.toDict())
 
 
@@ -62,6 +67,10 @@ def addDog(request):
 def editDog(request):
     fields = request.GET
     dog = models.Dog.objects.get(id=fields["id"])
+    if dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
     if "nick" in fields:
         dog.nick = fields["nick"]
     if "birth_date" in fields:
