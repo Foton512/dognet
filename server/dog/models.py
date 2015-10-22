@@ -17,6 +17,6 @@ class Dog(models.Model):
         return {
             "id": self.id,
             "nick": self.nick,
-            "birth_date": self.birthDate.strftime("%Y%m%d"),
+            "birth_date": self.birthDate.strftime("%Y%m%d") if self.birthDate else "",
             "weight": self.weight,
         }

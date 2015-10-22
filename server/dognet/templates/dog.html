@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ nick }}</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}{{ nick }}{% endblock %}
+
+{% block content %}
     <h1>{{ nick }}</h1>
     <ul>
         {% if birthDate %}
@@ -14,5 +12,4 @@
             <li>Вес: {{ weight }}</li>
         {% endif %}
     </ul>
-</body>
-</html>
+{% endblock %}

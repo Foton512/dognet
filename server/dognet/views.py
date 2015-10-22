@@ -74,10 +74,15 @@ def editDog(request):
     if "nick" in fields:
         dog.nick = fields["nick"]
     if "birth_date" in fields:
-        birthDate = datetime.strptime(fields["birth_date"], "%Y%m%d")
+        birthDate = fields["birth_date"]
+        if birthDate:
+            birthDate = datetime.strptime(birthDate, "%Y%m%d")
+        else:
+            birthDate = None
         dog.birthDate = birthDate
     if "weight" in fields:
-        dog.weight = fields["weight"]
+        weight = fields["weight"]
+        dog.weight = int(weight) if weight else None
     dog.save()
     return JsonResponse(dog.toDict())
 
