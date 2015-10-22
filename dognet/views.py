@@ -2,6 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect
 from dog import models
 from datetime import datetime
+from social.apps.django_app.utils import psa
+import uuid
+import view_decorators
 
 
 def main(request):
@@ -21,7 +24,20 @@ def login(request):
     return render_to_response("login.html")
 
 
-def dog(request, dogId): 
+@psa('social:complete')
+def auth(request, backend):
+    socialToken = request.GET.get('access_token')
+    user = request.backend.do_auth(socialToken)
+    token = models.Token.objects.create(token=uuid.uuid4().hex, user=user)
+    return JsonResponse({
+        "username": user.username,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "access_token": token.token,
+    })
+
+
+def dog(request, dogId):
     dog = models.Dog.objects.get(id=dogId)
 
     return render_to_response(
@@ -34,6 +50,7 @@ def dog(request, dogId):
     )
 
 
+@view_decorators.apiLoginRequired
 def addDog(request):
     fields = request.GET
     birthDate = datetime.strptime(fields["birth_date"], "%Y%m%d") if "birth_date" in fields else None
@@ -41,6 +58,7 @@ def addDog(request):
     return JsonResponse(dog.toDict())
 
 
+@view_decorators.apiLoginRequired
 def editDog(request):
     fields = request.GET
     dog = models.Dog.objects.get(id=fields["id"])
@@ -55,6 +73,7 @@ def editDog(request):
     return JsonResponse(dog.toDict())
 
 
+@view_decorators.apiLoginRequired
 def getDog(request):
     fields = request.GET
     dog = models.Dog.objects.get(id=fields["id"])
