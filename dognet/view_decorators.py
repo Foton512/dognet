@@ -7,17 +7,14 @@ from dog import models
 def apiLoginRequired(viewFunc):
     @wraps(viewFunc, assigned=available_attrs(viewFunc))
     def wrappedView(request, *args, **kwargs):
-        print 11
-        print request.user.username
-        print 22
         if request.user.is_authenticated():
             return viewFunc(request, *args, **kwargs)
         fields = request.GET
 
         errorMessage = None
-        if "access_token" in fields:
+        if "HTTP_AUTHORIZATION" in request.META:
             try:
-                token = models.Token.objects.get(token=fields["access_token"])
+                token = models.Token.objects.get(token=request.META["HTTP_AUTHORIZATION"])
                 request.user = token.user
             except models.Token.DoesNotExist:
                 errorMessage = "Invalid access_token"
