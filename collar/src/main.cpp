@@ -31,7 +31,14 @@ int main( )
 	vector<Coordinate> coords = database.getCoordinates( 10 );
 	size_t size = coords.size( );
 	for ( size_t i = 0; i < size; ++i )
-		cout << CConvertors::int2str( i ) << ") time = " << CConvertors::int2str( coords[i].timestamp ) << " coord = " << coords[i].coord << "\n";
+		cout << CConvertors::int2str( coords[i].id ) << ") time = " << CConvertors::int2str( coords[i].timestamp ) << " coord = " << coords[i].coord << "\n";
+		
+	database.removeCoordinate( coords[0].id );
+	
+	coords = database.getCoordinates( 10 );
+	size = coords.size( );
+	for ( size_t i = 0; i < size; ++i )
+		cout << CConvertors::int2str( coords[i].id ) << ") time = " << CConvertors::int2str( coords[i].timestamp ) << " coord = " << coords[i].coord << "\n";
 	
 	database.close( );
 	

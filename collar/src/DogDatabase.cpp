@@ -102,8 +102,9 @@ namespace dognetd
 		if ( count <= 0 )
 			return vector<Coordinate>( );
 		
-		// get coordinate and time
+		// get id, coordinate and time
 		vector<string> fields;
+		fields.push_back( "id" );
 		fields.push_back( "time" );
 		fields.push_back( "coordinate" );
 		
@@ -117,9 +118,45 @@ namespace dognetd
 		// convert to Coordinate
 		vector<Coordinate> coords;
 		for ( vector< map<string, string> >::iterator it = result.begin( ); it != result.end( ); ++it )
-			coords.push_back( Coordinate( CConvertors::str2int( ( *it )[ "time" ] ), ( *it )[ "coordinate" ] ) );
+			coords.push_back( Coordinate( CConvertors::str2int( ( *it )[ "id" ] ),
+				CConvertors::str2int( ( *it )[ "time" ] ), ( *it )[ "coordinate" ] ) );
 			
 		return coords;
+	};
+	
+	bool DogDatabase::removeCoordinate( int id )
+	{
+		vector<string> values;
+		values.push_back( CConvertors::int2str( id ) );
+		return sqlRemove( coordTableName, "id", values );
+	};
+	
+	bool DogDatabase::sqlRemove( const string &table_name, const string &field, const vector<string> &values )
+	{
+		// validate table name
+		if ( table_name.empty( ) )
+			return false;
+		
+		// prepare request
+		string request = "DELETE FROM " + table_name + " WHERE " + field;
+		size_t count = values.size( );
+		if ( count == 1 )
+			request += " = " + values[0];
+		else
+		{
+			string vals( " IN (" );
+			for ( size_t i = 0; i < count; ++i )
+			{
+				vals += values[i];
+				if ( i != count - 1 )
+					vals += ", ";
+			}
+			vals += ")";
+			request += vals;
+		}
+		
+		// execute it
+		return sqlExecuteQuery( NULL, request, NULL );
 	};
 	
 	vector< map<string, string> > DogDatabase::sqlSelect( const string &table_name, const vector<string> &fields,

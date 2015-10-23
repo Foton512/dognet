@@ -14,10 +14,12 @@ namespace dognetd
 	// structure for coordinates uploading
 	struct Coordinate
 	{
+		int id;
 		time_t timestamp;
 		string coord;
 		
-		Coordinate( time_t timestamp, string coord ):
+		Coordinate( int id, time_t timestamp, string coord ):
+			id( id ),
 			timestamp( timestamp ),
 			coord( coord )
 		{ };
@@ -34,6 +36,7 @@ namespace dognetd
 			bool createCoordinatesTable( void );
 			bool addCoordinate( const string &coords );
 			vector<Coordinate> getCoordinates( int count );
+			bool removeCoordinate( int id );
 
 		private:
 			sqlite3 *db;
@@ -45,6 +48,7 @@ namespace dognetd
 			bool sqlInsert( const string &table_name, const map<string,string> &fields );
 			vector< map<string, string> > sqlSelect( const string &table_name, const vector<string> &fields,
 					const string &condition, const string &additional );
+			bool sqlRemove( const string &table_name, const string &field, const vector<string> &values );
 	};
 };
 
