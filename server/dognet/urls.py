@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls import include, url
+from django.conf.urls.static import static
 from django.contrib import admin
 import views
+import settings
 
 urlpatterns = [
     # Admin
@@ -17,8 +20,13 @@ urlpatterns = [
     url(r"^dogs/$", views.dogs),
     url(r"^dog/([0-9]+)/$", views.dog),
 
+    # File upload
+    url(r"^upload_photo/$", views.uploadPhoto),
+
     # Api methods
     url(r"^api/dog/add/$", views.addDog),
     url(r"^api/dog/edit/$", views.editDog),
     url(r"^api/dog/get/$", views.getDog),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

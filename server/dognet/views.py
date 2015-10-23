@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
 from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect
+from django.template import RequestContext
 from dog import models
 from datetime import datetime
 from social.apps.django_app.utils import psa
 import uuid
 import view_decorators
+import forms
 
 
 def main(request):
@@ -40,7 +43,9 @@ def dogs(request):
         context={
             "user": user,
             "dogs": dogs,
+            "photoForm": forms.PhotoForm(),
         },
+        context_instance=RequestContext(request)
     )
 
 
@@ -53,8 +58,14 @@ def dog(request, dogId):
             "nick": dog.nick,
             "birthDate": dog.birthDate.strftime("%Y%m%d"),
             "weight": dog.weight,
+            "avatar": dog.avatar,
         },
     )
+
+
+def uploadPhoto(request):
+    photo = models.Photo.objects.create(file=request.FILES["photoFile"])
+    return JsonResponse({"url": photo.file.url})
 
 
 @view_decorators.apiLoginRequired
@@ -65,7 +76,8 @@ def addDog(request):
         nick=fields["nick"],
         birthDate=birthDate,
         weight=fields.get("weight", None),
-        user=request.user
+        user=request.user,
+        avatar=fields.get("avatar", None)
     )
     return JsonResponse(dog.toDict())
 
@@ -90,6 +102,9 @@ def editDog(request):
     if "weight" in fields:
         weight = fields["weight"]
         dog.weight = int(weight) if weight else None
+    if "avatar" in fields:
+        avatar = fields["avatar"]
+        dog.avatar = avatar if avatar else None
     dog.save()
     return JsonResponse(dog.toDict())
 

@@ -10,8 +10,36 @@
     <a href="/logout/">Выйти</a><br>
     Ваши собаки:<br>
     {% for dog in dogs %}
-        {{ dog.nick }}<br>
+        <a href="/dog/{{ dog.id }}">{{ dog.nick }}</a><br>
     {% endfor %}
+
+    Пример загрузки аватарки:<br>
+    <form action="/upload_photo/" id="photoForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+            {{ photoForm.photoFile }}
+        </p>
+        <p><input type="submit" value="Upload" /></p>
+    </form>
+
+    <script>
+        $('#photoForm').on("submit", function(event) {
+            event.preventDefault();
+            var data = new FormData($(this).get(0));
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (json) {
+                    console.log(json["url"]); // Use this url to set dog avatar using API
+                },
+            });
+            return false;
+        });
+    </script>
 </body>
 </html>
 

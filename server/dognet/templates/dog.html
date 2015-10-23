@@ -5,6 +5,9 @@
 {% block content %}
     <h1>{{ nick }}</h1>
     <ul>
+        {% if avatar %}
+            <li><img src="{{ avatar }}" width="100px" height="100px"/></li>
+        {% endif %}
         {% if birthDate %}
             <li>Дата рождения: {{ birthDate }}</li>
         {% endif %}
