@@ -3,11 +3,13 @@ from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from dog import models
-from datetime import datetime
 from social.apps.django_app.utils import psa
 import uuid
 import view_decorators
 import forms
+import hashlib
+import datetime
+from decimal import Decimal
 
 
 def main(request):
@@ -70,47 +72,71 @@ def uploadPhoto(request):
 
 @view_decorators.apiLoginRequired
 def addDog(request):
-    fields = request.GET
-    birthDate = datetime.strptime(fields["birth_date"], "%Y%m%d") if "birth_date" in fields else None
+    params = request.GET
+    birthDate = datetime.datetime.strptime(params["birth_date"], "%Y%m%d") if "birth_date" in params else None
     dog = models.Dog.objects.create(
-        nick=fields["nick"],
+        nick=params["nick"],
         birthDate=birthDate,
-        weight=fields.get("weight", None),
+        weight=params.get("weight", None),
         user=request.user,
-        avatar=fields.get("avatar", None)
+        avatar=params.get("avatar", None),
+        collarIdHash=hashlib.md5(params["collar_id"]).hexdigest() if "collar_id" in params else None
     )
     return JsonResponse(dog.toDict())
 
 
 @view_decorators.apiLoginRequired
 def editDog(request):
-    fields = request.GET
-    dog = models.Dog.objects.get(id=fields["id"])
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
-    if "nick" in fields:
-        dog.nick = fields["nick"]
-    if "birth_date" in fields:
-        birthDate = fields["birth_date"]
+    if "nick" in params:
+        dog.nick = params["nick"]
+    if "birth_date" in params:
+        birthDate = params["birth_date"]
         if birthDate:
             birthDate = datetime.strptime(birthDate, "%Y%m%d")
         else:
             birthDate = None
         dog.birthDate = birthDate
-    if "weight" in fields:
-        weight = fields["weight"]
+    if "weight" in params:
+        weight = params["weight"]
         dog.weight = int(weight) if weight else None
-    if "avatar" in fields:
-        avatar = fields["avatar"]
+    if "avatar" in params:
+        avatar = params["avatar"]
         dog.avatar = avatar if avatar else None
+    if "collar_id" in params:
+        collarId = params["collar_id"]
+        dog.collarIdHash = hashlib.md5(collarId).hexdigest() if collarId else None
     dog.save()
     return JsonResponse(dog.toDict())
 
 
 @view_decorators.apiLoginRequired
 def getDog(request):
-    fields = request.GET
-    dog = models.Dog.objects.get(id=fields["id"])
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
     return JsonResponse(dog.toDict())
+
+
+def addWalkPoint(request):
+    time = datetime.datetime.now()
+    params = request.GET
+    collarIdHash = params["collar_id_hash"]
+    dog = models.Dog.objects.get(collarIdHash=collarIdHash)
+    walkInProgress = dog.checkFinishedWalks()
+    if walkInProgress is None:
+        walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True)
+        # TODO: add first point in nearest house
+    models.WalkPoint.objects.create(
+        walk=walkInProgress,
+        time=time,
+        deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
+        lat=Decimal(params["lat"]),
+        lon=Decimal(params["lon"])
+    )
+
+    return JsonResponse({})

@@ -27,6 +27,8 @@ urlpatterns = [
     url(r"^api/dog/add/$", views.addDog),
     url(r"^api/dog/edit/$", views.editDog),
     url(r"^api/dog/get/$", views.getDog),
+
+    url(r"^api/collar/add_point/$", views.addWalkPoint),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
