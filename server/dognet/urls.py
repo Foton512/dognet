@@ -14,6 +14,7 @@ urlpatterns = [
 
     # Site pages
     url(r"^$", views.main),
+    url(r"^dogs/$", views.dogs),
     url(r"^dog/([0-9]+)/$", views.dog),
 
     # Api methods

@@ -10,14 +10,9 @@ import view_decorators
 def main(request):
     user = request.user
     if user.is_authenticated():
-        return render_to_response(
-            "main.html",
-            context={
-                "user": user,
-            }
-        )
+        return redirect("/dogs/")
     else:
-        return redirect("login/")
+        return redirect("/login/")
 
 
 def login(request):
@@ -35,6 +30,18 @@ def auth(request, backend):
         "last_name": user.last_name,
         "access_token": token.token,
     })
+
+
+def dogs(request):
+    user = request.user
+    dogs = models.Dog.objects.filter(user=user)
+    return render_to_response(
+        "dogs.html",
+        context={
+            "user": user,
+            "dogs": dogs,
+        },
+    )
 
 
 def dog(request, dogId):

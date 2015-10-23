@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+    Привет, {{ user.first_name }} {{ user.last_name }}<br>
+    <a href="/logout/">Выйти</a><br>
+    Ваши собаки:<br>
+    {% for dog in dogs %}
+        {{ dog.nick }}<br>
+    {% endfor %}
+</body>
+</html>
+
