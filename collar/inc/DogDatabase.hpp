@@ -16,12 +16,14 @@ namespace dognetd
 	{
 		int id;
 		time_t timestamp;
-		string coord;
+		string latitude;
+		string longitude;
 		
-		Coordinate( int id, time_t timestamp, string coord ):
+		Coordinate( int id, time_t timestamp, const string &latitude, const string &longitude ):
 			id( id ),
 			timestamp( timestamp ),
-			coord( coord )
+			latitude( latitude ),
+			longitude( longitude )
 		{ };
 	};
 	
@@ -34,7 +36,7 @@ namespace dognetd
 			bool open( void );
 			bool close( void );
 			bool createCoordinatesTable( void );
-			bool addCoordinate( const string &coords );
+			bool addCoordinate( const string &latitude, const string &longitude );
 			vector<Coordinate> getCoordinates( int count );
 			bool removeCoordinate( int id );
 
