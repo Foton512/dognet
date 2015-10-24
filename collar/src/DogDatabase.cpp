@@ -67,13 +67,18 @@ namespace dognetd
 		types.push_back( "INTEGER" );
 		flags.push_back( "PRIMARY KEY AUTOINCREMENT NOT NULL" );
 		
-		// capture time (UTC)
+		// capture time (timestamp)
 		names.push_back( "time" );
 		types.push_back( "INTEGER" );
 		flags.push_back( "" );
 		
-		// coordinates
-		names.push_back( "coordinate" );
+		// latitude
+		names.push_back( "latitude" );
+		types.push_back( "TEXT" );
+		flags.push_back( "" );
+		
+		// longitude
+		names.push_back( "longitude" );
 		types.push_back( "TEXT" );
 		flags.push_back( "" );
 		
@@ -81,12 +86,13 @@ namespace dognetd
 		return sqlCreateTable( coordTableName, names, types, flags );
 	};
 	
-	bool DogDatabase::addCoordinate( const string &coords )
+	bool DogDatabase::addCoordinate( const string &latitude, const string &longitude )
 	{
 		map<string,string> fields;
 		
 		// add coordinates
-		fields[ "coordinate" ] = coords;
+		fields[ "latitude" ] = latitude;
+		fields[ "longitude" ] = longitude;
 		
 		// add time
 		time_t timestamp = time( NULL );
@@ -106,7 +112,8 @@ namespace dognetd
 		vector<string> fields;
 		fields.push_back( "id" );
 		fields.push_back( "time" );
-		fields.push_back( "coordinate" );
+		fields.push_back( "latitude" );
+		fields.push_back( "longitude" );
 		
 		// prepare additional condition
 		string addCondition( "ORDER BY time LIMIT " );
@@ -119,7 +126,7 @@ namespace dognetd
 		vector<Coordinate> coords;
 		for ( vector< map<string, string> >::iterator it = result.begin( ); it != result.end( ); ++it )
 			coords.push_back( Coordinate( CConvertors::str2int( ( *it )[ "id" ] ),
-				CConvertors::str2int( ( *it )[ "time" ] ), ( *it )[ "coordinate" ] ) );
+				CConvertors::str2int( ( *it )[ "time" ] ), ( *it )[ "latitude" ], ( *it )[ "longitude" ] ) );
 			
 		return coords;
 	};

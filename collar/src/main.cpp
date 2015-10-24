@@ -24,21 +24,27 @@ int main( )
 	DogDatabase database( "dog.db" );
 	database.open( );
 	database.createCoordinatesTable( );
-	database.addCoordinate( "test coords0" );
-	database.addCoordinate( "test coords1" );
-	database.addCoordinate( "test coords2" );
+	database.addCoordinate( "lat1", "long1" );
+	database.addCoordinate( "lat2", "long2" );
+	database.addCoordinate( "lat3", "long3" );
 	
 	vector<Coordinate> coords = database.getCoordinates( 10 );
 	size_t size = coords.size( );
 	for ( size_t i = 0; i < size; ++i )
-		cout << CConvertors::int2str( coords[i].id ) << ") time = " << CConvertors::int2str( coords[i].timestamp ) << " coord = " << coords[i].coord << "\n";
+		cout << CConvertors::int2str( coords[i].id ) <<
+				") time = " << CConvertors::int2str( coords[i].timestamp ) <<
+				" lat = " << coords[i].latitude <<
+				" long = " << coords[i].longitude << "\n";
 		
 	database.removeCoordinate( coords[0].id );
 	
 	coords = database.getCoordinates( 10 );
 	size = coords.size( );
 	for ( size_t i = 0; i < size; ++i )
-		cout << CConvertors::int2str( coords[i].id ) << ") time = " << CConvertors::int2str( coords[i].timestamp ) << " coord = " << coords[i].coord << "\n";
+		cout << CConvertors::int2str( coords[i].id ) <<
+				") time = " << CConvertors::int2str( coords[i].timestamp ) <<
+				" lat = " << coords[i].latitude <<
+				" long = " << coords[i].longitude << "\n";
 	
 	database.close( );
 	
