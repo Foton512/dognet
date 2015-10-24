@@ -149,6 +149,24 @@ def setDogRelation(request):
 
 
 @view_decorators.apiLoginRequired
+def subscribe(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    subscription = models.UserDogSubscription.objects.get_or_create(user=request.user, dog=dog)[0]
+    return JsonResponse(subscription.toDict())
+
+
+@view_decorators.apiLoginRequired
+def unsubscribe(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    subscription = models.UserDogSubscription.objects.get(user=request.user, dog=dog)
+    response = subscription.toDict()
+    subscription.delete()
+    return JsonResponse(response)
+
+
+@view_decorators.apiLoginRequired
 def addHome(request):
     params = request.GET
     home = models.Home.objects.create(user=request.user, lat=Decimal(params["lat"]), lon=Decimal(params["lon"]))

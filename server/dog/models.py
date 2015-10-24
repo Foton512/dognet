@@ -93,6 +93,17 @@ class DogRelation(models.Model):
         }
 
 
+class UserDogSubscription(models.Model):
+    user = models.ForeignKey(User)
+    dog = models.ForeignKey(Dog)
+
+    def toDict(self):
+        return {
+            "user_id": self.user_id,
+            "dog_id": self.dog_id,
+        }
+
+
 class Home(models.Model):
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     lon = models.DecimalField(max_digits=9, decimal_places=6)

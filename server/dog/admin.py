@@ -1,12 +1,12 @@
 from django.contrib import admin
 
 
-class DogAdmin(admin.ModelAdmin):
-    list_display = ("nick", "birthDate", "weight", "user", "avatar", "collarIdHash")
+class TokenAdmin(admin.ModelAdmin):
+    list_display = ("user", "token")
 
 
-class DogRelationAdmin(admin.ModelAdmin):
-    list_display = ("dog", "relatedDog", "status")
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ("file",)
 
 
 class WalkAdmin(admin.ModelAdmin):
@@ -15,6 +15,18 @@ class WalkAdmin(admin.ModelAdmin):
 
 class WalkPointAdmin(admin.ModelAdmin):
     list_display = ("walk", "time", "deviceTime", "lat", "lon")
+
+
+class DogAdmin(admin.ModelAdmin):
+    list_display = ("nick", "birthDate", "weight", "user", "avatar", "collarIdHash")
+
+
+class DogRelationAdmin(admin.ModelAdmin):
+    list_display = ("dog", "relatedDog", "status")
+
+
+class UserDogSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ("user", "dog")
 
 
 class HomeAdmin(admin.ModelAdmin):
