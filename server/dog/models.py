@@ -5,6 +5,7 @@ import os
 import uuid
 import models_settings
 import datetime
+from django.utils import timezone
 
 
 class Token(models.Model):
@@ -12,12 +13,12 @@ class Token(models.Model):
     user = models.ForeignKey(User)
 
 
+def getUniquePhotoPath(instance, filename):
+    return os.path.join("photos", "{}.{}".format(uuid.uuid4(), filename.split(".")[-1]))
+
+
 class Photo(models.Model):
-    file = models.FileField(
-        upload_to=lambda instance, filename: os.path.join(
-            "photos", "{}.{}".format(uuid.uuid4(), filename.split(".")[-1])
-        )
-    )
+    file = models.FileField(upload_to=getUniquePhotoPath)
 
 
 class Walk(models.Model):
@@ -44,6 +45,9 @@ class Dog(models.Model):
     avatar = models.CharField(max_length=1000, null=True)
     collarIdHash = models.CharField(max_length=32, null=True)
 
+    def __unicode__(self):
+        return self.nick
+
     def toDict(self):
         return {
             "id": self.id,
@@ -55,11 +59,11 @@ class Dog(models.Model):
         }
 
     def checkFinishedWalks(self):
-        time = datetime.datetime.now()
+        time = timezone.now()
         try:
             walkInProgress = Walk.objects.get(dog=self, inProgress=True)
             lastWalkPoint = WalkPoint.objects.filter(walk=walkInProgress).latest("time")
-            if time - lastWalkPoint.time > models_settings.walkTimeout:
+            if (time - lastWalkPoint.time).seconds > models_settings.walkTimeout:
                 walkInProgress.inProgress = False
                 walkInProgress.save()
                 return None

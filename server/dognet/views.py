@@ -9,6 +9,7 @@ import view_decorators
 import forms
 import hashlib
 import datetime
+from django.utils import timezone
 from decimal import Decimal
 
 
@@ -123,7 +124,7 @@ def getDog(request):
 
 
 def addWalkPoint(request):
-    time = datetime.datetime.now()
+    time = timezone.now()
     params = request.GET
     collarIdHash = params["collar_id_hash"]
     dog = models.Dog.objects.get(collarIdHash=collarIdHash)

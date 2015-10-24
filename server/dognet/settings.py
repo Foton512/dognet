@@ -89,8 +89,6 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -112,3 +110,5 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_VK_OAUTH2_KEY = "5115660"
 SOCIAL_AUTH_VK_OAUTH2_SECRET = "Ur4cnXX6z7RA52hfpLk6"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
+
+USE_TZ=False

@@ -2,8 +2,14 @@
 from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
+from dog import models
+import dog.admin as admin_models
 import views
 import settings
+
+admin.site.register(models.Dog, admin_models.DogAdmin)
+admin.site.register(models.Walk, admin_models.WalkAdmin)
+admin.site.register(models.WalkPoint, admin_models.WalkPointAdmin)
 
 urlpatterns = [
     # Admin
