@@ -136,12 +136,12 @@ def getOwnDogs(request):
 @view_decorators.apiLoginRequired
 def setDogRelation(request):
     params = request.GET
-    dog = models.Dog.objects.get(id=params["dog_id"])
+    dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
-    relatedDog = models.Dog.objects.get(id=params["related_dog_id"])
+    relatedDog = models.Dog.objects.get(id=params["related_id"])
     relation = models.DogRelation.objects.get_or_create(dog=dog, relatedDog=relatedDog)[0]
     relation.status = int(params["status"])
     relation.save()

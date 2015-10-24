@@ -87,8 +87,8 @@ class DogRelation(models.Model):
 
     def toDict(self):
         return {
-            "dog_id": self.dog_id,
-            "related_dog_id": self.relatedDog_id,
+            "id": self.dog_id,
+            "related_id": self.relatedDog_id,
             "status": self.status,
         }
 
