@@ -123,6 +123,34 @@ def getDog(request):
     return JsonResponse(dog.toDict())
 
 
+@view_decorators.apiLoginRequired
+def getOwnDogs(request):
+    dogs = models.Dog.objects.filter(user=request.user)
+    return JsonResponse([dog.toDict() for dog in dogs], safe=False)
+
+
+@view_decorators.apiLoginRequired
+def setDogRelation(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["dog_id"])
+    if dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
+    relatedDog = models.Dog.objects.get(id=params["related_dog_id"])
+    relation = models.DogRelation.objects.get_or_create(dog=dog, relatedDog=relatedDog)[0]
+    relation.status = int(params["status"])
+    relation.save()
+    return JsonResponse(relation.toDict())
+
+
+@view_decorators.apiLoginRequired
+def addHome(request):
+    params = request.GET
+    home = models.Home.objects.create(user=request.user, lat=Decimal(params["lat"]), lon=Decimal(params["lon"]))
+    return JsonResponse(home.toDict())
+
+
 def addWalkPoint(request):
     time = timezone.now()
     params = request.GET
@@ -132,7 +160,7 @@ def addWalkPoint(request):
     if walkInProgress is None:
         walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True)
         # TODO: add first point in nearest house
-    models.WalkPoint.objects.create(
+    walkPoint = models.WalkPoint.objects.create(
         walk=walkInProgress,
         time=time,
         deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
@@ -140,4 +168,4 @@ def addWalkPoint(request):
         lon=Decimal(params["lon"])
     )
 
-    return JsonResponse({})
+    return JsonResponse(walkPoint.toDict())

@@ -8,8 +8,10 @@ import views
 import settings
 
 admin.site.register(models.Dog, admin_models.DogAdmin)
+admin.site.register(models.DogRelation, admin_models.DogRelationAdmin)
 admin.site.register(models.Walk, admin_models.WalkAdmin)
 admin.site.register(models.WalkPoint, admin_models.WalkPointAdmin)
+admin.site.register(models.Home, admin_models.HomeAdmin)
 
 urlpatterns = [
     # Admin
@@ -33,8 +35,12 @@ urlpatterns = [
     url(r"^api/dog/add/$", views.addDog),
     url(r"^api/dog/edit/$", views.editDog),
     url(r"^api/dog/get/$", views.getDog),
+    url(r"^api/dog/get_list/$", views.getOwnDogs),
+    url(r"^api/dog/set_relation/$", views.setDogRelation),
 
     url(r"^api/collar/add_point/$", views.addWalkPoint),
+
+    url(r"^api/user/add_home/$", views.addHome),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
