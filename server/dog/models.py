@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-import os
-import uuid
 import models_settings
-from social.storage.django_orm import DjangoUserMixin
 from django.utils import timezone
-import datetime
+import util
 
 
 class Token(models.Model):
@@ -14,12 +11,8 @@ class Token(models.Model):
     user = models.ForeignKey(User)
 
 
-def getUniquePhotoPath(instance, filename):
-    return os.path.join("photos", "{}.{}".format(uuid.uuid4(), filename.split(".")[-1]))
-
-
 class Photo(models.Model):
-    file = models.FileField(upload_to=getUniquePhotoPath)
+    file = models.FileField(upload_to=util.getUniquePhotoPath)
 
 
 class Walk(models.Model):
@@ -28,10 +21,6 @@ class Walk(models.Model):
 
     class Meta:
         index_together = ["dog", "inProgress"]
-
-
-def datetimeToTimestmap(dt):
-    return int((dt - datetime.datetime(1970, 1, 1)).total_seconds())
 
 
 class WalkPoint(models.Model):
@@ -44,18 +33,11 @@ class WalkPoint(models.Model):
     def toDict(self):
         return {
             "walk_id": self.walk_id,
-            "time": datetimeToTimestmap(self.time),
-            "deviceTime": datetimeToTimestmap(self.deviceTime),
+            "time": util.datetimeToTimestmap(self.time),
+            "deviceTime": util.datetimeToTimestmap(self.deviceTime),
             "lat": float(self.lat),
             "lon": float(self.lon),
         }
-
-
-def getSocialUrlByUser(user):
-    socialUser = DjangoUserMixin.get_social_auth_for_user(user)[0]
-    if socialUser.provider == "vk-oauth2":
-        return "vk.com/id{}".format(socialUser.uid)
-    # TODO: Add facebook
 
 
 class Dog(models.Model):
@@ -79,7 +61,8 @@ class Dog(models.Model):
             "collar_id_hash": self.collarIdHash,
             "user_first_name": self.user.first_name,
             "user_second_name": self.user.last_name,
-            "user_url": getSocialUrlByUser(self.user)
+            "user_url": util.getSocialUrlByUser(self.user),
+            "on_walk": Walk.objects.filter(dog=self, inProgress=True).exists(),
         }
 
     def checkFinishedWalks(self):

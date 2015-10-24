@@ -94,6 +94,7 @@ def editDog(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
+    dog.checkFinishedWalks()
     if "nick" in params:
         dog.nick = params["nick"]
     if "birth_date" in params:
@@ -120,12 +121,15 @@ def editDog(request):
 def getDog(request):
     params = request.GET
     dog = models.Dog.objects.get(id=params["id"])
+    dog.checkFinishedWalks()
     return JsonResponse(dog.toDict())
 
 
 @view_decorators.apiLoginRequired
 def getOwnDogs(request):
     dogs = models.Dog.objects.filter(user=request.user)
+    for dog in dogs:
+        dog.checkFinishedWalks()
     return JsonResponse([dog.toDict() for dog in dogs], safe=False)
 
 
