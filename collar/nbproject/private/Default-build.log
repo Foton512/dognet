@@ -1,0 +1,14 @@
+mkdir ./obj
+g++  -I./microhttpd -I./inc -I./sqlite -c src/main.cpp -o obj/main.o
+g++  -I./microhttpd -I./inc -I./sqlite -c src/CommandServer.cpp -o obj/CommandServer.o
+g++  -I./microhttpd -I./inc -I./sqlite -c src/DogDatabase.cpp -o obj/DogDatabase.o
+g++  -I./microhttpd -I./inc -I./sqlite -c src/CConvertors.cpp -o obj/CConvertors.o
+src/CConvertors.cpp:968:49: warning: comparison of constant 18446744073709551615 with expression of type 'unsigned int' is always true [-Wtautological-constant-out-of-range-compare]
+        while ((curr_pos = result.find('%', curr_pos)) != std::string::npos)
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~~~
+1 warning generated.
+g++  ./obj/main.o ./obj/CommandServer.o ./obj/DogDatabase.o ./obj/CConvertors.o -o dognetd -I./microhttpd -I./inc -I./sqlite -L/usr/local/lib -lmicrohttpd -lsqlite3
+ld: warning: directory not found for option '-L/usr/local/lib'
+ld: library not found for -lmicrohttpd
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [dognetd] Error 1

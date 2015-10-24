@@ -192,7 +192,7 @@ namespace dognetd
 		// prepare handler (who said we could not use local functions?)
 		struct X
 		{
-			static int selectProcessing ( void *output, int columnsNum, char **values, char **columns )
+			static int selectProcessing( void *output, int columnsNum, char **values, char **columns )
 			{
 				vector< map<string, string> > *result = reinterpret_cast< vector<map<string, string> > * >( output );
 

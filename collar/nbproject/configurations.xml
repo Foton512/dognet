@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="inc">
+        <in>CConvertors.hpp</in>
+        <in>CommandServer.hpp</in>
+        <in>DogDatabase.hpp</in>
+      </df>
+      <df name="microhttpd">
+        <in>autoinit_funcs.h</in>
+        <in>microhttpd.h</in>
+        <in>microspdy.h</in>
+        <in>platform.h</in>
+        <in>platform_interface.h</in>
+        <in>w32functions.h</in>
+      </df>
+      <df name="sqlite">
+        <in>sqlite3.h</in>
+      </df>
+      <df name="src">
+        <in>CConvertors.cpp</in>
+        <in>CommandServer.cpp</in>
+        <in>DogDatabase.cpp</in>
+        <in>main.cpp</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Важные файлы"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="debug" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE}</buildCommand>
+          <cleanCommand>${MAKE} clean</cleanCommand>
+          <executablePath></executablePath>
+        </makeTool>
+      </makefileType>
+      <item path="inc/CConvertors.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/CommandServer.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/DogDatabase.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="microhttpd/autoinit_funcs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="microhttpd/microhttpd.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="microhttpd/microspdy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="microhttpd/platform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="microhttpd/platform_interface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="microhttpd/w32functions.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sqlite/sqlite3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/CommandServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/DogDatabase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>GNU|GNU</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>dognetd</executablePath>
+          <ccTool>
+            <standard>8</standard>
+            <incDir>
+              <pElem>microhttpd</pElem>
+              <pElem>inc</pElem>
+              <pElem>sqlite</pElem>
+              <pElem>.</pElem>
+            </incDir>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/CommandServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/DogDatabase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
