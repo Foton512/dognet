@@ -9,6 +9,7 @@ import view_decorators
 import forms
 import hashlib
 import datetime
+from django.utils import timezone
 from decimal import Decimal
 
 
@@ -93,6 +94,7 @@ def editDog(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
+    dog.checkFinishedWalks()
     if "nick" in params:
         dog.nick = params["nick"]
     if "birth_date" in params:
@@ -119,11 +121,60 @@ def editDog(request):
 def getDog(request):
     params = request.GET
     dog = models.Dog.objects.get(id=params["id"])
+    dog.checkFinishedWalks()
     return JsonResponse(dog.toDict())
 
 
+@view_decorators.apiLoginRequired
+def getOwnDogs(request):
+    dogs = models.Dog.objects.filter(user=request.user)
+    for dog in dogs:
+        dog.checkFinishedWalks()
+    return JsonResponse([dog.toDict() for dog in dogs], safe=False)
+
+
+@view_decorators.apiLoginRequired
+def setDogRelation(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    if dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
+    relatedDog = models.Dog.objects.get(id=params["related_id"])
+    relation = models.DogRelation.objects.get_or_create(dog=dog, relatedDog=relatedDog)[0]
+    relation.status = int(params["status"])
+    relation.save()
+    return JsonResponse(relation.toDict())
+
+
+@view_decorators.apiLoginRequired
+def subscribe(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    subscription = models.UserDogSubscription.objects.get_or_create(user=request.user, dog=dog)[0]
+    return JsonResponse(subscription.toDict())
+
+
+@view_decorators.apiLoginRequired
+def unsubscribe(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    subscription = models.UserDogSubscription.objects.get(user=request.user, dog=dog)
+    response = subscription.toDict()
+    subscription.delete()
+    return JsonResponse(response)
+
+
+@view_decorators.apiLoginRequired
+def addHome(request):
+    params = request.GET
+    home = models.Home.objects.create(user=request.user, lat=Decimal(params["lat"]), lon=Decimal(params["lon"]))
+    return JsonResponse(home.toDict())
+
+
 def addWalkPoint(request):
-    time = datetime.datetime.now()
+    time = timezone.now()
     params = request.GET
     collarIdHash = params["collar_id_hash"]
     dog = models.Dog.objects.get(collarIdHash=collarIdHash)
@@ -131,7 +182,7 @@ def addWalkPoint(request):
     if walkInProgress is None:
         walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True)
         # TODO: add first point in nearest house
-    models.WalkPoint.objects.create(
+    walkPoint = models.WalkPoint.objects.create(
         walk=walkInProgress,
         time=time,
         deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
@@ -139,4 +190,4 @@ def addWalkPoint(request):
         lon=Decimal(params["lon"])
     )
 
-    return JsonResponse({})
+    return JsonResponse(walkPoint.toDict())
