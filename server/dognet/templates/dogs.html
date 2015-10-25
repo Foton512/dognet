@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная</title>
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
     Привет, {{ user.first_name }} {{ user.last_name }}<br>
     <a href="/logout/">Выйти</a><br>
     Ваши собаки:<br>
@@ -21,7 +18,9 @@
         </p>
         <p><input type="submit" value="Upload" /></p>
     </form>
+{% endblock %}
 
+{% block script-block %}
     <script>
         $('#photoForm').on("submit", function(event) {
             event.preventDefault();
@@ -40,6 +39,5 @@
             return false;
         });
     </script>
-</body>
-</html>
+{% endblock %}
 
