@@ -191,3 +191,56 @@ def addWalkPoint(request):
     )
 
     return JsonResponse(walkPoint.toDict())
+
+
+@view_decorators.apiLoginRequired
+def addTextComment(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    if dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
+    comment = models.Comment.objects.create(dog=dog, text=params["text"], type=0)
+    return JsonResponse(comment.toDict())
+
+
+@view_decorators.apiLoginRequired
+def addPhotoComment(request):
+    params = request.GET
+    dog = models.Dog.objects.get(id=params["id"])
+    if dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
+    comment = models.Comment.objects.create(dog=dog, text=params["text"], photo=params["photo"], type=2)
+    return JsonResponse(comment.toDict())
+
+
+@view_decorators.apiLoginRequired
+def deleteComment(request):
+    params = request.GET
+    comment = models.Comment.objects.get(id=params["comment_id"])
+    if comment.dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
+    response = comment.toDict()
+    comment.delete()
+    return JsonResponse(response)
+
+
+@view_decorators.apiLoginRequired
+def like(request):
+    params = request.GET
+    like = models.Like.objects.get_or_create(comment_id=params["comment_id"], user=request.user)[0]
+    return JsonResponse(like.toDict())
+
+
+@view_decorators.apiLoginRequired
+def unlike(request):
+    params = request.GET
+    like = models.Like.objects.get(comment_id=params["comment_id"], user=request.user)
+    response = like.toDict()
+    like.delete()
+    return JsonResponse(response)

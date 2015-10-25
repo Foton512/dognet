@@ -15,6 +15,9 @@ admin.site.register(models.UserDogSubscription, admin_models.UserDogSubscription
 admin.site.register(models.Walk, admin_models.WalkAdmin)
 admin.site.register(models.WalkPoint, admin_models.WalkPointAdmin)
 admin.site.register(models.Home, admin_models.HomeAdmin)
+admin.site.register(models.Comment, admin_models.CommentAdmin)
+admin.site.register(models.Like, admin_models.LikeAdmin)
+admin.site.register(models.Achievement, admin_models.AchievementAdmin)
 
 urlpatterns = [
     # Admin
@@ -46,6 +49,12 @@ urlpatterns = [
     url(r"^api/collar/add_point/$", views.addWalkPoint),
 
     url(r"^api/user/add_home/$", views.addHome),
+
+    url(r"^api/comment/add_text/$", views.addTextComment),
+    url(r"^api/comment/add_photo/$", views.addPhotoComment),
+    url(r"^api/comment/del/$", views.deleteComment),
+    url(r"^api/comment/like/$", views.like),
+    url(r"^api/comment/unlike/$", views.unlike),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

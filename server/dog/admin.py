@@ -31,3 +31,15 @@ class UserDogSubscriptionAdmin(admin.ModelAdmin):
 
 class HomeAdmin(admin.ModelAdmin):
     list_display = ("user", "lat", "lon")
+
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ("text", "type")
+
+
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ("comment", "user")
+
+
+class AchievementAdmin(admin.ModelAdmin):
+    list_display = ("type", "user")

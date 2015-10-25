@@ -115,3 +115,63 @@ class Home(models.Model):
             "lat": self.lat,
             "lon": self.lon,
         }
+
+
+class Achievement(models.Model):
+    type = models.PositiveSmallIntegerField()
+    dog = models.ForeignKey(Dog)
+
+    def toDict(self):
+        return {
+            "dog_id": self.dog_id,
+            "type": self.type,
+        }
+
+
+class Comment(models.Model):
+    dog = models.ForeignKey(Dog)
+    text = models.TextField()
+    type = models.PositiveSmallIntegerField()  # 0 - text, 1 - walk, 2 - photo, 3 - relation, 4 - achievement
+    walk = models.ForeignKey(Walk, null=True)
+    photo = models.CharField(max_length=1000, null=True)
+    relation = models.ForeignKey(DogRelation, null=True)
+    achievement = models.ForeignKey(Achievement, null=True)
+
+    def __unicode__(self):
+        return self.text
+
+    def toDict(self):
+        result = {
+            "id": self.id,
+            "dog_id": self.dog_id,
+            "text": self.text,
+            "type": {
+                0: "text",
+                1: "walk",
+                2: "photo",
+                3: "relation",
+                4: "achievement",
+            }[self.type],
+        }
+
+        if self.type == 1:
+            result["walk_id"] = self.walk_id
+        elif self.type == 2:
+            result["photo"] = self.photo
+        elif self.type == 3:
+            result["relation"] = self.relation.toDict()
+        elif self.type == 4:
+            result["achievement"] = self.achievement.toDict()
+
+        return result
+
+
+class Like(models.Model):
+    comment = models.ForeignKey(Comment)
+    user = models.ForeignKey(User)
+
+    def toDict(self):
+        return {
+            "comment_id": self.comment_id,
+            "user_id": self.user_id,
+        }
