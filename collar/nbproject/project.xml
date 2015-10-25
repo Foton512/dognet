@@ -29,6 +29,9 @@
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>coords</word>
             <word>dognetd</word>
+            <word>http</word>
+            <word>lon</word>
+            <word>uploader</word>
         </spellchecker-wordlist>
     </configuration>
 </project>

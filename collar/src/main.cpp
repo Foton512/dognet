@@ -4,6 +4,7 @@
 #include "CConvertors.hpp"
 #include "CommandServer.hpp"
 #include "DogDatabase.hpp"
+#include "CoordUploader.hpp"
 
 using namespace std;
 using namespace dognetd;
@@ -24,33 +25,15 @@ int main( )
 	DogDatabase database( "dog.db" );
 	database.open( );
 	database.createCoordinatesTable( );
-	database.addCoordinate( "lat1", "long1" );
-	database.addCoordinate( "lat2", "long2" );
-	database.addCoordinate( "lat3", "long3" );
-	
-	vector<Coordinate> coords = database.getCoordinates( 10 );
-	size_t size = coords.size( );
-	for ( size_t i = 0; i < size; ++i )
-		cout << CConvertors::int2str( coords[i].id ) <<
-				") time = " << CConvertors::int2str( coords[i].timestamp ) <<
-				" lat = " << coords[i].latitude <<
-				" long = " << coords[i].longitude << "\n";
-		
-	database.removeCoordinate( coords[0].id );
-	
-	coords = database.getCoordinates( 10 );
-	size = coords.size( );
-	for ( size_t i = 0; i < size; ++i )
-		cout << CConvertors::int2str( coords[i].id ) <<
-				") time = " << CConvertors::int2str( coords[i].timestamp ) <<
-				" lat = " << coords[i].latitude <<
-				" long = " << coords[i].longitude << "\n";
-	
-	database.close( );
+
+	CoordUploader uploader( database, "http://188.166.64.150:8000", "c4ca4238a0b923820dcc509a6f75849b" );
+	uploader.start( );
 	
 	cin.get( );
 
+	uploader.stop( );
+	database.close( );
 	server.stop( );
-	cout << "Command server stopped\n";
+
 	return 0;
 }

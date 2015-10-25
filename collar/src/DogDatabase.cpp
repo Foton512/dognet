@@ -274,6 +274,12 @@ namespace dognetd
 	bool DogDatabase::sqlExecuteQuery( int ( *callback )( void*, int, char**, char** ), const string &query, void *output )
 	{
 		char *zErrMsg = 0;
+		
+		if ( db == NULL )
+		{
+			cout << "db is closed, could not execute request!";
+			return false;
+		}
 
 		cout << "Executing SQL request: " << query << "\n";
 

@@ -5,6 +5,7 @@
       <df name="inc">
         <in>CConvertors.hpp</in>
         <in>CommandServer.hpp</in>
+        <in>CoordUploader.hpp</in>
         <in>DogDatabase.hpp</in>
       </df>
       <df name="microhttpd">
@@ -21,6 +22,7 @@
       <df name="src">
         <in>CConvertors.cpp</in>
         <in>CommandServer.cpp</in>
+        <in>CoordUploader.cpp</in>
         <in>DogDatabase.cpp</in>
         <in>main.cpp</in>
       </df>
@@ -58,6 +60,8 @@
       </item>
       <item path="inc/CommandServer.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="inc/CoordUploader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="inc/DogDatabase.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="microhttpd/autoinit_funcs.h" ex="false" tool="3" flavor2="0">
@@ -77,6 +81,8 @@
       <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/CommandServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/CoordUploader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DogDatabase.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -108,9 +114,13 @@
           </ccTool>
         </makeTool>
       </makefileType>
+      <item path="inc/CoordUploader.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/CommandServer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/CoordUploader.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/DogDatabase.cpp" ex="false" tool="1" flavor2="0">
       </item>

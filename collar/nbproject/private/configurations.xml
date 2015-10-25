@@ -5,6 +5,7 @@
       <df name="inc">
         <in>CConvertors.hpp</in>
         <in>CommandServer.hpp</in>
+        <in>CoordUploader.hpp</in>
         <in>DogDatabase.hpp</in>
       </df>
       <df name="microhttpd">
@@ -23,6 +24,7 @@
       <df name="src">
         <in>CConvertors.cpp</in>
         <in>CommandServer.cpp</in>
+        <in>CoordUploader.cpp</in>
         <in>DogDatabase.cpp</in>
         <in>main.cpp</in>
       </df>
@@ -37,13 +39,13 @@
       </toolsSet>
       <compile>
         <compiledirpicklist>
-          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
           <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
         </compiledirpicklist>
         <compiledir>${AUTO_FOLDER}</compiledir>
         <compilecommandpicklist>
-          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
           <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
         </compilecommandpicklist>
         <compilecommand>${AUTO_COMPILE}</compilecommand>
       </compile>
