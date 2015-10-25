@@ -118,12 +118,6 @@ class CConvertors
 		// serialize string chars to hex chars for sql query BLOB
 		static std::string strToBLOB(const std::string &str);
 
-		// convert cp866 string to koi8-r
-		static std::string convertCp866ToKoi8R(const std::string &cp866_str);
-
-		// convert cp866 string to cp1251
-		static std::string convertCp866ToCp1251(const std::string &cp866_str);
-
 		// convert string to int64_t
 		static int64_t str2int64(const std::string& str);
 
@@ -143,6 +137,12 @@ class CConvertors
 		static std::string parsePercentEncoding(const std::string & pos_str);
 
 		static short get_max_day(int month, int year);
+		
+		// split string by delimiter
+		static std::vector<std::string> split( const std::string &s, char delim );
+		
+		// convert string to double
+		static double str2double( const std::string &s );
 
 	private:
 		// private constructor

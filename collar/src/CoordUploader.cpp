@@ -8,7 +8,7 @@
 
 using namespace std;
 
-static const string coordUploadRequest = "/api/collar/add_point";
+static const string coordUploadRequest = "/api/collar/add_point/";
 
 namespace dognetd
 {
@@ -29,6 +29,7 @@ namespace dognetd
 	
 	void CoordUploader::start( void )
 	{
+		interrupted = false;
 		uploader = thread( &CoordUploader::run, this );
 	}
 	
@@ -48,6 +49,7 @@ namespace dognetd
 			vector< Coordinate > coords = db->getCoordinates( 10 );
 			
 			// upload to server
+			cout << "got " << CConvertors::int2str( coords.size() ) << " coordinates to upload\n";
 			for ( vector< Coordinate >::iterator it = coords.begin( ); it != coords.end( ); ++it )
 			{
 				if ( uploadSingle( *it ) )
@@ -74,10 +76,10 @@ namespace dognetd
 
 		CURLcode res = curl_easy_perform( curl );
 		if ( res != CURLE_OK )
-			cout << "curl_easy_perform failed: " << string( curl_easy_strerror( res ) ) + "\n";
+			cout << "curl_easy_perform failed: " << string( curl_easy_strerror( res ) ) << endl;
 		else
-			cout << "coordinate uploaded: (" << coord.latitude + ", " << coord.longitude + ")\n" ;
-		curl_easy_cleanup( curl );
+			cout << "coordinate uploaded: (" << coord.latitude + ", " << coord.longitude << ")\n";
+//		curl_easy_cleanup( curl );
 
 		return res == CURLE_OK;
 	};

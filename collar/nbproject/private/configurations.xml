@@ -6,6 +6,7 @@
         <in>CConvertors.hpp</in>
         <in>CommandServer.hpp</in>
         <in>CoordUploader.hpp</in>
+        <in>CoordsReader.hpp</in>
         <in>DogDatabase.hpp</in>
       </df>
       <df name="microhttpd">
@@ -25,6 +26,7 @@
         <in>CConvertors.cpp</in>
         <in>CommandServer.cpp</in>
         <in>CoordUploader.cpp</in>
+        <in>CoordsReader.cpp</in>
         <in>DogDatabase.cpp</in>
         <in>main.cpp</in>
       </df>

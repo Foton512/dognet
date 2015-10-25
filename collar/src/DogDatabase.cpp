@@ -32,7 +32,7 @@ namespace dognetd
 		int rc = sqlite3_open( db_name.c_str( ), &db );
 		if ( rc != SQLITE_OK )
 		{
-			cout << "Could not open database " << db_name << ": " << CConvertors::int2str( rc ) << "\n";
+			cout << "Could not open database " << db_name << ": " << CConvertors::int2str( rc ) << endl;
 			db = NULL;
 			return false;
 		}
@@ -46,7 +46,7 @@ namespace dognetd
 		int rc = sqlite3_close( db );
 		if ( rc != SQLITE_OK )
 		{
-			cout << "Could not close database " << db_name << ": " << CConvertors::int2str( rc ) << "\n";
+			cout << "Could not close database " << db_name << ": " << CConvertors::int2str( rc ) << endl;
 			db = NULL;
 			return false;
 		}
@@ -281,12 +281,12 @@ namespace dognetd
 			return false;
 		}
 
-		cout << "Executing SQL request: " << query << "\n";
+		cout << "Executing SQL request: " << query << endl;
 
 		int rc = sqlite3_exec( db, query.c_str( ), callback, output, &zErrMsg );
 		if ( rc != SQLITE_OK )
 		{
-			cout << "SQL error: " << zErrMsg << "\n";
+			cout << "SQL error: " << zErrMsg << endl;
 			sqlite3_free( zErrMsg );
 			return false;
 		}

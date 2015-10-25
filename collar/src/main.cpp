@@ -5,6 +5,7 @@
 #include "CommandServer.hpp"
 #include "DogDatabase.hpp"
 #include "CoordUploader.hpp"
+#include "CoordsReader.hpp"
 
 using namespace std;
 using namespace dognetd;
@@ -25,6 +26,9 @@ int main( )
 	DogDatabase database( "dog.db" );
 	database.open( );
 	database.createCoordinatesTable( );
+	
+	CoordsReader reader( database, "/dev/ttyUSB0" );
+	reader.start();
 
 	CoordUploader uploader( database, "http://188.166.64.150:8000", "c4ca4238a0b923820dcc509a6f75849b" );
 	uploader.start( );
@@ -32,6 +36,7 @@ int main( )
 	cin.get( );
 
 	uploader.stop( );
+	reader.stop();
 	database.close( );
 	server.stop( );
 
