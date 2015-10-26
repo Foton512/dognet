@@ -7,7 +7,7 @@ var prefix = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
 
 gulp.task('sass', function () {
-  gulp.src('static/scss/**.scss', './scss/*.scss')
+  gulp.src('bower_components/foundation/scss/**.scss')
   .pipe(plumber())
   .pipe(sass({errLogToConsole: true, includePaths: ['bower_components/foundation/scss']}))
   .pipe(prefix(
