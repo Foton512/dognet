@@ -177,20 +177,41 @@ def addWalkPoint(request):
     time = timezone.now()
     params = request.GET
     collarIdHash = params["collar_id_hash"]
-    dog = models.Dog.objects.get(collarIdHash=collarIdHash)
-    walkInProgress = dog.checkFinishedWalks()
-    if walkInProgress is None:
-        walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True)
-        # TODO: add first point in nearest house
-    walkPoint = models.WalkPoint.objects.create(
-        walk=walkInProgress,
-        time=time,
-        deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
-        lat=Decimal(params["lat"]),
-        lon=Decimal(params["lon"])
-    )
 
-    return JsonResponse(walkPoint.toDict())
+    dog = models.Dog.objects.get(collarIdHash=collarIdHash)
+    dog = models.Dog.getDogWithIncrementedEventCounter(dog)
+    walkInProgress = dog.checkFinishedWalks()
+
+    lat = Decimal(params["lat"])
+    lon = Decimal(params["lon"])
+    dog.lat = lat
+    dog.lon = lon
+
+    createNewWalkPoint = False
+    if walkInProgress is None:
+        walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True, lastTime=time)
+        createNewWalkPoint = True
+        # TODO: add first point in nearest house
+    else:
+        lastWalkPoint = models.WalkPoint.objects.filter(walk=walkInProgress).latest("eventCounter")
+        if lastWalkPoint.isSignificantDistance(lat, lon):
+            createNewWalkPoint = True
+
+    if createNewWalkPoint:
+        walkPoint = models.WalkPoint.objects.create(
+            walk=walkInProgress,
+            time=time,
+            deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
+            lat=lat,
+            lon=lon,
+            eventCounter=dog.eventCounter
+        )
+    else:
+        walkPoint = None
+
+    dog.save()
+
+    return JsonResponse(walkPoint.toDict() if walkPoint else None, safe=False)
 
 
 @view_decorators.apiLoginRequired
@@ -243,4 +264,36 @@ def unlike(request):
     like = models.Like.objects.get(comment_id=params["comment_id"], user=request.user)
     response = like.toDict()
     like.delete()
+    return JsonResponse(response)
+
+
+@view_decorators.apiLoginRequired
+def getDogEvents(request):
+    params = request.GET
+    eventCounter = int(params.get("event_counter"))
+    fields = params["fields"].split(",")
+    dog = models.Dog.objects.get(id=params["id"])
+    if dog.user != request.user:
+        return JsonResponse({
+            "error": "You don't have rights to execute this method",
+        })
+    response = {
+        "dog_id": dog.id,
+        "event_counter": dog.eventCounter,
+    }
+
+    if "lat" in fields or "lon" in fields or "walk" in fields:
+        walkInProgress = dog.checkFinishedWalks()
+
+    if "lat" in fields:
+        print dog.lat
+        response["lat"] = float(dog.lat) if dog.lat else None
+    if "lon" in fields:
+        response["lon"] = float(dog.lon) if dog.lon else None
+    if "walk" in fields:
+        response["walk"] = {
+            "id": walkInProgress.id,
+            "path": walkInProgress.getPathWithinPeriod(eventCounter, dog.eventCounter),
+        } if walkInProgress else None
+
     return JsonResponse(response)

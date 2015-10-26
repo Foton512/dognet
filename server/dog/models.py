@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-import models_settings
 from django.utils import timezone
+from django.db.models import F
+import models_settings
 import util
+from geopy.distance import distance
+from geopy.point import Point
 
 
 class Token(models.Model):
@@ -15,20 +18,13 @@ class Photo(models.Model):
     file = models.FileField(upload_to=util.getUniquePhotoPath)
 
 
-class Walk(models.Model):
-    dog = models.ForeignKey("Dog")
-    inProgress = models.BooleanField()
-
-    class Meta:
-        index_together = ["dog", "inProgress"]
-
-
 class WalkPoint(models.Model):
-    walk = models.ForeignKey(Walk)
+    walk = models.ForeignKey("Walk")
     time = models.DateTimeField(db_index=True)
     deviceTime = models.DateTimeField(db_index=True)
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     lon = models.DecimalField(max_digits=9, decimal_places=6)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
     def toDict(self):
         return {
@@ -39,6 +35,35 @@ class WalkPoint(models.Model):
             "lon": float(self.lon),
         }
 
+    def isSignificantDistance(self, lat, lon):
+        return distance(
+            Point(float(self.lat), float(self.lon)),
+            Point(float(lat), float(lon))
+        ).meters >= models_settings.pointsDistanceThreshold
+
+
+class Walk(models.Model):
+    dog = models.ForeignKey("Dog")
+    inProgress = models.BooleanField()
+    lastTime = models.DateTimeField()
+
+    class Meta:
+        index_together = ["dog", "inProgress"]
+
+    def getPathWithinPeriod(self, lowEventCounter, highEventCounter):
+        if lowEventCounter is None:
+            lowEventCounter = 0
+        else:
+            lowEventCounter += 1
+
+        walkPoints = WalkPoint.objects.filter(walk=self, eventCounter__gte=lowEventCounter, eventCounter__lte=highEventCounter)
+        return [
+            {
+                "lat": walkPoint.lat,
+                "lon": walkPoint.lon,
+            } for walkPoint in walkPoints
+        ]
+
 
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
@@ -47,6 +72,9 @@ class Dog(models.Model):
     user = models.ForeignKey(User)
     avatar = models.CharField(max_length=1000, null=True)
     collarIdHash = models.CharField(max_length=32, null=True)
+    lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    eventCounter = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return self.nick
@@ -65,12 +93,11 @@ class Dog(models.Model):
             "on_walk": Walk.objects.filter(dog=self, inProgress=True).exists(),
         }
 
-    def checkFinishedWalks(self):
+    def getWalkInProgress(self):
         time = timezone.now()
         try:
             walkInProgress = Walk.objects.get(dog=self, inProgress=True)
-            lastWalkPoint = WalkPoint.objects.filter(walk=walkInProgress).latest("time")
-            if (time - lastWalkPoint.time).seconds > models_settings.walkTimeout:
+            if (time - walkInProgress.lastTime).seconds > models_settings.walkTimeout:
                 walkInProgress.inProgress = False
                 walkInProgress.save()
                 return None
@@ -78,6 +105,20 @@ class Dog(models.Model):
                 return walkInProgress
         except Walk.DoesNotExist:
             return None
+
+    def checkFinishedWalks(self):
+        walkInProgress = self.getWalkInProgress()
+        if walkInProgress is None:
+            self.lat = self.lon = None
+            self.save()
+        return walkInProgress
+
+    @classmethod
+    def getDogWithIncrementedEventCounter(cls, dog):
+        dog.eventCounter = F('eventCounter') + 1
+        dog.save()
+        dog.refresh_from_db()
+        return dog
 
 
 class DogRelation(models.Model):

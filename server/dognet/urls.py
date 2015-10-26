@@ -55,6 +55,8 @@ urlpatterns = [
     url(r"^api/comment/del/$", views.deleteComment),
     url(r"^api/comment/like/$", views.like),
     url(r"^api/comment/unlike/$", views.unlike),
+
+    url(r"^api/dog/get_events/$", views.getDogEvents),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
