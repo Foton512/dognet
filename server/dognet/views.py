@@ -270,7 +270,7 @@ def unlike(request):
 @view_decorators.apiLoginRequired
 def getDogEvents(request):
     params = request.GET
-    eventCounter = int(params.get("event_counter"))
+    eventCounter = int(params["event_counter"]) if "event_counter" in params else None
     fields = params["fields"].split(",")
     dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
