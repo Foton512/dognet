@@ -26,13 +26,14 @@ class WalkPoint(models.Model):
     lon = models.DecimalField(max_digits=9, decimal_places=6)
     eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
-    def toDict(self):
+    def toDict(self, saved):
         return {
             "walk_id": self.walk_id,
             "time": util.datetimeToTimestmap(self.time),
             "deviceTime": util.datetimeToTimestmap(self.deviceTime),
             "lat": float(self.lat),
             "lon": float(self.lon),
+            "saved": saved
         }
 
     def isSignificantDistance(self, lat, lon):
