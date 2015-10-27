@@ -509,7 +509,7 @@ std::string CConvertors::bin2hex(const std::string& buf)
 
 	for (size_t i = 0; i < buf.size(); ++i)
 	{
-		sprintf(cbuf, "%02X", buf[i]);
+		sprintf(cbuf, "%02x", (uint8_t)buf[i]);
 		hbuf.append(cbuf, 2);
 	}
 
