@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Логин</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Логин{% endblock %}
+
+{% block login %}
+    <link rel="stylesheet" href="/static/css/dog.css">
+
     <a href="/login/vk-oauth2">vk</a><br>
     <a href="/login/facebook-oauth2">facebook (фиг вам, не работает)</a>
-</body>
-</html>
+{% endblock %}

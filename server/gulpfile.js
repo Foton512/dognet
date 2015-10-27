@@ -7,9 +7,9 @@ var prefix = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
 
 gulp.task('sass', function () {
-  gulp.src('bower_components/foundation/scss/**.scss')
+  gulp.src('static/scss/foundation.scss')
   .pipe(plumber())
-  .pipe(sass({errLogToConsole: true, includePaths: ['bower_components/foundation/scss']}))
+  .pipe(sass({errLogToConsole: true}))
   .pipe(prefix(
                 "last 3 version", "> 1%", "ie 8", "ie 7"
                 ))
