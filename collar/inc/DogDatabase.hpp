@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <fstream>
 
 using namespace std;
 
@@ -39,10 +40,15 @@ namespace dognetd
 			bool addCoordinate( const string &latitude, const string &longitude );
 			vector<Coordinate> getCoordinates( int count );
 			bool removeCoordinate( int id );
+			
+			void startFileLogging( void );
+			void endFileLogging( void );
 
 		private:
 			sqlite3 *db;
 			std::string db_name;
+			ofstream file;
+			bool logToFile;
 			
 			bool sqlExecuteQuery( int ( *callback )( void*, int, char**, char** ), const string &query, void *output );
 			bool sqlCreateTable( const std::string &table_name, const vector<string> &field_names,
