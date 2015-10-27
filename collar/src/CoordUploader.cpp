@@ -24,6 +24,7 @@ namespace dognetd
 	
 	CoordUploader::~CoordUploader( void )
 	{
+		stop( );
 		curl_global_cleanup( );
 	};
 	
