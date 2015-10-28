@@ -197,21 +197,23 @@ def addWalkPoint(request):
         if lastWalkPoint.isSignificantDistance(lat, lon):
             createNewWalkPoint = True
 
+    walkPoint = models.WalkPoint(
+        walk=walkInProgress,
+        time=time,
+        deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
+        lat=lat,
+        lon=lon,
+        eventCounter=dog.eventCounter
+    )
     if createNewWalkPoint:
-        walkPoint = models.WalkPoint.objects.create(
-            walk=walkInProgress,
-            time=time,
-            deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
-            lat=lat,
-            lon=lon,
-            eventCounter=dog.eventCounter
-        )
+        walkPoint.save()
+        saved = True
     else:
-        walkPoint = None
+        saved = False
 
     dog.save()
 
-    return JsonResponse(walkPoint.toDict() if walkPoint else None, safe=False)
+    return JsonResponse(walkPoint.toDict(saved))
 
 
 @view_decorators.apiLoginRequired
