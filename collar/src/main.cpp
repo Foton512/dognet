@@ -81,8 +81,8 @@ int main( int argc, char **argv )
 		return 0;
 	}
 	
-	//TODO find gps device, do not use hardcode!
-	CoordsReader reader( database, "/dev/ttyUSB0" );
+	// we use "gps" symlink created by script in /etc/udev/rules.d
+	CoordsReader reader( database, "/dev/gps" );
 	reader.start( );
 
 	CoordUploader uploader( database, serverAddr, hash );
