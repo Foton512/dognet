@@ -7,7 +7,7 @@ var prefix = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
 
 gulp.task('sass', function () {
-  gulp.src('static/scss/foundation.scss')
+  gulp.src('static/scss/**.scss')
   .pipe(plumber())
   .pipe(sass({errLogToConsole: true}))
   .pipe(prefix(
@@ -20,7 +20,7 @@ gulp.task('sass', function () {
 
 gulp.task('default', function() {
   gulp.run( 'sass');
-  gulp.watch('static/scss/**', function(event) {
+  gulp.watch('static/scss/**.scss', function(event) {
   gulp.run('sass');
   })
 });

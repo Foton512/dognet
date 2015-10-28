@@ -47,6 +47,7 @@ def dogs(request):
             "user": user,
             "dogs": dogs,
             "photoForm": forms.PhotoForm(),
+            "authenticated": request.user.is_authenticated()
         },
         context_instance=RequestContext(request)
     )

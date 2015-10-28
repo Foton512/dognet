@@ -1,0 +1,13 @@
+@import 'foundation';
+@import 'normalize';
+@import 'font-awesome';
+
+.login-block {
+  float: right;
+  > .right {
+    margin-right: 5px;
+  }
+  > .text {
+    line-height: 32px;
+  }
+}

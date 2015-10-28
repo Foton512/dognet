@@ -13,8 +13,7 @@
     <meta name="description" content="Тут нужно придумать какое-то здрыжне для поисковиков">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="/static/css/normalize.min.css">
-    <link rel="stylesheet" href="/static/css/foundation.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 
     <script src="/static/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
 
@@ -24,12 +23,23 @@
     <!--[if lt IE 8]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    {% block login %}
-    {% endblock %}
+
      <div class="row">
         <div class="large-12 columns">
           <div class="panel">
-            <h3>Dognet</h3>
+              <div class="row">
+                  <div class="large-4 columns ">
+                    <h4>Dognet</h4>
+                  </div>
+                  <div class="large-8 columns">
+                    {% if authenticated %}
+
+                        {% else %}
+                            {% block login %}
+                            {% endblock %}
+                  {% endif %}
+                  </div>
+              </div>
           </div>
         </div>
       </div>
