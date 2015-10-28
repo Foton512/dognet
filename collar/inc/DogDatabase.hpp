@@ -41,7 +41,7 @@ namespace dognetd
 			vector<Coordinate> getCoordinates( int count );
 			bool removeCoordinate( int id );
 			
-			void startFileLogging( void );
+			void startFileLogging( string filename );
 			void endFileLogging( void );
 
 		private:

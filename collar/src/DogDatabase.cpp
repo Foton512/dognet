@@ -12,7 +12,6 @@
 using namespace std;
 
 const string coordTableName = "coordinates";
-const string logFile = "log.txt";
 
 namespace dognetd
 {
@@ -147,11 +146,11 @@ namespace dognetd
 		return sqlRemove( coordTableName, "id", values );
 	}
 	
-	void DogDatabase::startFileLogging( void )
+	void DogDatabase::startFileLogging( string filename )
 	{
 		if ( !file.is_open( ) )
 		{
-			file.open( logFile );
+			file.open( filename );
 			logToFile = true;
 		}
 	}

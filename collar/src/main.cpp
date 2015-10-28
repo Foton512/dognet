@@ -40,6 +40,21 @@ static bool is_interface_online( string interface )
     return result;
 }
 
+// Get current date/time, format is YYYY-MM-DD-HH:mm:ss
+static const string currentDateTime( void )
+{
+    time_t     now = time( 0 );
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime( &now );
+    
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime( buf, sizeof( buf ), "%Y-%m-%d-%X", &tstruct );
+
+    return buf;
+}
+
 int main( int argc, char **argv )
 {
 	if ( argc != 4 )
@@ -47,6 +62,14 @@ int main( int argc, char **argv )
 		cout << "Usage: dognetd <external_server> <internal_server_port> <collar_id>\n";
 		return 0;
 	}
+	
+	// prepare log filenames
+	string logApp = "/home/pi/" + currentDateTime( ) + "_app.txt";
+	string logCoord = "/home/pi/" + currentDateTime( ) + "_coord.txt";
+	
+	// redirect cout to file
+	ofstream out( logApp );
+    cout.rdbuf( out.rdbuf( ) );
 	
 	// calculate md5 of collar id
 	string id( argv[3] );
@@ -63,9 +86,10 @@ int main( int argc, char **argv )
 	string serverAddr = string( argv[1] );
 	cout << "Server: " << serverAddr << endl;
 	
-	DogDatabase database( "dog.db" );
+	DogDatabase database( "/home/pi/dog.db" );
 	database.open( );
 	database.createCoordinatesTable( );
+	database.startFileLogging( logCoord );
 	
 	cout << "Waiting for ppp0 interface (3g)...\n";
 	while ( !is_interface_online( "ppp0" ) )
