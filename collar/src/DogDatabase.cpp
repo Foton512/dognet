@@ -19,7 +19,8 @@ namespace dognetd
 		db_name( db_name ),
 		db( NULL ),
 		file( ),
-		logToFile( false )
+		logToFile( false ),
+		lastCoord( )
 	{ }
 	
 	DogDatabase::~DogDatabase( void )
@@ -91,6 +92,12 @@ namespace dognetd
 	
 	bool DogDatabase::addCoordinate( const string &latitude, const string &longitude )
 	{
+		// check last coordinate
+		time_t timestamp = time( NULL );
+		Coordinate coord( 0, timestamp, latitude, longitude );
+		if ( coord == lastCoord )
+			return true;
+		
 		map<string,string> fields;
 		
 		// add coordinates
@@ -98,7 +105,6 @@ namespace dognetd
 		fields[ "longitude" ] = longitude;
 		
 		// add time
-		time_t timestamp = time( NULL );
 		string str_time = CConvertors::int2str( timestamp );
 		fields[ "time" ] = str_time;
 		
@@ -107,7 +113,13 @@ namespace dognetd
 			file << latitude << ", " << longitude << ", " << str_time << endl;
 		
 		// insert into coordinates table
-		return sqlInsert( coordTableName, fields );
+		if ( sqlInsert( coordTableName, fields ) )
+		{
+			lastCoord = coord;
+			return true;
+		}
+
+		return false;
 	}
 	
 	vector<Coordinate> DogDatabase::getCoordinates( int count )

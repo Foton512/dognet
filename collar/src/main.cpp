@@ -56,7 +56,7 @@ static const string currentDateTime( void )
 }
 
 int main( int argc, char **argv )
-{
+{	
 	if ( argc != 4 )
 	{
 		cout << "Usage: dognetd <external_server> <internal_server_port> <collar_id>\n";
@@ -64,8 +64,8 @@ int main( int argc, char **argv )
 	}
 	
 	// prepare log filenames
-	string logApp = "/home/pi/" + currentDateTime( ) + "_app.txt";
-	string logCoord = "/home/pi/" + currentDateTime( ) + "_coord.txt";
+	string logApp = "/home/pi/app_" + currentDateTime( ) + ".txt";
+	string logCoord = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	
 	// redirect cout to file
 	ofstream out( logApp );
