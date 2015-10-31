@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.db.models import F
+from django.db import transaction
 import models_settings
 import util
 from geopy.distance import distance
@@ -16,6 +17,23 @@ class Token(models.Model):
 
 class Photo(models.Model):
     file = models.FileField(upload_to=util.getUniquePhotoPath)
+
+
+class CloseDogRelation(models.Model):
+    dog = models.ForeignKey("Dog", related_name="+")
+    relatedDog = models.ForeignKey("Dog", related_name="+")
+
+
+class CloseDogEvent(models.Model):
+    dog = models.ForeignKey("Dog", related_name="+")
+    relatedDog = models.ForeignKey("Dog", related_name="+")
+    added = models.BooleanField()  # relatedDog became close if True. Became far otherwise
+    status = models.SmallIntegerField(default=0)  # -1 - enemy, 0 - neutral, 1 - friend, 2 - new
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
+
+    @classmethod
+    def removeOldEvents(cls, eventCounter):
+        cls.objects.filter(eventCounter__lte=eventCounter - models_settings.closeDogEventsToStore).delete()
 
 
 class WalkPoint(models.Model):
@@ -57,7 +75,9 @@ class Walk(models.Model):
         else:
             lowEventCounter += 1
 
-        walkPoints = WalkPoint.objects.filter(walk=self, eventCounter__gte=lowEventCounter, eventCounter__lte=highEventCounter)
+        walkPoints = WalkPoint.objects.filter(walk=self,
+                                              eventCounter__gte=lowEventCounter,
+                                              eventCounter__lte=highEventCounter).order_by("eventCounter")
         return [
             {
                 "lat": walkPoint.lat,
@@ -114,12 +134,15 @@ class Dog(models.Model):
             self.save()
         return walkInProgress
 
-    @classmethod
-    def getDogWithIncrementedEventCounter(cls, dog):
-        dog.eventCounter = F('eventCounter') + 1
-        dog.save()
-        dog.refresh_from_db()
-        return dog
+    # relatedObjects must not be not saved yet
+    def incEventCounter(self, relatedObjects):
+        with transaction.atomic():
+            self.eventCounter = F('eventCounter') + 1
+            self.save()
+            self.refresh_from_db(fields=["eventCounter"])
+            for obj in relatedObjects:
+                obj.eventCounter = self.eventCounter
+                obj.save()
 
 
 class DogRelation(models.Model):

@@ -1,2 +1,3 @@
 walkTimeout = 10 * 60  # In seconds
-pointsDistanceThreshold = 10 # In meters
+pointsDistanceThreshold = 10  # In meters
+closeDogEventsToStore = 500
