@@ -182,17 +182,6 @@ class Home(models.Model):
         }
 
 
-class Achievement(models.Model):
-    type = models.PositiveSmallIntegerField()
-    dog = models.ForeignKey(Dog)
-
-    def toDict(self):
-        return {
-            "dog_id": self.dog_id,
-            "type": self.type,
-        }
-
-
 class Comment(models.Model):
     dog = models.ForeignKey(Dog)
     text = models.TextField()
@@ -200,7 +189,8 @@ class Comment(models.Model):
     walk = models.ForeignKey(Walk, null=True)
     photo = models.CharField(max_length=1000, null=True)
     relation = models.ForeignKey(DogRelation, null=True)
-    achievement = models.ForeignKey(Achievement, null=True)
+    achievement = models.ForeignKey("Achievement", null=True)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
     def __unicode__(self):
         return self.text
@@ -234,9 +224,29 @@ class Comment(models.Model):
 class Like(models.Model):
     comment = models.ForeignKey(Comment)
     user = models.ForeignKey(User)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
     def toDict(self):
         return {
             "comment_id": self.comment_id,
             "user_id": self.user_id,
         }
+
+
+class Achievement(models.Model):
+    type = models.PositiveSmallIntegerField()
+    dog = models.ForeignKey(Dog)
+    eventCounter = models.PositiveIntegerField(default=0)
+
+    def toDict(self):
+        return {
+            "dog_id": self.dog_id,
+            "type": self.type,
+        }
+
+    @classmethod
+    def addAchievement(cls, type, dog):
+        achievement = models.Achievement(dog=dog, type=type)
+        dog.incEventCounter([achievement])
+        comment = Comment(dog=dog, text="", type=4, achievement=achievement)
+        dog.incEventCounter([comment])

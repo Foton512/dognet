@@ -145,10 +145,21 @@ def setDogRelation(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
+
     relatedDog = models.Dog.objects.get(id=params["related_id"])
     relation = models.DogRelation.objects.get_or_create(dog=dog, relatedDog=relatedDog)[0]
     relation.status = int(params["status"])
     relation.save()
+
+    if relation.status == 1:
+        nFriends = models.DogRelation(dog=dog, status=1).count()
+        if nFriends == 1:
+            models.Achievement.addAchievement(1, dog)
+
+    if relation.status in [-1, 1]:
+        comment = models.Comment(dog=dog, text="", type=3, relation=relation)
+        dog.incEventCounter([comment])
+
     return JsonResponse(relation.toDict())
 
 
@@ -213,6 +224,8 @@ def addWalkPoint(request):
         createNewWalkPoint = False
         if walkInProgress is None:
             walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True, lastTime=time)
+            comment = models.Comment(dog=dog, text="", type=1, walk=walkInProgress)
+            dog.incEventCounter([comment])
             createNewWalkPoint = True
             # TODO: add first point in nearest house
         else:
@@ -269,7 +282,8 @@ def addTextComment(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
-    comment = models.Comment.objects.create(dog=dog, text=params["text"], type=0)
+    comment = models.Comment(dog=dog, text=params["text"], type=0)
+    dog.incEventCounter([comment])
     return JsonResponse(comment.toDict())
 
 
@@ -281,7 +295,8 @@ def addPhotoComment(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
-    comment = models.Comment.objects.create(dog=dog, text=params["text"], photo=params["photo"], type=2)
+    comment = models.Comment(dog=dog, text=params["text"], photo=params["photo"], type=2)
+    dog.incEventCounter([comment])
     return JsonResponse(comment.toDict())
 
 
@@ -301,7 +316,8 @@ def deleteComment(request):
 @view_decorators.apiLoginRequired
 def like(request):
     params = request.GET
-    like = models.Like.objects.get_or_create(comment_id=params["comment_id"], user=request.user)[0]
+    like = models.Like(comment_id=params["comment_id"], user=request.user)[0]
+    dog.incEventCounter([like])
     return JsonResponse(like.toDict())
 
 
@@ -312,6 +328,24 @@ def unlike(request):
     response = like.toDict()
     like.delete()
     return JsonResponse(response)
+
+
+def fillResponseWithField(fields, fieldName, model, dogField, dog, eventCounter, response):
+    if fieldName in fields:
+        xargs = {
+            dogField: dog
+        }
+        objects = model.objects.filter(
+            eventCounter__range=[
+                (eventCounter if eventCounter else 0) + 1,
+                dog.eventCounter
+            ],
+            **xargs
+        ).order_by("eventCounter")
+        response[fieldName] = [
+            obj.toDict() for obj in objects
+        ]
+    return response
 
 
 @view_decorators.apiLoginRequired
@@ -344,7 +378,10 @@ def getDogEvents(request):
     if "close_dogs_events" in fields:
         if eventCounter:
             closeDogEvents = models.CloseDogEvent.objects.filter(dog=dog,
-                                                                 eventCounter__gt=eventCounter).order_by("eventCounter")
+                                                                 eventCounter__range=[
+                                                                     eventCounter + 1,
+                                                                     dog.eventCounter
+                                                                 ]).order_by("eventCounter")
             response["close_dogs_events"] = [
                 {
                     "dog_id": closeDogEvent.relatedDog_id,
@@ -368,5 +405,8 @@ def getDogEvents(request):
                     "status": getDogStatus(closeDogRelation.relatedDog_id, closeDogIdToStatus)
                 } for closeDogRelation in closeDogRelations
             ]
+    response = fillResponseWithField(fields, "comments", models.Comment, "dog", dog, eventCounter, response)
+    response = fillResponseWithField(fields, "likes", models.Like, "comment__dog", dog, eventCounter, response)
+    response = fillResponseWithField(fields, "achievements", models.Achievement, "dog", dog, eventCounter, response)
 
     return JsonResponse(response)
