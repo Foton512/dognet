@@ -11,6 +11,8 @@ admin.site.register(models.Token, admin_models.TokenAdmin)
 admin.site.register(models.Photo, admin_models.PhotoAdmin)
 admin.site.register(models.Dog, admin_models.DogAdmin)
 admin.site.register(models.DogRelation, admin_models.DogRelationAdmin)
+admin.site.register(models.CloseDogRelation, admin_models.CloseDogRelationAdmin)
+admin.site.register(models.CloseDogEvent, admin_models.CloseDogEventAdmin)
 admin.site.register(models.UserDogSubscription, admin_models.UserDogSubscriptionAdmin)
 admin.site.register(models.Walk, admin_models.WalkAdmin)
 admin.site.register(models.WalkPoint, admin_models.WalkPointAdmin)
@@ -55,6 +57,8 @@ urlpatterns = [
     url(r"^api/comment/del/$", views.deleteComment),
     url(r"^api/comment/like/$", views.like),
     url(r"^api/comment/unlike/$", views.unlike),
+
+    url(r"^api/dog/get_events/$", views.getDogEvents),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

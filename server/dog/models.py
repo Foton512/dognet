@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-import models_settings
 from django.utils import timezone
+from django.db.models import F
+from django.db import transaction
+import models_settings
 import util
+from geopy.distance import distance
+from geopy.point import Point
 
 
 class Token(models.Model):
@@ -15,29 +19,71 @@ class Photo(models.Model):
     file = models.FileField(upload_to=util.getUniquePhotoPath)
 
 
-class Walk(models.Model):
-    dog = models.ForeignKey("Dog")
-    inProgress = models.BooleanField()
+class CloseDogRelation(models.Model):
+    dog = models.ForeignKey("Dog", related_name="+")
+    relatedDog = models.ForeignKey("Dog", related_name="+")
 
-    class Meta:
-        index_together = ["dog", "inProgress"]
+
+class CloseDogEvent(models.Model):
+    dog = models.ForeignKey("Dog", related_name="+")
+    relatedDog = models.ForeignKey("Dog", related_name="+")
+    added = models.BooleanField()  # relatedDog became close if True. Became far otherwise
+    status = models.SmallIntegerField(default=0)  # -1 - enemy, 0 - neutral, 1 - friend, 2 - new
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
+
+    @classmethod
+    def removeOldEvents(cls, eventCounter):
+        cls.objects.filter(eventCounter__lte=eventCounter - models_settings.closeDogEventsToStore).delete()
 
 
 class WalkPoint(models.Model):
-    walk = models.ForeignKey(Walk)
+    walk = models.ForeignKey("Walk")
     time = models.DateTimeField(db_index=True)
     deviceTime = models.DateTimeField(db_index=True)
     lat = models.DecimalField(max_digits=9, decimal_places=6)
     lon = models.DecimalField(max_digits=9, decimal_places=6)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
-    def toDict(self):
+    def toDict(self, saved):
         return {
             "walk_id": self.walk_id,
             "time": util.datetimeToTimestmap(self.time),
             "deviceTime": util.datetimeToTimestmap(self.deviceTime),
             "lat": float(self.lat),
             "lon": float(self.lon),
+            "saved": saved
         }
+
+    def isSignificantDistance(self, lat, lon):
+        return distance(
+            Point(float(self.lat), float(self.lon)),
+            Point(float(lat), float(lon))
+        ).meters >= models_settings.pointsDistanceThreshold
+
+
+class Walk(models.Model):
+    dog = models.ForeignKey("Dog")
+    inProgress = models.BooleanField()
+    lastTime = models.DateTimeField()
+
+    class Meta:
+        index_together = ["dog", "inProgress"]
+
+    def getPathWithinPeriod(self, lowEventCounter, highEventCounter):
+        if lowEventCounter is None:
+            lowEventCounter = 0
+        else:
+            lowEventCounter += 1
+
+        walkPoints = WalkPoint.objects.filter(walk=self,
+                                              eventCounter__gte=lowEventCounter,
+                                              eventCounter__lte=highEventCounter).order_by("eventCounter")
+        return [
+            {
+                "lat": walkPoint.lat,
+                "lon": walkPoint.lon,
+            } for walkPoint in walkPoints
+        ]
 
 
 class Dog(models.Model):
@@ -47,6 +93,9 @@ class Dog(models.Model):
     user = models.ForeignKey(User)
     avatar = models.CharField(max_length=1000, null=True)
     collarIdHash = models.CharField(max_length=32, null=True)
+    lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    eventCounter = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
         return self.nick
@@ -65,12 +114,11 @@ class Dog(models.Model):
             "on_walk": Walk.objects.filter(dog=self, inProgress=True).exists(),
         }
 
-    def checkFinishedWalks(self):
+    def getWalkInProgress(self):
         time = timezone.now()
         try:
             walkInProgress = Walk.objects.get(dog=self, inProgress=True)
-            lastWalkPoint = WalkPoint.objects.filter(walk=walkInProgress).latest("time")
-            if (time - lastWalkPoint.time).seconds > models_settings.walkTimeout:
+            if (time - walkInProgress.lastTime).seconds > models_settings.walkTimeout:
                 walkInProgress.inProgress = False
                 walkInProgress.save()
                 return None
@@ -78,6 +126,23 @@ class Dog(models.Model):
                 return walkInProgress
         except Walk.DoesNotExist:
             return None
+
+    def checkFinishedWalks(self):
+        walkInProgress = self.getWalkInProgress()
+        if walkInProgress is None:
+            self.lat = self.lon = None
+            self.save()
+        return walkInProgress
+
+    # relatedObjects must not be not saved yet
+    def incEventCounter(self, relatedObjects):
+        with transaction.atomic():
+            self.eventCounter = F('eventCounter') + 1
+            self.save()
+            self.refresh_from_db(fields=["eventCounter"])
+            for obj in relatedObjects:
+                obj.eventCounter = self.eventCounter
+                obj.save()
 
 
 class DogRelation(models.Model):
@@ -117,17 +182,6 @@ class Home(models.Model):
         }
 
 
-class Achievement(models.Model):
-    type = models.PositiveSmallIntegerField()
-    dog = models.ForeignKey(Dog)
-
-    def toDict(self):
-        return {
-            "dog_id": self.dog_id,
-            "type": self.type,
-        }
-
-
 class Comment(models.Model):
     dog = models.ForeignKey(Dog)
     text = models.TextField()
@@ -135,7 +189,8 @@ class Comment(models.Model):
     walk = models.ForeignKey(Walk, null=True)
     photo = models.CharField(max_length=1000, null=True)
     relation = models.ForeignKey(DogRelation, null=True)
-    achievement = models.ForeignKey(Achievement, null=True)
+    achievement = models.ForeignKey("Achievement", null=True)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
     def __unicode__(self):
         return self.text
@@ -169,9 +224,29 @@ class Comment(models.Model):
 class Like(models.Model):
     comment = models.ForeignKey(Comment)
     user = models.ForeignKey(User)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
 
     def toDict(self):
         return {
             "comment_id": self.comment_id,
             "user_id": self.user_id,
         }
+
+
+class Achievement(models.Model):
+    type = models.PositiveSmallIntegerField()
+    dog = models.ForeignKey(Dog)
+    eventCounter = models.PositiveIntegerField(default=0)
+
+    def toDict(self):
+        return {
+            "dog_id": self.dog_id,
+            "type": self.type,
+        }
+
+    @classmethod
+    def addAchievement(cls, type, dog):
+        achievement = models.Achievement(dog=dog, type=type)
+        dog.incEventCounter([achievement])
+        comment = Comment(dog=dog, text="", type=4, achievement=achievement)
+        dog.incEventCounter([comment])

@@ -13,6 +13,14 @@ class WalkAdmin(admin.ModelAdmin):
     list_display = ("dog", "inProgress")
 
 
+class CloseDogRelationAdmin(admin.ModelAdmin):
+    list_display = ("dog", "relatedDog")
+
+
+class CloseDogEventAdmin(admin.ModelAdmin):
+    list_display = ("dog", "relatedDog", "status", "eventCounter")
+
+
 class WalkPointAdmin(admin.ModelAdmin):
     list_display = ("walk", "time", "deviceTime", "lat", "lon")
 

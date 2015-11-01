@@ -3,6 +3,7 @@
 #include <map>
 #include <ctime>
 #include <iostream>
+#include <fstream>
 #include <sqlite3.h>
 
 #include "CConvertors.hpp"
@@ -16,8 +17,11 @@ namespace dognetd
 {
 	DogDatabase::DogDatabase( const string &db_name ):
 		db_name( db_name ),
-		db( NULL )
-	{ };
+		db( NULL ),
+		file( ),
+		logToFile( false ),
+		lastCoord( )
+	{ }
 	
 	DogDatabase::~DogDatabase( void )
 	{
@@ -39,7 +43,7 @@ namespace dognetd
 		
 		cout << "Database " << db_name << " opened successfully\n";
 		return true;
-	};
+	}
 	
 	bool DogDatabase::close( void )
 	{
@@ -54,7 +58,7 @@ namespace dognetd
 		cout << "Database " << db_name << " closed successfully\n";
 		db = NULL;
 		return true;
-	};
+	}
 	
 	bool DogDatabase::createCoordinatesTable( void )
 	{
@@ -84,10 +88,16 @@ namespace dognetd
 		
 		// create table
 		return sqlCreateTable( coordTableName, names, types, flags );
-	};
+	}
 	
 	bool DogDatabase::addCoordinate( const string &latitude, const string &longitude )
 	{
+		// check last coordinate
+		time_t timestamp = time( NULL );
+		Coordinate coord( 0, timestamp, latitude, longitude );
+		if ( coord == lastCoord )
+			return true;
+		
 		map<string,string> fields;
 		
 		// add coordinates
@@ -95,12 +105,22 @@ namespace dognetd
 		fields[ "longitude" ] = longitude;
 		
 		// add time
-		time_t timestamp = time( NULL );
-		fields[ "time" ] = CConvertors::int2str( timestamp );
+		string str_time = CConvertors::int2str( timestamp );
+		fields[ "time" ] = str_time;
+		
+		// write to file if needed
+		if ( logToFile )
+			file << latitude << ", " << longitude << ", " << str_time << endl;
 		
 		// insert into coordinates table
-		return sqlInsert( coordTableName, fields );
-	};
+		if ( sqlInsert( coordTableName, fields ) )
+		{
+			lastCoord = coord;
+			return true;
+		}
+
+		return false;
+	}
 	
 	vector<Coordinate> DogDatabase::getCoordinates( int count )
 	{
@@ -129,14 +149,32 @@ namespace dognetd
 				CConvertors::str2int( ( *it )[ "time" ] ), ( *it )[ "latitude" ], ( *it )[ "longitude" ] ) );
 			
 		return coords;
-	};
+	}
 	
 	bool DogDatabase::removeCoordinate( int id )
 	{
 		vector<string> values;
 		values.push_back( CConvertors::int2str( id ) );
 		return sqlRemove( coordTableName, "id", values );
-	};
+	}
+	
+	void DogDatabase::startFileLogging( string filename )
+	{
+		if ( !file.is_open( ) )
+		{
+			file.open( filename );
+			logToFile = true;
+		}
+	}
+	
+	void DogDatabase::endFileLogging( void )
+	{
+		if ( file.is_open( ) )
+		{
+			logToFile = false;
+			file.close( );
+		}
+	}
 	
 	bool DogDatabase::sqlRemove( const string &table_name, const string &field, const vector<string> &values )
 	{
@@ -165,6 +203,18 @@ namespace dognetd
 		// execute it
 		return sqlExecuteQuery( NULL, request, NULL );
 	};
+	
+	static int selectCallback( void *output, int columnsNum, char **values, char **columns )
+	{
+		vector< map<string, string> > *result = reinterpret_cast< vector<map<string, string> > * >( output );
+
+		map<string, string> record;
+		for ( size_t i = 0; i < columnsNum; ++i )
+			record[ string( columns[i] ) ] = string( values[i] );
+		
+		result->push_back( record );
+		return 0;
+	}
 	
 	vector< map<string, string> > DogDatabase::sqlSelect( const string &table_name, const vector<string> &fields,
 		const string &condition, const string &additional )
@@ -195,24 +245,8 @@ namespace dognetd
 		
 		// prepare storage for result
 		vector< map<string, string> > result;
-		
-		// prepare handler (who said we could not use local functions?)
-		struct X
-		{
-			static int selectProcessing( void *output, int columnsNum, char **values, char **columns )
-			{
-				vector< map<string, string> > *result = reinterpret_cast< vector<map<string, string> > * >( output );
 
-				map<string, string> record;
-				for ( size_t i = 0; i < columnsNum; ++i )
-					record[ string( columns[i] ) ] = string( values[i] );
-				
-				result->push_back( record );
-				return 0;
-			}
-		};
-
-		sqlExecuteQuery( X::selectProcessing, request, reinterpret_cast<void *>( &result ) );
+		sqlExecuteQuery( selectCallback, request, reinterpret_cast<void *>( &result ) );
 		return result;
 	}
 	

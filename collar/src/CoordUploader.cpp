@@ -24,6 +24,7 @@ namespace dognetd
 	
 	CoordUploader::~CoordUploader( void )
 	{
+		stop( );
 		curl_global_cleanup( );
 	};
 	
@@ -56,8 +57,9 @@ namespace dognetd
 					db->removeCoordinate( it->id );
 			}
 			
-			// perform every second
-			sleep( 1 );
+			// perform check every second
+			if ( coords.empty( ) )
+				sleep( 1 );
 		}
 		
 		cout << "uploader thread stopped\n";
