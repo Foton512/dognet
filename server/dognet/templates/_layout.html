@@ -24,25 +24,17 @@
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-     <div class="row">
-        <div class="large-12 columns">
-          <div class="panel">
-              <div class="row">
-                  <div class="large-4 columns ">
-                    <h4>Dognet</h4>
-                  </div>
-                  <div class="large-8 columns">
-                    {% if authenticated %}
-
-                        {% else %}
-                            {% block login %}
-                            {% endblock %}
-                  {% endif %}
-                  </div>
+      <div class="panel top">
+          <div class="row">
+              <div class="large-4 columns ">
+                <h4>Dognet</h4>
+              </div>
+              <div class="large-8 columns">
+                {% include "loginBlock.html" %}
               </div>
           </div>
-        </div>
       </div>
+
 
     <div class="row">
 
@@ -145,7 +137,7 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="/static/js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-    <script src="bower_components/foundation/js/foundation.min.js"></script>
+    <script src="/static/js/foundation.min.js"></script>
     <script src="/static/js/main.js"></script>
     <script src="/static/js/app.js"></script>
     {% block script-block %}

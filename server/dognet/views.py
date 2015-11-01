@@ -52,6 +52,22 @@ def dogs(request):
         context_instance=RequestContext(request)
     )
 
+def base(request):
+    return render_to_response(
+        "_layout.html",
+        context={
+            "authenticated": request.user.is_authenticated()
+        }
+    )
+
+def loginBlock(request):
+    return render_to_response(
+        "loginBlock.html",
+        context={
+            "authenticated": request.user.is_authenticated()
+        }
+    )
+
 
 def dog(request, dogId):
     dog = models.Dog.objects.get(id=dogId)

@@ -1,10 +1,9 @@
-{% extends "base.html" %}
+{% extends "_layout.html" %}
 
 {% block title %}Главная{% endblock %}
 
 {% block content %}
     Привет, {{ user.first_name }} {{ user.last_name }}<br>
-    <a href="/logout/">Выйти</a><br>
     Ваши собаки:<br>
     {% for dog in dogs %}
         <a href="/dog/{{ dog.id }}">{{ dog.nick }}</a><br>

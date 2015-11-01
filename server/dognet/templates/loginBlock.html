@@ -1,12 +1,9 @@
-{% extends "_layout.html" %}
-
-{% block title %}Логин{% endblock %}
-
-{% block login %}
-    <link rel="stylesheet" href="/static/css/dog.css">
-    <div class="login-block">
+<div class="login-block">
+    {% if not authenticated %}
         <a class="right" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> </a>
         <a class="right" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> </a>
         <span class="text right">Авторизуйтесь через: </span>
-    </div>
-{% endblock %}
+    {% else %}
+        <a class="right" href="/logout/"><i class="fa fa-sign-out fa-2x"></i><span class="text">Выйти</span></a><br>
+    {% endif %}
+</div>

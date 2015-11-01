@@ -1,13 +1,21 @@
 @import 'foundation';
 @import 'normalize';
 @import 'font-awesome';
+@import 'font';
 
+.panel.top {
+  padding: 5px 20px;
+  h4 {
+    margin: 0;
+    line-height: 32px;
+  }
+}
 .login-block {
-  float: right;
   > .right {
     margin-right: 5px;
   }
-  > .text {
+  .text {
     line-height: 32px;
+    vertical-align: bottom;
   }
 }
