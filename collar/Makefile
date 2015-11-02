@@ -14,6 +14,7 @@ OBJ_FILES:= \
 	$(OBJ_DIR)/CConvertors.o \
 	$(OBJ_DIR)/CoordUploader.o \
 	$(OBJ_DIR)/CoordsReader.o \
+	$(OBJ_DIR)/ArduinoController.o \
 	$(OBJ_DIR)/md5.o
 
 dognetd: $(OBJ_DIR) $(OBJ_FILES)

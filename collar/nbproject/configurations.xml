@@ -3,6 +3,7 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
       <df name="inc">
+        <in>ArduinoController.hpp</in>
         <in>CConvertors.hpp</in>
         <in>CommandServer.hpp</in>
         <in>CoordUploader.hpp</in>
@@ -21,6 +22,7 @@
         <in>sqlite3.h</in>
       </df>
       <df name="src">
+        <in>ArduinoController.cpp</in>
         <in>CConvertors.cpp</in>
         <in>CommandServer.cpp</in>
         <in>CoordUploader.cpp</in>
@@ -58,6 +60,8 @@
           <executablePath></executablePath>
         </makeTool>
       </makefileType>
+      <item path="inc/ArduinoController.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="inc/CConvertors.hpp" ex="false" tool="3" flavor2="0">
       </item>
       <item path="inc/CommandServer.hpp" ex="false" tool="3" flavor2="0">
@@ -81,6 +85,8 @@
       <item path="microhttpd/w32functions.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sqlite/sqlite3.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/ArduinoController.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -109,6 +115,9 @@
           <buildCommand>${MAKE} -f Makefile</buildCommand>
           <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
           <executablePath>dognetd</executablePath>
+          <cTool>
+            <standard>10</standard>
+          </cTool>
           <ccTool>
             <standard>8</standard>
             <incDir>
@@ -116,25 +125,26 @@
               <pElem>inc</pElem>
               <pElem>sqlite</pElem>
               <pElem>.</pElem>
+              <pElem>/usr/include</pElem>
+              <pElem>/usr/include/glib-2.0</pElem>
+              <pElem>/usr/lib/arm-linux-gnueabihf/glib-2.0/include</pElem>
             </incDir>
           </ccTool>
         </makeTool>
       </makefileType>
-      <item path="inc/CoordUploader.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/ArduinoController.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="inc/CoordsReader.hpp" ex="false" tool="3" flavor2="0">
+      <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="src/CConvertors.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/CommandServer.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="src/CommandServer.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/CoordUploader.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="src/CoordUploader.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/CoordsReader.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="src/CoordsReader.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/DogDatabase.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="src/DogDatabase.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="src/main.cpp" ex="false" tool="1" flavor2="0">
+      <item path="src/main.cpp" ex="false" tool="1" flavor2="8">
       </item>
     </conf>
   </confs>

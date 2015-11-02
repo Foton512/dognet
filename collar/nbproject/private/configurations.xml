@@ -2,12 +2,19 @@
 <configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
+      <df name="arduino">
+      </df>
+      <df name="curl">
+        <in>curl.h</in>
+      </df>
       <df name="inc">
+        <in>ArduinoController.hpp</in>
         <in>CConvertors.hpp</in>
         <in>CommandServer.hpp</in>
         <in>CoordUploader.hpp</in>
         <in>CoordsReader.hpp</in>
         <in>DogDatabase.hpp</in>
+        <in>md5.hpp</in>
       </df>
       <df name="microhttpd">
         <in>autoinit_funcs.h</in>
@@ -23,12 +30,14 @@
         <in>sqlite3.h</in>
       </df>
       <df name="src">
+        <in>ArduinoController.cpp</in>
         <in>CConvertors.cpp</in>
         <in>CommandServer.cpp</in>
         <in>CoordUploader.cpp</in>
         <in>CoordsReader.cpp</in>
         <in>DogDatabase.cpp</in>
         <in>main.cpp</in>
+        <in>md5.cpp</in>
       </df>
     </df>
   </logicalFolder>
@@ -114,8 +123,9 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" http://188.166.64.150:8000 8888 1</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <runcommand>"${OUTPUT_PATH}" http://188.166.64.150:8000 8888 1</runcommand>
         <rundir>.</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>

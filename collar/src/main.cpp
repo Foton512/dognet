@@ -13,6 +13,7 @@
 #include "DogDatabase.hpp"
 #include "CoordUploader.hpp"
 #include "CoordsReader.hpp"
+#include "ArduinoController.hpp"
 
 #include "md5.hpp"
 
@@ -56,7 +57,7 @@ static const string currentDateTime( void )
 }
 
 int main( int argc, char **argv )
-{	
+{
 	if ( argc != 4 )
 	{
 		cout << "Usage: dognetd <external_server> <internal_server_port> <collar_id>\n";
@@ -67,9 +68,9 @@ int main( int argc, char **argv )
 	string logApp = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	string logCoord = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	
-	// redirect cout to file
-	ofstream out( logApp );
-    cout.rdbuf( out.rdbuf( ) );
+//	// redirect cout to file
+//	ofstream out( logApp );
+//    cout.rdbuf( out.rdbuf( ) );
 	
 	// calculate md5 of collar id
 	string id( argv[3] );
@@ -90,6 +91,12 @@ int main( int argc, char **argv )
 	database.open( );
 	database.createCoordinatesTable( );
 	database.startFileLogging( logCoord );
+	
+	ArduinoController arduino( database, "/dev/ttyACM0" );
+	arduino.start( );
+	
+	arduino.lcdClear( );
+	arduino.lcdLine( 0, "Waiting for 3G..." );
 	
 	cout << "Waiting for ppp0 interface (3g)...\n";
 	while ( !is_interface_online( "ppp0" ) )
