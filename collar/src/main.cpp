@@ -9,7 +9,7 @@
 #include <errno.h>
 
 #include "CConvertors.hpp"
-#include "CommandServer.hpp"
+//#include "CommandServer.hpp"
 #include "DogDatabase.hpp"
 #include "CoordUploader.hpp"
 #include "CoordsReader.hpp"
@@ -58,9 +58,9 @@ static const string currentDateTime( void )
 
 int main( int argc, char **argv )
 {
-	if ( argc != 4 )
+	if ( argc != 3 )
 	{
-		cout << "Usage: dognetd <external_server> <internal_server_port> <collar_id>\n";
+		cout << "Usage: dognetd <external_server> <collar_id>\n";
 		return 0;
 	}
 	
@@ -68,12 +68,12 @@ int main( int argc, char **argv )
 	string logApp = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	string logCoord = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	
-//	// redirect cout to file
-//	ofstream out( logApp );
-//    cout.rdbuf( out.rdbuf( ) );
+	// redirect cout to file
+	ofstream out( logApp );
+    cout.rdbuf( out.rdbuf( ) );
 	
 	// calculate md5 of collar id
-	string id( argv[3] );
+	string id( argv[2] );
 	MD5_CTX md5_ctx;
 	MD5_Init( &md5_ctx );
 	MD5_Update( &md5_ctx, id.c_str( ), id.size( ) );
@@ -102,15 +102,15 @@ int main( int argc, char **argv )
 	while ( !is_interface_online( "ppp0" ) )
 		sleep( 2 );
 	
-	int serverPort = CConvertors::str2int( string( argv[2] ) );
-	CommandServer server( serverPort );
-	if ( server.start( ) )
-		cout << "Command server started on port " << string( argv[2] ) << endl;
-	else
-	{
-		cout << "Could not start command server on port " << string( argv[2] ) << endl;
-		return 0;
-	}
+//	int serverPort = CConvertors::str2int( string( argv[2] ) );
+//	CommandServer server( serverPort );
+//	if ( server.start( ) )
+//		cout << "Command server started on port " << string( argv[2] ) << endl;
+//	else
+//	{
+//		cout << "Could not start command server on port " << string( argv[2] ) << endl;
+//		return 0;
+//	}
 	
 	// we use "gps" symlink created by script in /etc/udev/rules.d
 	CoordsReader reader( database, "/dev/gps" );

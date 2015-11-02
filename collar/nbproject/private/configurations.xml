@@ -124,8 +124,10 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>"${OUTPUT_PATH}" http://188.166.64.150:8000 8888 1</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" http://188.166.64.150:8000  1</runcommandpicklistitem>
+          <runcommandpicklistitem>"${OUTPUT_PATH}" http://188.166.64.150:8000 1</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}" http://188.166.64.150:8000 8888 1</runcommand>
+        <runcommand>"${OUTPUT_PATH}" http://188.166.64.150:8000 1</runcommand>
         <rundir>.</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
