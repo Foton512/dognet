@@ -192,11 +192,7 @@ def getDogStatus(dogId, dogIdToStatus):
     return dogIdToStatus.get(dogId, 2)
 
 
-def addCloseDogEvents(dog, relatedDogs, added):
-    relatedDogIdToStatus = {
-        dogRelation.relatedDog_id: dogRelation.status
-        for dogRelation in models.DogRelation.objects.filter(dog=dog, relatedDog__in=relatedDogs)
-    }
+def addCloseDogEvents(dog, relatedDogs, added, relatedDogIdToStatus):
     for relatedDog in relatedDogs:
         closeDogEvent = models.CloseDogEvent(
             dog=dog,
@@ -259,19 +255,30 @@ def addWalkPoint(request):
             closeDogRelation.relatedDog for closeDogRelation in models.CloseDogRelation.objects.filter(dog=dog)
         ]
 
+        relatedDogIdToStatus = {
+            dogRelation.relatedDog_id: dogRelation.status
+            for dogRelation in models.DogRelation.objects.filter(dog=dog,
+                                                                 relatedDog__in=set(newCloseDogs + oldCloseDogs))
+        }
+
         dogsAdded = set(newCloseDogs) - set(oldCloseDogs)
         dogsRemoved = set(oldCloseDogs) - set(newCloseDogs)
         for relatedDog in dogsAdded:
             models.CloseDogRelation.objects.create(dog=dog, relatedDog=relatedDog)
-        addCloseDogEvents(dog, dogsAdded, True)
+        addCloseDogEvents(dog, dogsAdded, True, relatedDogIdToStatus)
         models.CloseDogRelation.objects.filter(dog=dog, relatedDog__in=dogsRemoved).delete()
-        addCloseDogEvents(dog, dogsRemoved, False)
+        addCloseDogEvents(dog, dogsRemoved, False, relatedDogIdToStatus)
 
         models.CloseDogEvent.removeOldEvents(dog.eventCounter)
+
+        closeDogsStatus = [relatedDogIdToStatus[dog.id] for dog in newCloseDogs]
+        return JsonResponse({
+            "friends": closeDogsStatus.count(1),
+            "enemies": closeDogsStatus.count(-1),
+            "unknown": closeDogsStatus.count(2),
+        })
     except Exception as e:
         return JsonResponse({"error": str(e)})
-
-    return JsonResponse({})
 
 
 @view_decorators.apiLoginRequired
