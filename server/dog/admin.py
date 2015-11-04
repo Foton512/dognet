@@ -5,10 +5,6 @@ class TokenAdmin(admin.ModelAdmin):
     list_display = ("user", "token")
 
 
-class PhotoAdmin(admin.ModelAdmin):
-    list_display = ("file",)
-
-
 class WalkAdmin(admin.ModelAdmin):
     list_display = ("dog", "inProgress")
 
@@ -26,7 +22,7 @@ class WalkPointAdmin(admin.ModelAdmin):
 
 
 class DogAdmin(admin.ModelAdmin):
-    list_display = ("nick", "birthDate", "weight", "user", "avatar", "collarIdHash")
+    list_display = ("nick", "birthDate", "weight", "user", "avatarFile", "collarIdHash")
 
 
 class DogRelationAdmin(admin.ModelAdmin):

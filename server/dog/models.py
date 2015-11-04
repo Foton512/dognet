@@ -15,10 +15,6 @@ class Token(models.Model):
     user = models.ForeignKey(User)
 
 
-class Photo(models.Model):
-    file = models.FileField(upload_to=util.getUniquePhotoPath)
-
-
 class CloseDogRelation(models.Model):
     dog = models.ForeignKey("Dog", related_name="+")
     relatedDog = models.ForeignKey("Dog", related_name="+")
@@ -91,7 +87,7 @@ class Dog(models.Model):
     birthDate = models.DateField(null=True)
     weight = models.IntegerField(null=True)
     user = models.ForeignKey(User)
-    avatar = models.CharField(max_length=1000, null=True)
+    avatarFile = models.FileField(upload_to=util.getUniquePhotoPath, null=True)
     collarIdHash = models.CharField(max_length=32, null=True)
     lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
@@ -106,7 +102,6 @@ class Dog(models.Model):
             "nick": self.nick,
             "birth_date": self.birthDate.strftime("%Y%m%d") if self.birthDate else "",
             "weight": self.weight,
-            "avatar": self.avatar,
             "collar_id_hash": self.collarIdHash,
             "user_first_name": self.user.first_name,
             "user_second_name": self.user.last_name,

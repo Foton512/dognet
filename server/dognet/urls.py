@@ -8,7 +8,6 @@ import views
 import settings
 
 admin.site.register(models.Token, admin_models.TokenAdmin)
-admin.site.register(models.Photo, admin_models.PhotoAdmin)
 admin.site.register(models.Dog, admin_models.DogAdmin)
 admin.site.register(models.DogRelation, admin_models.DogRelationAdmin)
 admin.site.register(models.CloseDogRelation, admin_models.CloseDogRelationAdmin)
@@ -37,9 +36,6 @@ urlpatterns = [
     url(r"^dog/([0-9]+)/$", views.dog),
     url(r"^dog/edit/([0-9]+)/$", views.edit),
     url(r"^news/$", views.news),
-
-    # File upload
-    url(r"^upload_photo/$", views.uploadPhoto),
 
     # Api methods
     url(r"^api/dog/add/$", views.addDog),

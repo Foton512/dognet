@@ -10,64 +10,37 @@
         <ul class="clearing-thumbs clearing-feature" data-clearing>
           <li><img src="{{ avatar }}"></li>
         </ul>
-        <form id="dogForm" action="javascript:saveDog()">
-            {% include "fields/formField.html" with fieldName="Nick" label="Прозвище питомца"  input=dogForm.nick %}
-            {% include "fields/formDate.html" with fieldName="BirthDate" label="Дата рождения" %}
-            {% include "fields/formField.html" with fieldName="Weight" label="Вес питомца" input=dogForm.weight %}
+        <form id="dogForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% include "fields/formField.html" with label="Аватарка" input=dogForm.avatarFile %}
+            {% include "fields/formField.html" with label="Прозвище питомца"  input=dogForm.nick %}
+            {% include "fields/formField.html" with label="Дата рождения" input=dogForm.birthDate %}
+            {% include "fields/formField.html" with label="Вес питомца" input=dogForm.weight %}
             {% include "fields/formBtn.html" with css="success small" name="Сохранить" type=" " %}
+            <input type="hidden" name="id" value="{{ dog.id }}">
         </form>
-
-    Пример загрузки аватарки:<br>
-    <form action="/upload_photo/" id="photoForm" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>
-            {{ photoForm.photoFile }}
-        </p>
-        <p><input type="submit" value="Upload" /></p>
-    </form>
 {% endblock %}
 
 {% block script-block %}
     <script>
-        var saveDog = function(){
-            var data = getDogData();
-            $.ajax({
-                url: "/api/dog/edit/",
-                method: 'GET',
-                data: data,
-                dataType: 'json',
-                success: function () {
-                    alert(1);
-                },
-            });
-        };
-        var getDogData = function() {
-            var dateText = $('#BirthDate').val();
-            var date = dateText.replace(/(\d+)\/(\d+)\/(\d+)/, '$3$1$2');
-
-            return {
-                "id": {{ dog.id }},
-                "nick": $('#id_nick').val(),
-                "weight": $('#id_weight').val(),
-                "birth_date" : date
-            }
-
-        };
-        $('#photoForm').on("submit", function(event) {
+        $('#dogForm').on("submit", function(event) {
             event.preventDefault();
             var data = new FormData($(this).get(0));
+            data.append("birth_date", $({{ dogForm.birthDate.auto_id }})[0].value);
             $.ajax({
-                url: $(this).attr('action'),
-                type: $(this).attr('method'),
+                url: "/api/dog/edit/",
+                type: "post",
                 data: data,
                 cache: false,
                 processData: false,
                 contentType: false,
-                success: function (json) {
-                    console.log(json["url"]); // Use this url to set dog avatar using API
+                success: function () {
                 },
             });
             return false;
+        });
+        $({{ dogForm.birthDate.auto_id }}).fdatepicker({
+            format: 'yyyy-mm-dd'
         });
     </script>
 {% endblock %}

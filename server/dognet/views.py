@@ -16,6 +16,7 @@ from geopy.point import Point
 
 from dog import models, models_settings, forms
 import view_decorators
+from date_util import dateToStr, dateFromStr
 
 
 def main(request):
@@ -32,7 +33,7 @@ def login(request):
 
 @psa("social:complete")
 def auth(request, backend):
-    socialToken = request.GET.get("access_token")
+    socialToken = request.REQUEST.get("access_token")
     user = request.backend.do_auth(socialToken)
     token = models.Token.objects.create(token=uuid.uuid4().hex, user=user)
     return JsonResponse({
@@ -50,23 +51,19 @@ def dogs(request):
         "dogs.html",
         context={
             "dogs": dogs,
-            "photoForm": forms.PhotoForm(),
         },
         context_instance=RequestContext(request)
     )
 
 
 def edit(request, dogId):
-    user = request.user
     dog = models.Dog.objects.get(id=dogId)
     return render_to_response(
         "editDog.html",
         context={
-            "user": user,
             "dog": dog,
-            "photoForm": forms.PhotoForm(),
             "dogForm": forms.DogForm(instance=dog),
-            "birthDate": dog.birthDate.strftime("%Y%m%d") if dog.birthDate else "",
+            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
         },
         context_instance=RequestContext(request)
     )
@@ -104,10 +101,8 @@ def dog(request, dogId):
     return render_to_response(
         "dog.html",
         context={
-            "nick": dog.nick,
-            "birthDate": dog.birthDate.strftime("%Y%m%d") if dog.birthDate else "",
-            "weight": dog.weight,
-            "avatar": dog.avatar,
+            "dog": dog,
+            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
         },
         context_instance=RequestContext(request)
     )
@@ -120,14 +115,13 @@ def uploadPhoto(request):
 
 @view_decorators.apiLoginRequired
 def addDog(request):
-    params = request.GET
-    birthDate = datetime.datetime.strptime(params["birth_date"], "%Y%m%d") if "birth_date" in params else None
+    params = request.REQUEST
+    birthDate = dateFromStr(params["birth_date"]) if "birth_date" in params else None
     dog = models.Dog.objects.create(
         nick=params["nick"],
         birthDate=birthDate,
         weight=params.get("weight", None),
         user=request.user,
-        avatar=params.get("avatar", None),
         collarIdHash=hashlib.md5(params["collar_id"]).hexdigest() if "collar_id" in params else None
     )
     return JsonResponse(dog.toDict())
@@ -135,7 +129,7 @@ def addDog(request):
 
 @view_decorators.apiLoginRequired
 def editDog(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
         return JsonResponse({
@@ -147,16 +141,15 @@ def editDog(request):
     if "birth_date" in params:
         birthDate = params["birth_date"]
         if birthDate:
-            birthDate = datetime.strptime(birthDate, "%Y%m%d")
+            birthDate = dateFromStr(birthDate)
         else:
             birthDate = None
         dog.birthDate = birthDate
     if "weight" in params:
         weight = params["weight"]
         dog.weight = int(weight) if weight else None
-    if "avatar" in params:
-        avatar = params["avatar"]
-        dog.avatar = avatar if avatar else None
+    if request.FILES:
+        dog.avatarFile = request.FILES["avatarFile"]
     if "collar_id" in params:
         collarId = params["collar_id"]
         dog.collarIdHash = hashlib.md5(collarId).hexdigest() if collarId else None
@@ -166,7 +159,7 @@ def editDog(request):
 
 @view_decorators.apiLoginRequired
 def getDog(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     dog.checkFinishedWalks()
     return JsonResponse(dog.toDict())
@@ -182,7 +175,7 @@ def getOwnDogs(request):
 
 @view_decorators.apiLoginRequired
 def setDogRelation(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
         return JsonResponse({
@@ -208,7 +201,7 @@ def setDogRelation(request):
 
 @view_decorators.apiLoginRequired
 def subscribe(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     subscription = models.UserDogSubscription.objects.get_or_create(user=request.user, dog=dog)[0]
     return JsonResponse(subscription.toDict())
@@ -216,7 +209,7 @@ def subscribe(request):
 
 @view_decorators.apiLoginRequired
 def unsubscribe(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     subscription = models.UserDogSubscription.objects.get(user=request.user, dog=dog)
     response = subscription.toDict()
@@ -226,7 +219,7 @@ def unsubscribe(request):
 
 @view_decorators.apiLoginRequired
 def addHome(request):
-    params = request.GET
+    params = request.REQUEST
     home = models.Home.objects.create(user=request.user, lat=Decimal(params["lat"]), lon=Decimal(params["lon"]))
     return JsonResponse(home.toDict())
 
@@ -249,7 +242,7 @@ def addCloseDogEvents(dog, relatedDogs, added, relatedDogIdToStatus):
 def addWalkPoint(request):
     try:
         time = timezone.now()
-        params = request.GET
+        params = request.REQUEST
         collarIdHash = params["collar_id_hash"]
 
         dog = models.Dog.objects.get(collarIdHash=collarIdHash)
@@ -326,7 +319,7 @@ def addWalkPoint(request):
 
 @view_decorators.apiLoginRequired
 def addTextComment(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
         return JsonResponse({
@@ -339,7 +332,7 @@ def addTextComment(request):
 
 @view_decorators.apiLoginRequired
 def addPhotoComment(request):
-    params = request.GET
+    params = request.REQUEST
     dog = models.Dog.objects.get(id=params["id"])
     if dog.user != request.user:
         return JsonResponse({
@@ -352,7 +345,7 @@ def addPhotoComment(request):
 
 @view_decorators.apiLoginRequired
 def deleteComment(request):
-    params = request.GET
+    params = request.REQUEST
     comment = models.Comment.objects.get(id=params["comment_id"])
     if comment.dog.user != request.user:
         return JsonResponse({
@@ -365,7 +358,7 @@ def deleteComment(request):
 
 @view_decorators.apiLoginRequired
 def like(request):
-    params = request.GET
+    params = request.REQUEST
     like = models.Like(comment_id=params["comment_id"], user=request.user)[0]
     dog.incEventCounter([like])
     return JsonResponse(like.toDict())
@@ -373,7 +366,7 @@ def like(request):
 
 @view_decorators.apiLoginRequired
 def unlike(request):
-    params = request.GET
+    params = request.REQUEST
     like = models.Like.objects.get(comment_id=params["comment_id"], user=request.user)
     response = like.toDict()
     like.delete()
@@ -400,7 +393,7 @@ def fillResponseWithField(fields, fieldName, model, dogField, dog, eventCounter,
 
 @view_decorators.apiLoginRequired
 def getDogEvents(request):
-    params = request.GET
+    params = request.REQUEST
     eventCounter = int(params["event_counter"]) if "event_counter" in params else None
     fields = params["fields"].split(",")
     dog = models.Dog.objects.get(id=params["id"])

@@ -9,7 +9,6 @@ def apiLoginRequired(viewFunc):
     def wrappedView(request, *args, **kwargs):
         if request.user.is_authenticated():
             return viewFunc(request, *args, **kwargs)
-        fields = request.GET
 
         errorMessage = None
         if "HTTP_AUTHORIZATION" in request.META:

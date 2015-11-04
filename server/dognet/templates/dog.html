@@ -1,12 +1,12 @@
 {% extends "_layout.html" %}
 
-{% block title %}{{ nick }}{% endblock %}
+{% block title %}{{ dog.nick }}{% endblock %}
 
 {% block content %}
-<h1>{{ nick }}</h1>
+<h1>{{ dog.nick }}</h1>
 
-    {% if avatar %}
-        <li><img src="{{ avatar }}" width="100px" height="100px"/></li>
+    {% if dog.avatarFile %}
+        <li><img src="{{ dog.avatarFile.url }}" width="100px" height="100px"/></li>
     {% endif %}
     <div class="row">
     {% if birthDate %}
@@ -17,12 +17,12 @@
           {{ birthDate }}
         </div>
     {% endif %}
-    {% if weight %}
+    {% if dog.weight %}
         <div class="small-12 large-3 columns">
           <span class="right inline">Вес:</span>
         </div>
         <div class="small-12 large-9 columns">
-          {{ weight }}
+          {{ dog.weight }}
         </div>
     {% endif %}
     </div>
