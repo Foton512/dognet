@@ -1,5 +1,5 @@
 <div class="login-block">
-    {% if not authenticated %}
+    {% if not user.is_authenticated %}
         <a class="right" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> </a>
         <a class="right" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> </a>
         <span class="text right">Авторизуйтесь через: </span>
