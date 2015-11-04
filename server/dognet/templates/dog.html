@@ -1,18 +1,29 @@
-{% extends "base.html" %}
+{% extends "_layout.html" %}
 
 {% block title %}{{ nick }}{% endblock %}
 
 {% block content %}
-    <h1>{{ nick }}</h1>
-    <ul>
-        {% if avatar %}
-            <li><img src="{{ avatar }}" width="100px" height="100px"/></li>
-        {% endif %}
-        {% if birthDate %}
-            <li>Дата рождения: {{ birthDate }}</li>
-        {% endif %}
-        {% if weight %}
-            <li>Вес: {{ weight }}</li>
-        {% endif %}
-    </ul>
+<h1>{{ nick }}</h1>
+
+    {% if avatar %}
+        <li><img src="{{ avatar }}" width="100px" height="100px"/></li>
+    {% endif %}
+    <div class="row">
+    {% if birthDate %}
+        <div class="small-12 large-3 columns">
+          <span class="right inline">Дата рождения:</span>
+        </div>
+        <div class="small-12 large-9 columns">
+          {{ birthDate }}
+        </div>
+    {% endif %}
+    {% if weight %}
+        <div class="small-12 large-3 columns">
+          <span class="right inline">Вес:</span>
+        </div>
+        <div class="small-12 large-9 columns">
+          {{ weight }}
+        </div>
+    {% endif %}
+    </div>
 {% endblock %}

@@ -1,0 +1,67 @@
+{% extends "_layout.html" %}
+
+{% block title %}Редактирование {{ dog.nick }}{% endblock %}
+
+{% block content %}
+    {% comment %}{% if not dog.id %}{% endcomment %}
+    {% comment %}{% endif %}{% endcomment %}
+        <h2>Настройки питомца</h2>
+        <h3>{{ nick }}</h3>
+        <ul class="clearing-thumbs clearing-feature" data-clearing>
+          <li><img src="{{ avatar }}"></li>
+        </ul>
+        <form id="dogForm" action="javascript:saveDog()">
+            {% include "fields/formField.html" with fieldName="Nick" label="Прозвище питомца"  input=dogForm.nick %}
+            {% include "fields/formDate.html" with fieldName="BirthDate" label="Дата рождения" %}
+            {% include "fields/formField.html" with fieldName="Weight" label="Вес питомца" input=dogForm.weight %}
+            {% include "fields/formBtn.html" with css="success small" name="Сохранить" type=" " %}
+        </form>
+
+    Пример загрузки аватарки:<br>
+    <form action="/upload_photo/" id="photoForm" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>
+            {{ photoForm.photoFile }}
+        </p>
+        <p><input type="submit" value="Upload" /></p>
+    </form>
+{% endblock %}
+
+{% block script-block %}
+    <script>
+        var saveDog = function(){
+            debugger;
+            var data = getDogData();
+            $.ajax({
+                url: "/api/dog/edit/",
+                metod: 'GET',
+                data: data,
+                dataType: 'json',
+                success: function () {
+                    alert(1);
+                },
+            });
+        };
+        var getDogData = function() {
+            return {"id": {{ dog.id }}, "Nick": $('#id_nick').val(), "Weight": $('#id_weight').val()}
+
+        };
+        $('#photoForm').on("submit", function(event) {
+            event.preventDefault();
+            var data = new FormData($(this).get(0));
+            $.ajax({
+                url: $(this).attr('action'),
+                type: $(this).attr('method'),
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (json) {
+                    console.log(json["url"]); // Use this url to set dog avatar using API
+                },
+            });
+            return false;
+        });
+    </script>
+{% endblock %}
+

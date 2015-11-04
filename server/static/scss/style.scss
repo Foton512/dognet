@@ -1,0 +1,22 @@
+@import 'foundation';
+@import 'normalize';
+@import 'foundation-datepicker';
+@import 'font-awesome';
+@import 'font';
+
+.panel.top {
+  padding: 5px 20px;
+  h4 {
+    margin: 0;
+    line-height: 32px;
+  }
+}
+.login-block {
+  > .right {
+    margin-right: 5px;
+  }
+  .text {
+    line-height: 32px;
+    vertical-align: bottom;
+  }
+}

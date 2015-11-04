@@ -35,6 +35,8 @@ urlpatterns = [
     url(r"^$", views.main),
     url(r"^dogs/$", views.dogs),
     url(r"^dog/([0-9]+)/$", views.dog),
+    url(r"^dog/edit/([0-9]+)/$", views.edit),
+    url(r"^news/$", views.news),
 
     # File upload
     url(r"^upload_photo/$", views.uploadPhoto),

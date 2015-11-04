@@ -1,13 +1,13 @@
-{% extends "base.html" %}
+{% extends "_layout.html" %}
 
 {% block title %}Главная{% endblock %}
 
 {% block content %}
     Привет, {{ user.first_name }} {{ user.last_name }}<br>
-    <a href="/logout/">Выйти</a><br>
     Ваши собаки:<br>
     {% for dog in dogs %}
         <a href="/dog/{{ dog.id }}">{{ dog.nick }}</a><br>
+        <img scr="{{ dog.avatar }}">
     {% endfor %}
 
     Пример загрузки аватарки:<br>
@@ -22,7 +22,8 @@
 
 {% block script-block %}
     <script>
-        $('#photoForm').on("submit", function(event) {
+    $(document).ready(function(){
+         $('#photoForm').on("submit", function(event) {
             event.preventDefault();
             var data = new FormData($(this).get(0));
             $.ajax({
@@ -38,6 +39,8 @@
             });
             return false;
         });
+    })
+
     </script>
 {% endblock %}
 
