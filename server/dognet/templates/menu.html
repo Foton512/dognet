@@ -1,23 +1,26 @@
 {% comment %}<a href="#"><img src="http://placehold.it/300x240&text=[img]"/></a>{% endcomment %}
-  <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
-  <section class="section">
-    <h5 class="title"><a href="/dog/edit/3">Редактировать собаку</a></h5>
-  </section>
-  <section class="section">
-    <h5 class="title"><a id="addDog" href="">Добавить собаку</a></h5>
-  </section>
-  <section class="section">
-    <h5 class="title"><a href="/news">Новости</a></h5>
-  </section>
-  <section class="section">
-    <h5 class="title"><a href="#">Section 4</a></h5>
-  </section>
-  <section class="section">
-    <h5 class="title"><a href="#">Section 5</a></h5>
-  </section>
-  <section class="section">
-    <h5 class="title"><a href="#">Section 6</a></h5>
-  </section>
+<div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
+    {% if user.is_authenticated %}
+        <section class="section">
+          <h5 class="title"><a id="addDog" href="">Добавить собаку</a></h5>
+        </section>
+        {% if dog %}
+            <section class="section">
+                <h5 class="title"><a href="/dog/edit/{{ dog.id }}">Редактировать собаку</a></h5>
+            </section>
+            <section class="section">
+                <h5 class="title"><a href="/friends">Друзья и враги</a></h5>
+            </section>
+            <section class="section">
+              <h5 class="title"><a href="/news">Новости</a></h5>
+            </section>
+            {% for dog in ownDogs %}
+                <section class="section">
+                    <h5 class="title"><a href="/dog/{{ dog.id }}">{{ dog.nick }}</a></h5>
+                </section>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
 </div>
 
 <script>
@@ -31,7 +34,7 @@
                 dataType: "json",
                 data: data,
                 success: function () {
-                    alert("ok");
+                    location.reload();
                 }
             });
             return false;

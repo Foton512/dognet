@@ -1,12 +1,14 @@
 <ul>
-    {% if avatar %}
-        <li><img src="{{ avatar }}" width="100px" height="100px"/></li>
-    {% endif %}
-    {% if birthDate %}
-        <li>Дата рождения: {{ birthDate }}</li>
-    {% endif %}
-    {% if weight %}
-        <li>Вес: {{ weight }}</li>
+    {% if dog %}
+        {% if dog.avatarFile %}
+            <li><img src="{{ dog.avatarFile.url }}" width="100px" height="100px"/></li>
+        {% endif %}
+        {% if birthDate %}
+            <li>Дата рождения: {{ birthDate }}</li>
+        {% endif %}
+        {% if dog.weight %}
+            <li>Вес: {{ dog.weight }}</li>
+        {% endif %}
     {% endif %}
 </ul>
 {% comment %}

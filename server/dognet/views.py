@@ -22,13 +22,34 @@ from date_util import dateToStr, dateFromStr
 def main(request):
     user = request.user
     if user.is_authenticated():
-        return redirect("/dogs/")
+        if "currentDogId" in request.session:
+            dog = models.Dog.objects.get(id=request.session["currentDogId"])
+            ownDogs = models.Dog.objects.filter(user=request.user)
+
+            return render_to_response(
+                "dog.html",
+                context={
+                    "dog": dog,
+                    "ownDogs": ownDogs,
+                    "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+                },
+                context_instance=RequestContext(request)
+            )
+        else:
+            try:
+                lastDog = models.Dog.objects.filter(user=user).latest("id")
+                request.session["currentDogId"] = lastDog.id
+                return redirect("/")
+            except models.Dog.DoesNotExist:
+                return render_to_response(
+                    "blank.html",
+                    context_instance=RequestContext(request)
+                )
     else:
-        return redirect("/login/")
-
-
-def login(request):
-    return render_to_response("login.html")
+        return render_to_response(
+            "blank.html",
+            context_instance=RequestContext(request)
+        )
 
 
 @psa("social:complete")
@@ -44,24 +65,14 @@ def auth(request, backend):
     })
 
 
-def dogs(request):
-    user = request.user
-    dogs = models.Dog.objects.filter(user=user)
-    return render_to_response(
-        "dogs.html",
-        context={
-            "dogs": dogs,
-        },
-        context_instance=RequestContext(request)
-    )
-
-
 def edit(request, dogId):
     dog = models.Dog.objects.get(id=dogId)
+    ownDogs = models.Dog.objects.filter(user=request.user)
     return render_to_response(
         "editDog.html",
         context={
             "dog": dog,
+            "ownDogs": ownDogs,
             "dogForm": forms.DogForm(instance=dog),
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
         },
@@ -69,43 +80,39 @@ def edit(request, dogId):
     )
 
 
-def base(request):
+def friends(request):
+    dogId = request.session.get("currentDogId", None)
+    dog = models.Dog.objects.get(id=dogId) if dogId else None
+    ownDogs = models.Dog.objects.filter(user=request.user)
     return render_to_response(
-        "_layout.html",
+        "friends.html",
         context={
-        }
-    )
-
-
-def loginBlock(request):
-    return render_to_response(
-        "loginBlock.html",
-        context={
-        }
+            "dog": dog,
+            "ownDogs": ownDogs,
+            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+        },
+        context_instance=RequestContext(request)
     )
 
 
 def news(request):
+    dogId = request.session.get("currentDogId", None)
+    dog = models.Dog.objects.get(id=dogId) if dogId else None
+    ownDogs = models.Dog.objects.filter(user=request.user)
     return render_to_response(
         "news.html",
         context={
-
+            "dog": dog,
+            "ownDogs": ownDogs,
+            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
         },
         context_instance=RequestContext(request)
     )
 
 
 def dog(request, dogId):
-    dog = models.Dog.objects.get(id=dogId)
-
-    return render_to_response(
-        "dog.html",
-        context={
-            "dog": dog,
-            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
-        },
-        context_instance=RequestContext(request)
-    )
+    request.session["currentDogId"] = dogId
+    return redirect("/")
 
 
 def uploadPhoto(request):

@@ -1,0 +1,21 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+    {% if user.is_authenticated %}
+        Собак добавь
+    {% else %}
+        Логин
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        Добавь собак сука!
+    {% else %}
+        Надо залогиниться (справа сверху кнопочки такие и facebook не работает)
+    {% endif %}
+{% endblock %}
+
+{% block script-block %}
+{% endblock %}
+

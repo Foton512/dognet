@@ -25,17 +25,16 @@ urlpatterns = [
     url(r"^admin/", include(admin.site.urls)),
 
     # Authentication
-    url(r"^login/$", views.login),
     url(r"^logout/$", "django.contrib.auth.views.logout", {'next_page': '/'}),
     url(r'^auth/(?P<backend>[^/]+)/$', views.auth),
     url('', include('social.apps.django_app.urls', namespace='social')),
 
     # Site pages
     url(r"^$", views.main),
-    url(r"^dogs/$", views.dogs),
     url(r"^dog/([0-9]+)/$", views.dog),
     url(r"^dog/edit/([0-9]+)/$", views.edit),
     url(r"^news/$", views.news),
+    url(r"^friends/$", views.friends),
 
     # Api methods
     url(r"^api/dog/add/$", views.addDog),
