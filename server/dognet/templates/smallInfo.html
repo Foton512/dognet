@@ -1,0 +1,19 @@
+<ul>
+    {% if avatar %}
+        <li><img src="{{ avatar }}" width="100px" height="100px"/></li>
+    {% endif %}
+    {% if birthDate %}
+        <li>Дата рождения: {{ birthDate }}</li>
+    {% endif %}
+    {% if weight %}
+        <li>Вес: {{ weight }}</li>
+    {% endif %}
+</ul>
+{% comment %}
+<ul class="clearing-thumbs" data-clearing>
+  <li><a href="path/to/your/img" data-clearing-interchange="[path/to/default/img, (default)], [path/to/bigger/img, (large)]"><img src="path/to/your/img-th"></a></li>
+  <li><a href="path/to/your/img" data-clearing-interchange="[path/to/default/img, (default)], [path/to/bigger/img, (large)]"><img src="path/to/your/img-th"></a></li>
+  <li><a href="path/to/your/img" data-clearing-interchange="[path/to/default/img, (default)], [path/to/bigger/img, (large)]"><img src="path/to/your/img-th"></a></li>
+</ul>{% endcomment %}
+
+{% include "menu.html" %}
