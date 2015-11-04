@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
+import uuid
+import hashlib
+import datetime
+from decimal import Decimal
+
 from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.db.models import Q
-from dog import models, models_settings
 from social.apps.django_app.utils import psa
-import uuid
-import view_decorators
-import forms
-import hashlib
-import datetime
 from django.utils import timezone
-from decimal import Decimal
 import geopy
 from geopy.distance import distance
 from geopy.point import Point
+
+from dog import models, models_settings, forms
+import view_decorators
 
 
 def main(request):
@@ -29,9 +30,9 @@ def login(request):
     return render_to_response("login.html")
 
 
-@psa('social:complete')
+@psa("social:complete")
 def auth(request, backend):
-    socialToken = request.GET.get('access_token')
+    socialToken = request.GET.get("access_token")
     user = request.backend.do_auth(socialToken)
     token = models.Token.objects.create(token=uuid.uuid4().hex, user=user)
     return JsonResponse({
@@ -56,24 +57,22 @@ def dogs(request):
         context_instance=RequestContext(request)
     )
 
+
 def edit(request, dogId):
     user = request.user
     dog = models.Dog.objects.get(id=dogId)
-    data = {'nick': dog.nick, 'weight': dog.weight}
     return render_to_response(
         "editDog.html",
         context={
             "user": user,
             "dog": dog,
             "photoForm": forms.PhotoForm(),
-            "dogForm": forms.EditDogForm(data),
-            "nick": dog.nick,
-            "birthDate": dog.birthDate.strftime("%Y%m%d"),
-            "weight": dog.weight,
-            "avatar": dog.avatar,
+            "dogForm": forms.DogForm(instance=dog),
+            "birthDate": dog.birthDate.strftime("%Y%m%d") if dog.birthDate else "",
         },
         context_instance=RequestContext(request)
     )
+
 
 def base(request):
     return render_to_response(
@@ -83,6 +82,7 @@ def base(request):
         }
     )
 
+
 def loginBlock(request):
     return render_to_response(
         "loginBlock.html",
@@ -90,6 +90,7 @@ def loginBlock(request):
             "authenticated": request.user.is_authenticated()
         }
     )
+
 
 def news(request):
     return render_to_response(
@@ -107,7 +108,7 @@ def dog(request, dogId):
         "dog.html",
         context={
             "nick": dog.nick,
-            "birthDate": dog.birthDate.strftime("%Y%m%d"),
+            "birthDate": dog.birthDate.strftime("%Y%m%d") if dog.birthDate else "",
             "weight": dog.weight,
             "avatar": dog.avatar,
         },

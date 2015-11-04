@@ -6,7 +6,7 @@
     {% comment %}{% if not dog.id %}{% endcomment %}
     {% comment %}{% endif %}{% endcomment %}
         <h2>Настройки питомца</h2>
-        <h3>{{ nick }}</h3>
+        <h3>{{ dog.nick }}</h3>
         <ul class="clearing-thumbs clearing-feature" data-clearing>
           <li><img src="{{ avatar }}"></li>
         </ul>
@@ -33,7 +33,7 @@
             var data = getDogData();
             $.ajax({
                 url: "/api/dog/edit/",
-                metod: 'GET',
+                method: 'GET',
                 data: data,
                 dataType: 'json',
                 success: function () {
@@ -45,7 +45,12 @@
             var dateText = $('#BirthDate').val();
             var date = dateText.replace(/(\d+)\/(\d+)\/(\d+)/, '$3$1$2');
 
-            return {"id": {{ dog.id }}, "nick": $('#id_nick').val(), "weight": $('#id_weight').val(), "birth_date" : date}
+            return {
+                "id": {{ dog.id }},
+                "nick": $('#id_nick').val(),
+                "weight": $('#id_weight').val(),
+                "birth_date" : date
+            }
 
         };
         $('#photoForm').on("submit", function(event) {
