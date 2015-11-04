@@ -186,6 +186,8 @@ class Comment(models.Model):
     relation = models.ForeignKey(DogRelation, null=True)
     achievement = models.ForeignKey("Achievement", null=True)
     eventCounter = models.PositiveIntegerField(default=0, db_index=True)
+    time = models.DateTimeField(auto_now_add=True)
+    parentComment = models.ForeignKey("Comment", null=True)
 
     def __unicode__(self):
         return self.text
@@ -202,6 +204,7 @@ class Comment(models.Model):
                 3: "relation",
                 4: "achievement",
             }[self.type],
+            "parent_comment_id": self.parentComment_id if self.parentComment else None,
         }
 
         if self.type == 1:
@@ -241,7 +244,7 @@ class Achievement(models.Model):
 
     @classmethod
     def addAchievement(cls, type, dog):
-        achievement = models.Achievement(dog=dog, type=type)
+        achievement = cls(dog=dog, type=type)
         dog.incEventCounter([achievement])
         comment = Comment(dog=dog, text="", type=4, achievement=achievement)
         dog.incEventCounter([comment])

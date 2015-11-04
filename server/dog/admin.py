@@ -38,7 +38,7 @@ class HomeAdmin(admin.ModelAdmin):
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("text", "type")
+    list_display = ("text", "type", "parentComment")
 
 
 class LikeAdmin(admin.ModelAdmin):

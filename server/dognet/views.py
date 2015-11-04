@@ -96,15 +96,23 @@ def friends(request):
 
 
 def news(request):
+    user = request.user
     dogId = request.session.get("currentDogId", None)
     dog = models.Dog.objects.get(id=dogId) if dogId else None
-    ownDogs = models.Dog.objects.filter(user=request.user)
+    ownDogs = models.Dog.objects.filter(user=user)
+
+    dogsWithComments = list(ownDogs) + [
+        userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
+    ]
+    comments = models.Comment.objects.filter(dog__in=dogsWithComments).prefetch_related("comment_set").order_by("-time")
+
     return render_to_response(
         "news.html",
         context={
             "dog": dog,
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+            "comments": comments,
         },
         context_instance=RequestContext(request)
     )
@@ -195,9 +203,10 @@ def setDogRelation(request):
     relation.save()
 
     if relation.status == 1:
-        nFriends = models.DogRelation(dog=dog, status=1).count()
+        nFriends = models.DogRelation.objects.filter(dog=dog, status=1).count()
         if nFriends == 1:
             models.Achievement.addAchievement(1, dog)
+        models.UserDogSubscription.objects.get_or_create(user=request.user, dog=relatedDog)
 
     if relation.status in [-1, 1]:
         comment = models.Comment(dog=dog, text="", type=3, relation=relation)
@@ -284,7 +293,7 @@ def addWalkPoint(request):
 
         approxDistanceThreshold = geopy.units.degrees(arcminutes=geopy.units.nautical(miles=1))
         closeCandidates = models.Dog.objects.filter(
-            ~Q(id=dog.id),
+            ~Q(user=dog.user),
             lat__range=(float(lat) - approxDistanceThreshold, float(lat) + approxDistanceThreshold),
             lon__range=(float(lon) - approxDistanceThreshold, float(lon) + approxDistanceThreshold)
         )
@@ -332,7 +341,12 @@ def addTextComment(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
-    comment = models.Comment(dog=dog, text=params["text"], type=0)
+    comment = models.Comment(
+        dog=dog,
+        text=params["text"],
+        type=0,
+        parentComment_id=params["parent_comment_id"] if "parent_comment_id" in params else None
+    )
     dog.incEventCounter([comment])
     return JsonResponse(comment.toDict())
 

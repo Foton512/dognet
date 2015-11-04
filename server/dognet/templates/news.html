@@ -3,87 +3,46 @@
 {% block title %}Новости{% endblock %}
 
 {% block content %}
-    <div class="row">
-            <div class="large-2 columns small-3"><img src="http://placehold.it/80x80&text=[img]"/></div>
-            <div class="large-10 columns">
-              <p><strong>Some Person said:</strong> Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong.</p>
-              <ul class="inline-list">
-                <li><a href="">Reply</a></li>
-                <li><a href="">Share</a></li>
-              </ul>
-
-
-              <h6>2 Comments</h6>
-              <div class="row">
-                <div class="large-2 columns small-3"><img src="http://placehold.it/50x50&text=[img]"/></div>
-                <div class="large-10 columns"><p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p></div>
-              </div>
-              <div class="row">
-                <div class="large-2 columns small-3"><img src="http://placehold.it/50x50&text=[img]"/></div>
-                <div class="large-10 columns"><p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p></div>
-              </div>
+    {% for comment in comments %}
+        {% if not comment.parentComment %}
+            <div class="row">
+                <div class="large-2 columns small-3">
+                    <img
+                    {% if comment.dog.avatarFile %}
+                        src="{{ dog.avatarFile.url }}"
+                    {% else %}
+                        src="http://placehold.it/80x80&text=[img]"
+                    {% endif %}
+                    width="80px" height="80px"/>
+                </div>
+                <div class="large-10 columns">
+                    <p><strong>{{ comment.dog.nick }}: </strong>{{ comment.text }}</p>
+                    <ul class="inline-list">
+                        <li><a href="">Reply</a></li>
+                        <li><a href="">Share</a></li>
+                    </ul>
+                </div>
             </div>
-          </div>
-
-
-          <hr/>
-
-
-          <div class="row">
-            <div class="large-2 columns small-3"><img src="http://placehold.it/80x80&text=[img]"/></div>
-            <div class="large-10 columns">
-              <p><strong>Some Person said:</strong> Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong.</p>
-              <ul class="inline-list">
-                <li><a href="">Reply</a></li>
-                <li><a href="">Share</a></li>
-              </ul>
-            </div>
-          </div>
-
-
-          <hr/>
-
-
-          <div class="row">
-            <div class="large-2 columns small-3"><img src="http://placehold.it/80x80&text=[img]"/></div>
-            <div class="large-10 columns">
-              <p><strong>Some Person said:</strong> Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong.</p>
-              <ul class="inline-list">
-                <li><a href="">Reply</a></li>
-                <li><a href="">Share</a></li>
-              </ul>
-
-
-              <h6>2 Comments</h6>
-              <div class="row">
-                <div class="large-2 columns small-3"><img src="http://placehold.it/50x50&text=[img]"/></div>
-                <div class="large-10 columns"><p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit</p></div>
-              </div>
-            </div>
-          </div>
+           <h6>{{ comment.comment_set.count }} Comments</h6>
+            {% for reply in comment.comment_set.all %}
+                <div class="row">
+                    <div class="large-2 columns small-3">
+                        <img
+                            {% if reply.dog.avatarFile %}
+                                src="{{ reply.dog.avatarFile.url }}"
+                            {% else %}
+                                src="http://placehold.it/80x80&text=[img]"
+                            {% endif %}
+                                width="50px" height="50px"/>
+                    </div>
+                    <div class="large-10 columns"><p>{{ reply.text }}</p></div>
+                </div>
+            {% endfor %}
+            <hr/>
+        {% endif %}
+    {% endfor %}
 {% endblock %}
 
 {% block script-block %}
-    <script>
-    $(document).ready(function(){
-         $('#photoForm').on("submit", function(event) {
-            event.preventDefault();
-            var data = new FormData($(this).get(0));
-            $.ajax({
-                url: $(this).attr('action'),
-                type: $(this).attr('method'),
-                data: data,
-                cache: false,
-                processData: false,
-                contentType: false,
-                success: function (json) {
-                    console.log(json["url"]); // Use this url to set dog avatar using API
-                },
-            });
-            return false;
-        });
-    })
-
-    </script>
 {% endblock %}
 

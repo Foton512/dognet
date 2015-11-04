@@ -13,9 +13,10 @@ def datetimeToTimestmap(dt):
 
 
 def getSocialUrlByUser(user):
-    socialUser = DjangoUserMixin.get_social_auth_for_user(user)[0]
-    if socialUser.provider == "vk-oauth2":
-        return "vk.com/id{}".format(socialUser.uid)
-        # TODO: Add facebook
-
-
+    try:
+        socialUser = DjangoUserMixin.get_social_auth_for_user(user)[0]
+        if socialUser.provider == "vk-oauth2":
+            return "vk.com/id{}".format(socialUser.uid)
+            # TODO: Add facebook
+    except:
+        return None
