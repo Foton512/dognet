@@ -30,7 +30,6 @@
 {% block script-block %}
     <script>
         var saveDog = function(){
-            debugger;
             var data = getDogData();
             $.ajax({
                 url: "/api/dog/edit/",
@@ -43,7 +42,10 @@
             });
         };
         var getDogData = function() {
-            return {"id": {{ dog.id }}, "Nick": $('#id_nick').val(), "Weight": $('#id_weight').val()}
+            var dateText = $('#BirthDate').val();
+            var date = dateText.replace(/(\d+)\/(\d+)\/(\d+)/, '$3$1$2');
+
+            return {"id": {{ dog.id }}, "nick": $('#id_nick').val(), "weight": $('#id_weight').val(), "birth_date" : date}
 
         };
         $('#photoForm').on("submit", function(event) {
