@@ -162,7 +162,7 @@ def editDog(request):
         dog.birthDate = birthDate
     if "weight" in params:
         weight = params["weight"]
-        dog.weight = int(weight) if weight else None
+        dog.weight = float(weight) if weight else None
     if request.FILES:
         dog.avatarFile = request.FILES["avatarFile"]
     if "collar_id" in params:

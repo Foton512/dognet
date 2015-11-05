@@ -85,7 +85,7 @@ class Walk(models.Model):
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
     birthDate = models.DateField(null=True)
-    weight = models.IntegerField(null=True)
+    weight = models.FloatField(null=True)
     user = models.ForeignKey(User)
     avatarFile = models.FileField(upload_to=util.getUniquePhotoPath, null=True)
     collarIdHash = models.CharField(max_length=32, null=True)
