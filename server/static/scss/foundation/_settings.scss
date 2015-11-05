@@ -802,7 +802,7 @@ $font-family-sans-serif: "Roboto Condensed", Helvetica, Roboto, Arial, sans-seri
 
 // $include-html-off-canvas-classes: $include-html-classes;
 
-// $tabbar-bg: $oil;
+$tabbar-bg: #F7F2ED;
 // $tabbar-height: rem-calc(45);
 // $tabbar-icon-width: $tabbar-height;
 // $tabbar-line-height: $tabbar-height;
@@ -821,7 +821,7 @@ $font-family-sans-serif: "Roboto Condensed", Helvetica, Roboto, Arial, sans-seri
 
 // Off Canvas Menu Variables
 // $off-canvas-width: rem-calc(250);
-// $off-canvas-bg: $oil;
+$off-canvas-bg: #F7F2ED;
 // $off-canvas-bg-hover: scale-color($tabbar-bg, $lightness: -30%);
 
 // Off Canvas Menu List Variables
@@ -862,7 +862,7 @@ $font-family-sans-serif: "Roboto Condensed", Helvetica, Roboto, Arial, sans-seri
 // Off Canvas Back-Link Overlay
 // $off-canvas-overlay-transition: background 300ms ease;
 // $off-canvas-overlay-cursor: pointer;
-// $off-canvas-overlay-box-shadow: -4px 0 4px rgba($black, 0.5), 4px 0 4px rgba($black, 0.5);
+$off-canvas-overlay-box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 // $off-canvas-overlay-background: rgba($white, 0.2);
 // $off-canvas-overlay-background-hover: rgba($white, 0.05);
 

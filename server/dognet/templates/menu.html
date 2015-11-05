@@ -1,6 +1,32 @@
 {% comment %}<a href="#"><img src="http://placehold.it/300x240&text=[img]"/></a>{% endcomment %}
 <div class="section-container vertical-nav" data-section data-options="deep_linking: false; one_up: true">
     {% if user.is_authenticated %}
+        {% if dog.avatarFile %}
+            <ul class="clearing-thumbs main-img" data-clearing>
+              <li>
+                  <a href="{{ dog.avatarFile.url }}" data-tooltip aria-haspopup="true" class="has-tip" title="{{ dog.nick }}" data-clearing-interchange="[{{ dog.avatarFile.url }}, (default)], [{{ dog.avatarFile.url }}, (large)]">
+                      <img src="{% if dog.avatarFile %}{{ dog.avatarFile.url }}{% else %}/media/none-img.png{% endif %}">
+                  </a>
+              </li>
+            </ul>
+        {% endif %}
+
+        {% if ownDogs > 1 %}
+            <section class="section">
+                <ul class="small-imgs clearfix">
+                    {% for d in ownDogs %}
+                        {% if d.id != dog.id %}
+                            <li>
+                                <a data-tooltip aria-haspopup="true" class="has-tip th" title="{{ d.nick }}" href="/dog/{{ d.id }}">
+                                    <img src="{% if d.avatarFile %}{{ d.avatarFile.url }}{% else %}/media/none-img.png{% endif %}">
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+
         <section class="section">
           <h5 class="title"><a id="addDog" href="">Добавить собаку</a></h5>
         </section>

@@ -11,7 +11,7 @@ gulp.task('sass', function () {
   .pipe(plumber())
   .pipe(sass({errLogToConsole: true}))
   .pipe(prefix(
-                "last 3 version", "> 1%", "ie 8"
+                "last 3 version", "> 1%"
                 ))
   /*.pipe(gulp.dest('static/css'))
   .pipe(minifycss())*/
