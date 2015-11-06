@@ -197,7 +197,7 @@ $('.fdatepicker').fdatepicker({
   transformicons.add('.tcon');
 
   $(document).on('close.fndtn.offcanvas', function () {
-    $('#tcon-trigger').removeClass('tcon-transform');
+    $('#tcon-trigger > .tcon').removeClass('tcon-transform');
   });
 
   $(window).resize(function(){

@@ -79,6 +79,18 @@ def edit(request, dogId):
         context_instance=RequestContext(request)
     )
 
+def add(request):
+    ownDogs = models.Dog.objects.filter(user=request.user)
+    return render_to_response(
+        "addDog.html",
+        context={
+            "ownDogs": ownDogs,
+            "dogForm": forms.DogForm(),
+            "birthDate": "",
+        },
+        context_instance=RequestContext(request)
+    )
+
 
 def friends(request):
     dogId = request.session.get("currentDogId", None)

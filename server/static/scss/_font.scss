@@ -45,7 +45,7 @@ $tcon-transition: .3s !default;
 $tcon-jstransform: 'tcon-transform' !default;
 
 $tcon-menu-radius: ($tcon-size / 14) !default;
-$tcon-menu-color: black !default;
+$tcon-menu-color: #0BA5B7 !default;
 $tcon-menu-arrowleft-transformation: (
   transform: scale3d(.8, .8, .8) rotate3d(0, 0, 1, 90deg)
 ) !default;

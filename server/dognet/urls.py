@@ -33,6 +33,7 @@ urlpatterns = [
     url(r"^$", views.main),
     url(r"^dog/([0-9]+)/$", views.dog),
     url(r"^dog/edit/([0-9]+)/$", views.edit),
+    url(r"^dog/add/$", views.add),
     url(r"^news/$", views.news),
     url(r"^friends/$", views.friends),
 

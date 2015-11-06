@@ -5,7 +5,15 @@
             <ul class="clearing-thumbs main-img" data-clearing>
               <li>
                   <a href="{{ dog.avatarFile.url }}" data-tooltip aria-haspopup="true" class="has-tip" title="{{ dog.nick }}" data-clearing-interchange="[{{ dog.avatarFile.url }}, (default)], [{{ dog.avatarFile.url }}, (large)]">
-                      <img src="{% if dog.avatarFile %}{{ dog.avatarFile.url }}{% else %}/media/none-img.png{% endif %}">
+                      <img src="{{ dog.avatarFile.url }}">
+                  </a>
+              </li>
+            </ul>
+            {% else %}
+            <ul class="clearing-thumbs main-img" data-clearing>
+              <li>
+                  <a href=" " data-tooltip aria-haspopup="true" class="has-tip" title="{{ dog.nick }}">
+                      <img src="/media/none-img.png">
                   </a>
               </li>
             </ul>
@@ -28,7 +36,7 @@
         {% endif %}
 
         <section class="section">
-          <h5 class="title"><a id="addDog" href="">Добавить собаку</a></h5>
+          <h5 class="title"><a id="addDog" href="/dog/add">Добавить собаку</a></h5>
         </section>
         {% if dog %}
             <section class="section">
@@ -40,11 +48,20 @@
             <section class="section">
               <h5 class="title"><a href="/news">Новости</a></h5>
             </section>
-            {% for dog in ownDogs %}
+            <section class="section">
+              <h5 class="title"><a href=" ">Карта</a></h5>
+            </section>
+            <section class="section">
+              <h5 class="title"><a href=" ">Стая</a></h5>
+            </section>
+            <section class="section">
+              <h5 class="title"><a href=" ">Достижения</a></h5>
+            </section>
+            {% comment %}{% for dog in ownDogs %}
                 <section class="section">
                     <h5 class="title"><a href="/dog/{{ dog.id }}">{{ dog.nick }}</a></h5>
                 </section>
-            {% endfor %}
+            {% endfor %}{% endcomment %}
         {% endif %}
     {% endif %}
 </div>
