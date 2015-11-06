@@ -17,6 +17,7 @@ from geopy.point import Point
 from dog import models, models_settings, forms
 import view_decorators
 from date_util import dateToStr, dateFromStr
+import settings
 
 
 def main(request):
@@ -174,7 +175,7 @@ def editDog(request):
         dog.birthDate = birthDate
     if "weight" in params:
         weight = params["weight"]
-        dog.weight = int(weight) if weight else None
+        dog.weight = float(weight) if weight else None
     if request.FILES:
         dog.avatarFile = request.FILES["avatarFile"]
     if "collar_id" in params:
@@ -336,6 +337,14 @@ def addWalkPoint(request):
         models.CloseDogEvent.removeOldEvents(dog.eventCounter)
 
         closeDogsStatus = [relatedDogIdToStatus[dog.id] for dog in newCloseDogs]
+
+        if float(lat) == settings.testLat and float(lon) == settings.testLon:
+            return JsonResponse({
+                "friends": settings.testNFriends,
+                "enemies": settings.testNEnemies,
+                "unknown": settings.testNUnknown,
+            })
+
         return JsonResponse({
             "friends": closeDogsStatus.count(1),
             "enemies": closeDogsStatus.count(-1),

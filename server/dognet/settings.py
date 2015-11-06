@@ -112,3 +112,8 @@ SOCIAL_AUTH_VK_OAUTH2_SECRET = "Ur4cnXX6z7RA52hfpLk6"
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
 
 USE_TZ = False
+
+testLat = testLon = 3.1415926
+testNFriends = 2
+testNEnemies = 1
+testNUnknown = 1
