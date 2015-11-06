@@ -21,7 +21,7 @@
 
     <link href="/static/css/common.css" rel="stylesheet">
 </head>
-<body>
+<body><div id="wrapper">
     <!--[if lt IE 8]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -58,16 +58,17 @@
             </a></h1></li>
         </ul>
     </nav>
+
     <div class="off-canvas-wrap" data-offcanvas>
         <div class="inner-wrap">
+
+        <aside class="left-off-canvas-menu show-for-medium-down">
+            <div class="off-canvas-list">
+                {% include "menu.html" %}
+            </div>
+        </aside>
+
         <div class="row">
-
-
-            <aside class="left-off-canvas-menu show-for-medium-down">
-                <div class="off-canvas-list">
-                    {% include "menu.html" %}
-                </div>
-            </aside>
 
             <div class="large-3 columns hide-for-medium-down">
               <div class="panel">
@@ -92,5 +93,5 @@
     <script src="/static/js/app.js"></script>
     {% block script-block %}
     {% endblock %}
-</body>
+</div></body>
 </html>

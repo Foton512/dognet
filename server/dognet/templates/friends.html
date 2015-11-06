@@ -3,6 +3,35 @@
 {% block title %}Друзья и враги{% endblock %}
 
 {% block content %}
+    <dl class="sub-nav">
+      {% comment %}<dt>Filter:</dt>{% endcomment %}
+      <dd class="active"><a href="#">Все знакомые собаки</a></dd>
+      <dd><a href="#">Друзья</a></dd>
+      <dd><a href="#">Враги</a></dd>
+      <dd><a href="#">Заявки на отношения</a></dd>
+    </dl>
+    <div class="row">
+        <div class="large-2 columns small-3"><img src="/media/none-img.png"></div>
+        <div class="large-10 columns">
+            <div class="small-12 medium-3 large-3 columns">
+              <span class="right inline">Дата рождения:</span>
+            </div>
+            <div class="small-12 medium-9 large-9 columns">
+              1812 05 05
+            </div>
+            <div class="small-12 medium-3 large-3 columns">
+              <span class="right inline">Вес:</span>
+            </div>
+            <div class="small-12 medium-9 large-9 columns">
+              ЖИРОБАС
+            </div>
+            <ul class="button-group">
+              <li><a href="#" class="button">Во враги</a></li>
+              <li><a href="#" class="button">Где находится</a></li>
+              <li><a href="#" class="button">Посмотреть стаю</a></li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script-block %}

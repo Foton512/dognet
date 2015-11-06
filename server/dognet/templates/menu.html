@@ -62,25 +62,21 @@
                     <h5 class="title"><a href="/dog/{{ dog.id }}">{{ dog.nick }}</a></h5>
                 </section>
             {% endfor %}{% endcomment %}
+            <section class="section">
+                <h5 class="title">
+                    <a href="/logout/"><span class="text">Выйти</span></a>
+                </h5>
+            </section>
+            {% else %}
+            <section class="section">
+                <h5 class="title">
+                    <a href="/login/vk-oauth2">ВКонтакте</a>
+                </h5>
+            </section><section class="section">
+                <h5 class="title">
+                    <a href="/login/facebook-oauth2">Facebook</a>
+                </h5>
+            </section>
         {% endif %}
     {% endif %}
 </div>
-
-<script>
-    $(document).ready(function(){
-        $('#addDog').on("click", function(event) {
-            event.preventDefault();
-            var data ={ 'nick': "Собака", 'birth_date': 20150101, 'weight': 5 };
-            $.ajax({
-                url: '/api/dog/add/',
-                method: 'GET',
-                dataType: "json",
-                data: data,
-                success: function () {
-                    location.reload();
-                }
-            });
-            return false;
-        });
-    })
-</script>
