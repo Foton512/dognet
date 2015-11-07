@@ -1,6 +1,8 @@
 #include <curl/curl.h>
 #include <iostream>
 #include <thread>
+#include <unistd.h>
+#include "json.h"
 
 #include "DogDatabase.hpp"
 #include "CoordUploader.hpp"
@@ -12,21 +14,22 @@ static const string coordUploadRequest = "/api/collar/add_point/";
 
 namespace dognetd
 {
-	CoordUploader::CoordUploader( DogDatabase &db, const string &url, const string &hash ):
+	CoordUploader::CoordUploader( DogDatabase &db, ArduinoController &arduino, const string &url, const string &hash ):
 		db( &db ),
+		arduino( &arduino ),
 		url( url ),
 		hash( hash ),
 		interrupted( false )
 	{
 		curl_global_init( CURL_GLOBAL_ALL );
 		curl = curl_easy_init( );
-	};
+	}
 	
 	CoordUploader::~CoordUploader( void )
 	{
 		stop( );
 		curl_global_cleanup( );
-	};
+	}
 	
 	void CoordUploader::start( void )
 	{
@@ -63,7 +66,13 @@ namespace dognetd
 		}
 		
 		cout << "uploader thread stopped\n";
-	};
+	}
+	
+	static size_t writeFunc( void *ptr, size_t size, size_t nmemb, string *str )
+	{
+		str->append( ( char* )ptr, nmemb );
+		return size * nmemb;
+	}
 	
 	bool CoordUploader::uploadSingle( const Coordinate &coord )
 	{
@@ -74,15 +83,25 @@ namespace dognetd
 			"&lat=" + coord.latitude + "&lon=" + coord.longitude;
 		string full_url = url + coordUploadRequest + get;
 		
+		string response;
+		
 		curl_easy_setopt( curl, CURLOPT_URL, full_url.c_str( ) );
+		curl_easy_setopt( curl, CURLOPT_WRITEFUNCTION, writeFunc );
+		curl_easy_setopt( curl, CURLOPT_WRITEDATA, &response );
 
 		CURLcode res = curl_easy_perform( curl );
 		if ( res != CURLE_OK )
 			cout << "curl_easy_perform failed: " << string( curl_easy_strerror( res ) ) << endl;
 		else
 			cout << "coordinate uploaded: (" << coord.latitude + ", " << coord.longitude << ")\n";
-//		curl_easy_cleanup( curl );
+		
+		processResponse( response );
 
 		return res == CURLE_OK;
-	};
+	}
+	
+	void CoordUploader::processResponse( const string &response )
+	{
+		
+	}
 }

@@ -4,9 +4,6 @@
     <df root="." name="0">
       <df name="arduino">
       </df>
-      <df name="curl">
-        <in>curl.h</in>
-      </df>
       <df name="inc">
         <in>ArduinoController.hpp</in>
         <in>CConvertors.hpp</in>
@@ -15,6 +12,10 @@
         <in>CoordsReader.hpp</in>
         <in>DogDatabase.hpp</in>
         <in>md5.hpp</in>
+      </df>
+      <df name="json">
+        <in>json-forwards.h</in>
+        <in>json.h</in>
       </df>
       <df name="microhttpd">
         <in>autoinit_funcs.h</in>
@@ -36,8 +37,25 @@
         <in>CoordUploader.cpp</in>
         <in>CoordsReader.cpp</in>
         <in>DogDatabase.cpp</in>
+        <in>jsoncpp.cpp</in>
         <in>main.cpp</in>
         <in>md5.cpp</in>
+      </df>
+    </df>
+    <df root="." name="1">
+      <df name="arduino">
+      </df>
+      <df name="inc">
+      </df>
+      <df name="json">
+      </df>
+      <df name="microhttpd">
+      </df>
+      <df name="obj">
+      </df>
+      <df name="sqlite">
+      </df>
+      <df name="src">
       </df>
     </df>
   </logicalFolder>

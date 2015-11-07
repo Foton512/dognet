@@ -11,6 +11,7 @@
 #include <thread>
 #include <curl/curl.h>
 #include "DogDatabase.hpp"
+#include "ArduinoController.hpp"
 
 namespace dognetd
 {
@@ -18,7 +19,7 @@ namespace dognetd
 	class CoordUploader
 	{
 		public:
-			CoordUploader( DogDatabase &db, const string &url, const string &hash );
+			CoordUploader( DogDatabase &db, ArduinoController &arduino, const string &url, const string &hash );
 			~CoordUploader( void );
 			
 			void start( void );
@@ -26,6 +27,7 @@ namespace dognetd
 			
 		private:
 			DogDatabase *db;
+			ArduinoController *arduino;
 			CURL *curl;
 			string url;
 			string hash;
@@ -35,6 +37,7 @@ namespace dognetd
 			
 			void run( void );
 			bool uploadSingle( const Coordinate &coord );
+			void processResponse( const std::string &response );
 	};
 }
 

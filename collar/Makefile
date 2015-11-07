@@ -1,10 +1,11 @@
 # makefile for dognetd
 
-INCLUDE_DIR:=-I./microhttpd -I./inc -I./sqlite
+INCLUDE_DIR:=-I./microhttpd -I./inc -I./sqlite -I./json
 LIBS:=-lmicrohttpd -lsqlite3 -lcurl -pthread
 LIBS_DIR:=-L/usr/local/lib
 OBJ_DIR:=./obj
 SRC_DIR:=./src
+GPP:=g++-4.7
 
 BINARY_NAME:=dognetd
 OBJ_FILES:= \
@@ -15,13 +16,14 @@ OBJ_FILES:= \
 	$(OBJ_DIR)/CoordUploader.o \
 	$(OBJ_DIR)/CoordsReader.o \
 	$(OBJ_DIR)/ArduinoController.o \
-	$(OBJ_DIR)/md5.o
+	$(OBJ_DIR)/md5.o \
+	$(OBJ_DIR)/jsoncpp.o
 
 dognetd: $(OBJ_DIR) $(OBJ_FILES)
-	g++ -std=c++0x $(LDFLAGS) $(OBJ_FILES) -o $(BINARY_NAME) $(INCLUDE_DIR) $(LIBS_DIR) $(LIBS)
+	$(GPP) -std=c++11 $(LDFLAGS) $(OBJ_FILES) -o $(BINARY_NAME) $(INCLUDE_DIR) $(LIBS_DIR) $(LIBS)
 $(OBJ_DIR):
 	mkdir $(OBJ_DIR)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	g++ -std=c++0x $(LDFLAGS) $(INCLUDE_DIR) -c $< -o $@
+	$(GPP) -std=c++11 $(LDFLAGS) $(INCLUDE_DIR) -c $< -o $@
 clean:
-	rm $(OBJ_DIR)/*.o $(BINARY_NAME)
+	rm -f $(OBJ_DIR)/*.o $(BINARY_NAME)

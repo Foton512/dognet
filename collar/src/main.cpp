@@ -7,6 +7,7 @@
 #include <sys/ioctl.h> 
 #include <net/if.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "CConvertors.hpp"
 //#include "CommandServer.hpp"
@@ -68,9 +69,9 @@ int main( int argc, char **argv )
 	string logApp = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	string logCoord = "/home/pi/app_" + currentDateTime( ) + ".txt";
 	
-	// redirect cout to file
-	ofstream out( logApp );
-    cout.rdbuf( out.rdbuf( ) );
+//	// redirect cout to file
+//	ofstream out( logApp );
+//    cout.rdbuf( out.rdbuf( ) );
 	
 	// calculate md5 of collar id
 	string id( argv[2] );
@@ -98,9 +99,10 @@ int main( int argc, char **argv )
 	arduino.lcdClear( );
 	arduino.lcdLine( 0, "Waiting for 3G..." );
 	
-	cout << "Waiting for ppp0 interface (3g)...\n";
-	while ( !is_interface_online( "ppp0" ) )
-		sleep( 2 );
+	//TODO uncomment!
+//	cout << "Waiting for ppp0 interface (3g)...\n";
+//	while ( !is_interface_online( "ppp0" ) )
+//		sleep( 2 );
 	
 //	int serverPort = CConvertors::str2int( string( argv[2] ) );
 //	CommandServer server( serverPort );
@@ -116,8 +118,10 @@ int main( int argc, char **argv )
 	CoordsReader reader( database, "/dev/gps" );
 	reader.start( );
 
-	CoordUploader uploader( database, serverAddr, hash );
+	CoordUploader uploader( database, arduino, serverAddr, hash );
 	uploader.start( );
+	
+	database.addCoordinate( "3.1415926", "3.1415926" );
 	
 	// loop until signal
 	while ( true )

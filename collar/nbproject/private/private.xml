@@ -10,15 +10,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/Users/asu/Documents/dognet/collar/inc/CoordUploader.hpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/inc/CConvertors.hpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/src/CConvertors.cpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/src/CoordUploader.cpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/inc/CoordsReader.hpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/src/DogDatabase.cpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/Makefile</file>
-            <file>file:/Users/asu/Documents/dognet/collar/src/CoordsReader.cpp</file>
-            <file>file:/Users/asu/Documents/dognet/collar/inc/DogDatabase.hpp</file>
+            <file>file:/Users/asu/Documents/dognet/collar/inc/ArduinoController.hpp</file>
+            <file>file:/Users/asu/Documents/dognet/collar/src/ArduinoController.cpp</file>
             <file>file:/Users/asu/Documents/dognet/collar/src/main.cpp</file>
         </group>
     </open-files>
