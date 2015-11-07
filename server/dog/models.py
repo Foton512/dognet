@@ -84,6 +84,7 @@ class Walk(models.Model):
 
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
+    breed = models.CharField(max_length=100, null=True)
     birthDate = models.DateField(null=True)
     weight = models.FloatField(null=True)
     user = models.ForeignKey(User)

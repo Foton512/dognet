@@ -86,7 +86,7 @@ def add(request):
         "addDog.html",
         context={
             "ownDogs": ownDogs,
-            "dogForm": forms.DogForm(),
+            "dogForm": forms.DogForm(initial={"breed": "Сиба Ину"}),
             "birthDate": "",
         },
         context_instance=RequestContext(request)
@@ -147,6 +147,7 @@ def addDog(request):
     birthDate = dateFromStr(params["birth_date"]) if "birth_date" in params else None
     dog = models.Dog.objects.create(
         nick=params["nick"],
+        breed=params["breed"] if "breed" in params else None,
         birthDate=birthDate,
         weight=params.get("weight", None),
         user=request.user,
@@ -167,6 +168,8 @@ def editDog(request):
     dog.checkFinishedWalks()
     if "nick" in params:
         dog.nick = params["nick"]
+    if "breed" in params:
+        dog.breed = params["breed"]
     if "birth_date" in params:
         birthDate = params["birth_date"]
         if birthDate:
