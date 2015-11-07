@@ -8,6 +8,7 @@ import models_settings
 import util
 from geopy.distance import distance
 from geopy.point import Point
+import sys
 
 
 class Token(models.Model):
@@ -82,6 +83,19 @@ class Walk(models.Model):
         ]
 
 
+class Home(models.Model):
+    lat = models.DecimalField(max_digits=9, decimal_places=6)
+    lon = models.DecimalField(max_digits=9, decimal_places=6)
+    user = models.ForeignKey(User)
+
+    def toDict(self):
+        return {
+            "user_id": self.user_id,
+            "lat": self.lat,
+            "lon": self.lon,
+        }
+
+
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
     breed = models.CharField(max_length=100, null=True)
@@ -115,6 +129,16 @@ class Dog(models.Model):
         try:
             walkInProgress = Walk.objects.get(dog=self, inProgress=True)
             if (time - walkInProgress.lastTime).seconds > models_settings.walkTimeout:
+                nearestHome = self.getNearestHome()
+                if nearestHome:
+                    lastWalkPoint = WalkPoint.objects.filter(walk=walkInProgress).latest("id")
+                    self.createWalkPoint(
+                        walkInProgress,
+                        time,
+                        lastWalkPoint.deviceTime,
+                        nearestHome.lat,
+                        nearestHome.lon
+                    )
                 walkInProgress.inProgress = False
                 walkInProgress.save()
                 return None
@@ -140,6 +164,28 @@ class Dog(models.Model):
                 obj.eventCounter = self.eventCounter
                 obj.save()
 
+    def createWalkPoint(self, walk, time, deviceTime, lat, lon):
+        walkPoint = WalkPoint(
+            walk=walk,
+            time=time,
+            deviceTime=deviceTime,
+            lat=lat,
+            lon=lon
+        )
+        self.incEventCounter([walkPoint])
+
+    def getNearestHome(self):
+        nearestHome = None
+        homes = Home.objects.filter(user=self.user)
+        if self.lat and self.lon and homes.exists():
+            minDistance = sys.float_info.max
+            for home in homes:
+                homeDistance = distance(Point(self.lat, self.lon), Point(home.lat, home.lon)).meters
+                if homeDistance < minDistance and homeDistance < models_settings.homeDistanceThreshold:
+                    minDistance = homeDistance
+                    nearestHome = home
+        return nearestHome
+
 
 class DogRelation(models.Model):
     dog = models.ForeignKey(Dog, related_name="+")
@@ -162,19 +208,6 @@ class UserDogSubscription(models.Model):
         return {
             "user_id": self.user_id,
             "dog_id": self.dog_id,
-        }
-
-
-class Home(models.Model):
-    lat = models.DecimalField(max_digits=9, decimal_places=6)
-    lon = models.DecimalField(max_digits=9, decimal_places=6)
-    user = models.ForeignKey(User)
-
-    def toDict(self):
-        return {
-            "user_id": self.user_id,
-            "lat": self.lat,
-            "lon": self.lon,
         }
 
 
@@ -233,7 +266,8 @@ class Like(models.Model):
 
 
 class Achievement(models.Model):
-    type = models.PositiveSmallIntegerField()
+    type = models.PositiveSmallIntegerField()  # 1 - First friend
+                                               # 2 - First enemy
     dog = models.ForeignKey(Dog)
     eventCounter = models.PositiveIntegerField(default=0)
 

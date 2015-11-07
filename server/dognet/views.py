@@ -219,15 +219,21 @@ def setDogRelation(request):
     relation.status = int(params["status"])
     relation.save()
 
-    if relation.status == 1:
-        nFriends = models.DogRelation.objects.filter(dog=dog, status=1).count()
-        if nFriends == 1:
-            models.Achievement.addAchievement(1, dog)
-        models.UserDogSubscription.objects.get_or_create(user=request.user, dog=relatedDog)
-
     if relation.status in [-1, 1]:
         comment = models.Comment(dog=dog, text="", type=3, relation=relation)
         dog.incEventCounter([comment])
+
+        if relation.status == 1:
+            nFriends = models.DogRelation.objects.filter(dog=dog, status=1).count()
+            if nFriends == 1:
+                models.Achievement.addAchievement(1, dog)
+            models.UserDogSubscription.objects.get_or_create(user=request.user, dog=relatedDog)
+
+        if relation.status == -1:
+            nEnemies = models.DogRelation.objects.filter(dog=dog, status=-1).count()
+            if nEnemies == 1:
+                models.Achievement.addAchievement(2, dog)
+
 
     return JsonResponse(relation.toDict())
 
@@ -286,27 +292,24 @@ def addWalkPoint(request):
         dog.lat = lat
         dog.lon = lon
 
+        deviceTime = datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None)
+
         createNewWalkPoint = False
         if walkInProgress is None:
             walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True, lastTime=time)
             comment = models.Comment(dog=dog, text="", type=1, walk=walkInProgress)
             dog.incEventCounter([comment])
             createNewWalkPoint = True
-            # TODO: add first point in nearest house
+            nearestHome = dog.getNearestHome()
+            if nearestHome:
+                dog.createWalkPoint(walkInProgress, time, deviceTime, nearestHome.lat, nearestHome.lon)
         else:
             lastWalkPoint = models.WalkPoint.objects.filter(walk=walkInProgress).latest("eventCounter")
             if lastWalkPoint.isSignificantDistance(lat, lon):
                 createNewWalkPoint = True
 
         if createNewWalkPoint:
-            walkPoint = models.WalkPoint(
-                walk=walkInProgress,
-                time=time,
-                deviceTime=datetime.datetime.fromtimestamp(int(params["timestamp"])).replace(tzinfo=None),
-                lat=lat,
-                lon=lon
-            )
-            dog.incEventCounter([walkPoint])
+            dog.createWalkPoint(walkInProgress, time, deviceTime, lat, lon)
 
         approxDistanceThreshold = geopy.units.degrees(arcminutes=geopy.units.nautical(miles=1))
         closeCandidates = models.Dog.objects.filter(
@@ -318,7 +321,7 @@ def addWalkPoint(request):
             closeCandidate for closeCandidate in closeCandidates if distance(
                 Point(lat, lon),
                 Point(closeCandidate.lat, closeCandidate.lon)
-            ) <= models_settings.pointsDistanceThreshold
+            ).meters <= models_settings.pointsDistanceThreshold
         ]
         oldCloseDogs = [
             closeDogRelation.relatedDog for closeDogRelation in models.CloseDogRelation.objects.filter(dog=dog)
