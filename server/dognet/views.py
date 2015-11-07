@@ -297,16 +297,25 @@ def addWalkPoint(request):
         createNewWalkPoint = False
         if walkInProgress is None:
             walkInProgress = models.Walk.objects.create(dog=dog, inProgress=True, lastTime=time)
-            comment = models.Comment(dog=dog, text="", type=1, walk=walkInProgress)
-            dog.incEventCounter([comment])
             createNewWalkPoint = True
             nearestHome = dog.getNearestHome()
             if nearestHome:
                 dog.createWalkPoint(walkInProgress, time, deviceTime, nearestHome.lat, nearestHome.lon)
         else:
             lastWalkPoint = models.WalkPoint.objects.filter(walk=walkInProgress).latest("eventCounter")
-            if lastWalkPoint.isSignificantDistance(lat, lon):
+            distanceFromLast = distance(
+                Point(float(lastWalkPoint.lat), float(lastWalkPoint.lon)),
+                Point(float(lat), float(lon))
+            ).meters
+            if distanceFromLast >= models_settings.pointsDistanceThreshold:
                 createNewWalkPoint = True
+                walkInProgress.length += distanceFromLast
+                prevTotalWalkLength = dog.totalWalkLength
+                dog.totalWalkLength += distanceFromLast
+                walkInProgress.save()
+                dog.save()
+                if prevTotalWalkLength < 50 and dog.totalWalkLength >= 50:
+                    models.Achievement.addAchievement(3, dog)
 
         if createNewWalkPoint:
             dog.createWalkPoint(walkInProgress, time, deviceTime, lat, lon)
@@ -393,7 +402,7 @@ def addPhotoComment(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
-    comment = models.Comment(dog=dog, text=params["text"], photo=params["photo"], type=2)
+    comment = models.Comment(dog=dog, text=params["text"], type=2)
     dog.incEventCounter([comment])
     return JsonResponse(comment.toDict())
 

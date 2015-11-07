@@ -51,17 +51,12 @@ class WalkPoint(models.Model):
             "saved": saved
         }
 
-    def isSignificantDistance(self, lat, lon):
-        return distance(
-            Point(float(self.lat), float(self.lon)),
-            Point(float(lat), float(lon))
-        ).meters >= models_settings.pointsDistanceThreshold
-
 
 class Walk(models.Model):
     dog = models.ForeignKey("Dog")
     inProgress = models.BooleanField()
     lastTime = models.DateTimeField()
+    length = models.FloatField(default=0)
 
     class Meta:
         index_together = ["dog", "inProgress"]
@@ -82,6 +77,12 @@ class Walk(models.Model):
             } for walkPoint in walkPoints
         ]
 
+    def getPath(self):
+        walkPoints = WalkPoint.objects.filter(walk=self)
+        return [
+            (float(point.lat), float(point.lon)) for point in walkPoints
+        ]
+
 
 class Home(models.Model):
     lat = models.DecimalField(max_digits=9, decimal_places=6)
@@ -96,6 +97,48 @@ class Home(models.Model):
         }
 
 
+class Comment(models.Model):
+    dog = models.ForeignKey("Dog")
+    text = models.TextField()
+    type = models.PositiveSmallIntegerField()  # 0 - text, 1 - walk, 2 - photo, 3 - relation, 4 - achievement
+    walk = models.ForeignKey("Walk", null=True)
+    photoFile = models.FileField(upload_to=util.getUniquePhotoPath, null=True)
+    relation = models.ForeignKey("DogRelation", null=True)
+    achievement = models.ForeignKey("Achievement", null=True)
+    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
+    time = models.DateTimeField(auto_now_add=True)
+    parentComment = models.ForeignKey("Comment", null=True)
+
+    def __unicode__(self):
+        return self.text
+
+    def toDict(self):
+        result = {
+            "id": self.id,
+            "dog_id": self.dog_id,
+            "text": self.text,
+            "type": {
+                0: "text",
+                1: "walk",
+                2: "photo",
+                3: "relation",
+                4: "achievement",
+            }[self.type],
+            "parent_comment_id": self.parentComment_id if self.parentComment else None,
+        }
+
+        if self.type == 1:
+            result["walk"] = self.walk.toDict()
+        elif self.type == 2:
+            result["photo"] = self.photoFile.url if self.photoFile else None
+        elif self.type == 3:
+            result["relation"] = self.relation.toDict()
+        elif self.type == 4:
+            result["achievement"] = self.achievement.toDict()
+
+        return result
+
+
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
     breed = models.CharField(max_length=100, null=True)
@@ -107,6 +150,7 @@ class Dog(models.Model):
     lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     eventCounter = models.PositiveIntegerField(default=0)
+    totalWalkLength = models.FloatField(default=0)
 
     def __unicode__(self):
         return self.nick
@@ -141,6 +185,10 @@ class Dog(models.Model):
                     )
                 walkInProgress.inProgress = False
                 walkInProgress.save()
+
+                comment = Comment(dog=self, text="", type=1, walk=walkInProgress)
+                self.incEventCounter([comment])
+
                 return None
             else:
                 return walkInProgress
@@ -211,48 +259,6 @@ class UserDogSubscription(models.Model):
         }
 
 
-class Comment(models.Model):
-    dog = models.ForeignKey(Dog)
-    text = models.TextField()
-    type = models.PositiveSmallIntegerField()  # 0 - text, 1 - walk, 2 - photo, 3 - relation, 4 - achievement
-    walk = models.ForeignKey(Walk, null=True)
-    photo = models.CharField(max_length=1000, null=True)
-    relation = models.ForeignKey(DogRelation, null=True)
-    achievement = models.ForeignKey("Achievement", null=True)
-    eventCounter = models.PositiveIntegerField(default=0, db_index=True)
-    time = models.DateTimeField(auto_now_add=True)
-    parentComment = models.ForeignKey("Comment", null=True)
-
-    def __unicode__(self):
-        return self.text
-
-    def toDict(self):
-        result = {
-            "id": self.id,
-            "dog_id": self.dog_id,
-            "text": self.text,
-            "type": {
-                0: "text",
-                1: "walk",
-                2: "photo",
-                3: "relation",
-                4: "achievement",
-            }[self.type],
-            "parent_comment_id": self.parentComment_id if self.parentComment else None,
-        }
-
-        if self.type == 1:
-            result["walk_id"] = self.walk_id
-        elif self.type == 2:
-            result["photo"] = self.photo
-        elif self.type == 3:
-            result["relation"] = self.relation.toDict()
-        elif self.type == 4:
-            result["achievement"] = self.achievement.toDict()
-
-        return result
-
-
 class Like(models.Model):
     comment = models.ForeignKey(Comment)
     user = models.ForeignKey(User)
@@ -268,6 +274,7 @@ class Like(models.Model):
 class Achievement(models.Model):
     type = models.PositiveSmallIntegerField()  # 1 - First friend
                                                # 2 - First enemy
+                                               # 3 - 50m length distance
     dog = models.ForeignKey(Dog)
     eventCounter = models.PositiveIntegerField(default=0)
 

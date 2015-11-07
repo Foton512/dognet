@@ -46,4 +46,4 @@ class LikeAdmin(admin.ModelAdmin):
 
 
 class AchievementAdmin(admin.ModelAdmin):
-    list_display = ("type", "user")
+    list_display = ("type", "dog")

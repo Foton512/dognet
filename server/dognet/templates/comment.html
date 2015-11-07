@@ -1,0 +1,29 @@
+{% if comment.type == 0 %}
+    <p>{{ comment.text }}</p>
+{% elif comment.type == 1 %}
+    <p>Прогулочка</p>
+    <p>
+        Длина: {{ comment.walk.length }}м. Маршрут:
+        {% for point in comment.walk.getPath %}
+            ({{ point.0 }}, {{ point.1 }}),
+        {% endfor %}
+    </p>
+{% elif comment.type == 2 %}
+    <p>Фоточка</p>
+    <p>{{ comment.text }}</p>
+{% elif comment.type == 3 %}
+    {% if comment.relation.status == 1 %}
+        <p>Новый друг - {{ comment.relation.relatedDog.nick }}</p>
+    {% elif comment.relation.status == -1 %}
+        <p>Новый враг - {{ comment.relation.relatedDog.nick }}</p>
+    {% endif %}
+{% elif comment.type == 4 %}
+    <p>Ачивка</p>
+    {% if comment.achievement.type == 1 %}
+        <p>"Первый друг"</p>
+    {% elif comment.achievement.type == 2 %}
+        <p>"Первый враг"</p>
+    {% elif comment.achievement.type == 3 %}
+        <p>"Пройдено 50 метров"</p>
+    {% endif %}
+{% endif %}

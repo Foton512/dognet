@@ -13,8 +13,8 @@
         <form id="dogForm" enctype="multipart/form-data">
             {% csrf_token %}
             {% include "fields/formField.html" with label="Аватарка" input=dogForm.avatarFile %}
-            {% include "fields/formField.html" with label="Кличка"  input=dogForm.nick %}
-            {% include "fields/formField.html" with label="Порода"  input=dogForm.breed %}
+            {% include "fields/formField.html" with label="Кличка" input=dogForm.nick %}
+            {% include "fields/formField.html" with label="Порода" input=dogForm.breed %}
             {% include "fields/formField.html" with label="Дата рождения" input=dogForm.birthDate %}
             {% include "fields/formField.html" with label="Вес питомца" input=dogForm.weight %}
             {% include "fields/formField.html" with label="Номер ошейника" input=dogForm.collar_id %}
