@@ -341,9 +341,15 @@ def addWalkPoint(request):
 
         if float(lat) == settings.testLat and float(lon) == settings.testLon:
             return JsonResponse({
-                "friends": settings.testNFriends,
-                "enemies": settings.testNEnemies,
-                "unknown": settings.testNUnknown,
+                "friends": 1,
+                "enemies": 0,
+                "unknown": 0,
+            })
+        elif float(lat) == -settings.testLat and float(lon) == -settings.testLon:
+            return JsonResponse({
+                "friends": 0,
+                "enemies": 1,
+                "unknown": 0,
             })
 
         return JsonResponse({
