@@ -150,7 +150,8 @@ def addDog(request):
         birthDate=birthDate,
         weight=params.get("weight", None),
         user=request.user,
-        collarIdHash=hashlib.md5(params["collar_id"]).hexdigest() if "collar_id" in params else None
+        collarIdHash=hashlib.md5(params["collar_id"]).hexdigest() if "collar_id" in params else None,
+        avatarFile=request.FILES["avatarFile"] if request.FILES else None
     )
     return JsonResponse(dog.toDict())
 
