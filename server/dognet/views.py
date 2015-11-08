@@ -89,17 +89,23 @@ def friends(request):
     ownDogs = models.Dog.objects.filter(user=request.user)
 
     filter = params.get("filter", "all")
-    if filter == "friends":
-        status = [1]
-    elif filter == "enemies":
-        status = [-1]
+    if filter == "new":
+        relatedDogs = [dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog)]
+        relations = models.DogRelation.objects.filter(~Q(dog__in=relatedDogs), relatedDog=dog, status__in=[-1, 1])
+        for relation in relations:
+            relation.dog.onWalk = models.Walk.objects.filter(dog=relation.dog, inProgress=True).exists()
     else:
-        status = [-1, 1]
-    relations = models.DogRelation.objects.filter(dog=dog, status__in=status)
-    for relation in relations:
-        relation.relatedDog.onWalk = models.Walk.objects.filter(dog=relation.relatedDog, inProgress=True).exists()
-    if filter == "walk":
-        relations = [relation for relation in relations if relation.relatedDog.onWalk]
+        if filter == "friends":
+            status = [1]
+        elif filter == "enemies":
+            status = [-1]
+        else:
+            status = [-1, 1]
+        relations = models.DogRelation.objects.filter(dog=dog, status__in=status)
+        for relation in relations:
+            relation.relatedDog.onWalk = models.Walk.objects.filter(dog=relation.relatedDog, inProgress=True).exists()
+        if filter == "walk":
+            relations = [relation for relation in relations if relation.relatedDog.onWalk]
 
     return render_to_response(
         "friends.html",

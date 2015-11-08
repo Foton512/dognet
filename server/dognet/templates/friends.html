@@ -8,13 +8,15 @@
         <dd {% if filter == "walk" %}class="active"{% endif %}><a href="?filter=walk">На прогулке</a></dd>
         <dd {% if filter == "friends" %}class="active"{% endif %}><a href="?filter=friends">Друзья</a></dd>
         <dd {% if filter == "enemies" %}class="active"{% endif %}><a href="?filter=enemies">Враги</a></dd>
-        <dd {% if filter == "new" %}class="active"{% endif %}><a href="#">Добавили вас</a></dd>
+        <dd {% if filter == "new" %}class="active"{% endif %}><a href="?filter=new">Добавили вас</a></dd>
     </dl>
     {% for relation in relations %}
         <div class="row">
             <div class="large-2 columns small-3">
                 <img
-                {% if relation.relatedDog.avatarFile %}
+                {% if filter == "new" and relation.dog.avatarFile %}
+                    src="{{ relation.dog.avatarFile.url }}"
+                {% elif filter != "new" and relation.relatedDog.avatarFile %}
                     src="{{ relation.relatedDog.avatarFile.url }}"
                 {% else %}
                     src="/media/none-img.png"
@@ -23,28 +25,38 @@
             </div>
             <div class="large-10 columns">
                 <div class="columns">
-                    <a href="/dog/{{ relation.relatedDog.id }}"><strong>{{ relation.relatedDog.nick }}</strong></a>
+                    {% if filter == "new" %}
+                        <a href="/dog/{{ relation.dog.id }}"><strong>{{ relation.dog.nick }}</strong></a>
+                    {% else %}
+                        <a href="/dog/{{ relation.relatedDog.id }}"><strong>{{ relation.relatedDog.nick }}</strong></a>
+                    {% endif %}
                 </div>
                 <div class="columns">
-                    {% if relation.relatedDog.onWalk %}
+                    {% if filter == "new" and relation.dog.onWalk or relation.relatedDog.onWalk %}
                         На прогулке
                     {% else %}
                         Дома
                     {% endif %}
                 </div>
                 <ul class="button-group">
-                    {% if relation.status == 1 %}
-                        <li>
-                            <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, -1)">Во враги</a>
-                        </li>
+                    {% if filter == "new" %}
+                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, 1)">В друзья</a>
+                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, -1)">Во враги</a>
+                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, 0)">Скрыть</a>
                     {% else %}
+                        {% if relation.status == 1 %}
+                            <li>
+                                <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, -1)">Во враги</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 1)">В друзья</a>
+                            </li>
+                        {% endif %}
                         <li>
-                            <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 1)">В друзья</a>
+                            <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 0)">Перестать отслеживать</a>
                         </li>
                     {% endif %}
-                    <li>
-                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 0)">Перестать отслеживать</a>
-                    </li>
                 </ul>
             </div>
         </div>
