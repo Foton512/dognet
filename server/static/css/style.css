@@ -17676,6 +17676,19 @@ th {
     position: static;
     width: auto; }
 
+/* -------------------------------------------------------------
+  Sass CSS3 Mixins! The Cross-Browser CSS3 Sass Library
+  By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
+
+  List of CSS3 Sass Mixins File to be @imported and @included as you need
+
+  The purpose of this library is to facilitate the use of CSS3 on different browsers avoiding HARD TO READ and NEVER
+  ENDING css files
+
+  note: All CSS3 Properties are being supported by Safari 5
+  more info: http://www.findmebyip.com/litmus/#css3-properties
+
+------------------------------------------------------------- */
 html, body,
 #wrapper {
   height: 100%;
@@ -17684,7 +17697,7 @@ html, body,
 .off-canvas-wrap,
 .inner-wrap,
 .left-off-canvas-menu {
-  height: 100%; }
+  min-height: 100%; }
 
 .off-canvas-list > .section-container {
   width: 178px;
@@ -17696,6 +17709,56 @@ html, body,
 .toggler {
   height: 45px;
   padding: 6px 5px 9px 15px; }
+
+.top-bar, .menu {
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); }
+
+input[type='file'] {
+  visibility: hidden; }
+
+.custom-file-upload-hidden {
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  left: -9999px; }
+
+.custom-file-upload {
+  display: block;
+  width: auto; }
+  .custom-file-upload label {
+    display: block; }
+
+.file-upload-wrapper {
+  position: relative; }
+
+.file-upload-input {
+  width: 300px;
+  color: #fff;
+  padding: 11px 17px;
+  border: none;
+  background-color: lighten #0F92BD, 70;
+  transition: all 0.2s ease-in;
+  float: left;
+  /* IE 9 Fix */ }
+  .file-upload-input:hover, .file-upload-input:focus {
+    background-color: #e7f8fd;
+    outline: none; }
+
+.file-upload-button {
+  cursor: pointer;
+  display: inline-block;
+  color: #fff;
+  text-transform: uppercase;
+  padding: 11px 20px;
+  border: none;
+  margin-left: -1px;
+  background-color: #0b6d8e;
+  float: left;
+  /* IE 9 Fix */
+  transition: all 0.2s ease-in; }
+  .file-upload-button:hover {
+    background-color: #08495f; }
 
 .main-img {
   margin-bottom: 5px; }
@@ -17713,6 +17776,9 @@ html, body,
     width: 59px;
     height: auto;
     float: left; }
+
+.fa-2x {
+  vertical-align: -20%; }
 
 .split.button {
   width: 100%; }

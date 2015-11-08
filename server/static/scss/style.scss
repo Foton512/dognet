@@ -3,6 +3,7 @@
 @import 'foundation-datepicker';
 @import 'font-awesome';
 @import 'font';
+@import "css3-mixins";
 
 html, body,
 #wrapper {
@@ -12,7 +13,7 @@ html, body,
 .off-canvas-wrap,
 .inner-wrap,
 .left-off-canvas-menu {
-  height: 100%;
+  min-height: 100%;
 }
 .off-canvas-list {
   > .section-container {
@@ -26,6 +27,63 @@ html, body,
 .toggler {
   height: 45px;
   padding: 6px 5px 9px 15px;
+}
+.top-bar, .menu {
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+$background: #0F92BD;
+$file-upload-color: #0F92BD;
+$file-upload-size: 300px;
+
+input[type='file'] {
+  visibility: hidden;
+}
+.custom-file-upload-hidden {
+    display: none;
+    visibility: hidden;
+    position: absolute;
+    left: -9999px;
+}
+.custom-file-upload {
+    display: block;
+    width: auto;
+    label {
+        display: block;
+    }
+}
+
+.file-upload-wrapper {
+    position: relative;
+}
+.file-upload-input {
+    width: $file-upload-size;
+    color: #fff;
+    padding: 11px 17px;
+    border: none;
+    background-color: lighten ($file-upload-color, 70);
+    @include transition(all 0.2s ease-in);
+    float: left; /* IE 9 Fix */
+    &:hover, &:focus {
+        background-color: lighten($file-upload-color, 55);
+        outline: none;
+    }
+}
+.file-upload-button {
+    cursor: pointer;
+    display: inline-block;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 11px 20px;
+    border: none;
+    margin-left: -1px;
+    background-color: darken($file-upload-color, 10);
+    float: left; /* IE 9 Fix */
+    @include transition(all 0.2s ease-in);
+    &:hover {
+        background-color: darken($file-upload-color, 20);
+    }
 }
 
 .main-img {
@@ -47,6 +105,9 @@ html, body,
     height: auto;
     float: left;
   }
+}
+.fa-2x {
+  vertical-align: -20%;
 }
 
 $facebook-color: #3b5998;

@@ -1,10 +1,10 @@
 <div class="row">
     <div class="small-12 medium-3 large-3 columns">
-      <label class="right inline">{{ label }}</label>
+      <label for="{{ for }}" class="right inline">{{ label }}</label>
     </div>
     <div class="small-12 medium-9 large-9 columns">
-        <span class="small button btn-file">
-            Browse {{ input }}
-        </span>
+        <div class="custom-file-upload">
+            {{ input }}
+        </div>
     </div>
 </div>

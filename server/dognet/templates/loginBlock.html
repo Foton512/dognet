@@ -1,13 +1,17 @@
 {% if not user.is_authenticated %}
-    <a class="not-click">Войти</a>
-    <ul class="dropdown">
-        <li>
-            <a class="right" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> ВКонтакте</a>
-        </li>
-        <li>
-            <a class="right" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> Facebook</a>
-        </li>
-    </ul>
+    <li class="has-dropdown not-click">
+        <a class="not-click">Войти</a>
+        <ul class="dropdown">
+            <li>
+                <a class="right" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> ВКонтакте</a>
+            </li>
+            <li>
+                <a class="right" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> Facebook</a>
+            </li>
+        </ul>
+    </li>
 {% else %}
-    <a class="right" href="/logout/"><i class="fa fa-sign-out fa-2x"></i><span class="text">Выйти</span></a><br>
+    <li class="">
+        <a class="right" href="/logout/"><i class="fa fa-sign-out fa-2x"></i><span class="text"> Выйти</span></a>
+    </li>
 {% endif %}
