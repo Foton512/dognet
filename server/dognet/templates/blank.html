@@ -68,7 +68,7 @@
     <div class="off-canvas-wrap" data-offcanvas>
         <div class="inner-wrap">
             <div class="row">
-                <div class="centered small-10 medium-6 large-4 columns ">
+                <div class="small-10 small-centered medium-6 medium-centered large-5 columns">
                     {% if user.is_authenticated %}
                         <div><h3>Учавствуй в жизни своего питомца</h3></div>
                         {% if dog.id %}
@@ -78,8 +78,11 @@
                         {% endif %}
                     {% else %}
                         <div><h3>Авторизуйтесь плизки</h3></div>
-                        <a class="btn btn-vk" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> ВКонтакте</a>
-                        <a class="btn btn-fb" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> Facebook</a>
+                        <button href="/login/vk-oauth2" class="vk left-icon button split"> <span></span> войти через ВКонтакте</button>
+                        <button href="/login/facebook-oauth2" class="fb left-icon button split"> <span></span> войти через Facebook</button>
+                        <button href=" " class="win left-icon button split"> <span></span> войти через LiveID</button>
+                        {% comment %}<a class="btn btn-vk" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> ВКонтакте</a>
+                        <a class="btn btn-fb" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> Facebook</a>{% endcomment %}
                     {% endif %}
 
                 </div>

@@ -17714,6 +17714,61 @@ html, body,
     height: auto;
     float: left; }
 
+.split.button {
+  width: 100%; }
+  .split.button.fb {
+    background: #3b5998;
+    text-transform: uppercase; }
+    .split.button.fb span {
+      background: #2d4373; }
+      .split.button.fb span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -0.9rem; }
+  .split.button.vk {
+    background: #54769B;
+    text-transform: uppercase; }
+    .split.button.vk span {
+      background: #425d7a; }
+      .split.button.vk span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -1rem; }
+  .split.button.win {
+    background: #58B3ED;
+    text-transform: uppercase; }
+    .split.button.win span {
+      background: #2a9ee8; }
+      .split.button.win span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -1rem; }
+  .split.button.google {
+    background: #d50f25;
+    text-transform: uppercase; }
+    .split.button.google span {
+      background: #a50c1d; }
+      .split.button.google span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -1rem; }
+  .split.button.left-icon {
+    text-align: right; }
+    .split.button.left-icon span {
+      left: 0; }
+
 @media only screen and (max-width: 64em) {
   #dogIntro {
     display: none; } }
