@@ -1,0 +1,25 @@
+{% extends "_layout.html" %}
+
+{% block title %}Друзья и враги{% endblock %}
+
+{% block content %}
+    {% for achievement in achievements %}
+        <div class="row">
+            <div class="large-2 columns small-3">
+                <img src="/media/none-img.png" width="80px" height="80px"/>
+            </div>
+            <div class="large-10 columns">
+                <strong>
+                    {% if achievement.type == 1 %}
+                        Первый друг
+                    {% elif achievement.type == 2 %}
+                        Первый враг
+                    {% elif achievement.type == 3 %}
+                        Пройдено 50 метров
+                    {% endif %}
+                </strong>
+            </div>
+        </div>
+        <hr/>
+    {% endfor %}
+{% endblock %}

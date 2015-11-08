@@ -36,6 +36,7 @@ urlpatterns = [
     url(r"^dog/add/$", views.add),
     url(r"^news/$", views.news),
     url(r"^friends/$", views.friends),
+    url(r"^achievements/$", views.achievements),
 
     # Api methods
     url(r"^api/dog/add/$", views.addDog),

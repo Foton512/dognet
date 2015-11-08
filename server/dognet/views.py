@@ -120,6 +120,26 @@ def friends(request):
     )
 
 
+def achievements(request):
+    user = request.user
+    dogId = request.session.get("currentDogId", None)
+    dog = models.Dog.objects.get(id=dogId) if dogId else None
+    ownDogs = models.Dog.objects.filter(user=user)
+
+    achievements = models.Achievement.objects.filter(dog=dog)
+
+    return render_to_response(
+        "achievements.html",
+        context={
+            "dog": dog,
+            "ownDogs": ownDogs,
+            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+            "achievements": achievements,
+        },
+        context_instance=RequestContext(request)
+    )
+
+
 def news(request):
     user = request.user
     dogId = request.session.get("currentDogId", None)

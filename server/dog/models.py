@@ -286,6 +286,8 @@ class Achievement(models.Model):
 
     @classmethod
     def addAchievement(cls, type, dog):
+        if cls.objects.filter(dog=dog, type=type).exists():
+            return
         achievement = cls(dog=dog, type=type)
         dog.incEventCounter([achievement])
         comment = Comment(dog=dog, text="", type=4, achievement=achievement)
