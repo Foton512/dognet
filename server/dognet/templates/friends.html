@@ -4,36 +4,70 @@
 
 {% block content %}
     <dl class="sub-nav">
-      {% comment %}<dt>Filter:</dt>{% endcomment %}
-      <dd class="active"><a href="#">Все знакомые собаки</a></dd>
-      <dd><a href="#">Друзья</a></dd>
-      <dd><a href="#">Враги</a></dd>
-      <dd><a href="#">Заявки на отношения</a></dd>
+        <dd {% if filter == "all" %}class="active"{% endif %}><a href="?filter=all">Все знакомые собаки</a></dd>
+        <dd {% if filter == "walk" %}class="active"{% endif %}><a href="?filter=walk">На прогулке</a></dd>
+        <dd {% if filter == "friends" %}class="active"{% endif %}><a href="?filter=friends">Друзья</a></dd>
+        <dd {% if filter == "enemies" %}class="active"{% endif %}><a href="?filter=enemies">Враги</a></dd>
+        <dd {% if filter == "new" %}class="active"{% endif %}><a href="#">Добавили вас</a></dd>
     </dl>
-    <div class="row">
-        <div class="large-2 columns small-3"><img src="/media/none-img.png"></div>
-        <div class="large-10 columns">
-            <div class="small-12 medium-3 large-3 columns">
-              <span class="right inline">Дата рождения:</span>
+    {% for relation in relations %}
+        <div class="row">
+            <div class="large-2 columns small-3">
+                <img
+                {% if relation.relatedDog.avatarFile %}
+                    src="{{ relation.relatedDog.avatarFile.url }}"
+                {% else %}
+                    src="/media/none-img.png"
+                {% endif %}
+                    width="80px" height="80px"/>
             </div>
-            <div class="small-12 medium-9 large-9 columns">
-              1812 05 05
+            <div class="large-10 columns">
+                <div class="columns">
+                    <a href="/dog/{{ relation.relatedDog.id }}"><strong>{{ relation.relatedDog.nick }}</strong></a>
+                </div>
+                <div class="columns">
+                    {% if relation.relatedDog.onWalk %}
+                        На прогулке
+                    {% else %}
+                        Дома
+                    {% endif %}
+                </div>
+                <ul class="button-group">
+                    {% if relation.status == 1 %}
+                        <li>
+                            <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, -1)">Во враги</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 1)">В друзья</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 0)">Перестать отслеживать</a>
+                    </li>
+                </ul>
             </div>
-            <div class="small-12 medium-3 large-3 columns">
-              <span class="right inline">Вес:</span>
-            </div>
-            <div class="small-12 medium-9 large-9 columns">
-              ЖИРОБАС
-            </div>
-            <ul class="button-group">
-              <li><a href="#" class="button">Во враги</a></li>
-              <li><a href="#" class="button">Где находится</a></li>
-              <li><a href="#" class="button">Посмотреть стаю</a></li>
-            </ul>
         </div>
-    </div>
+        <hr/>
+    {% endfor %}
 {% endblock %}
 
 {% block script-block %}
+    <script>
+        function setRelation(dogId, relatedDogId, status) {
+            $.ajax({
+                url: "/api/dog/set_relation/",
+                type: "get",
+                data: {
+                    "id": dogId,
+                    "related_id": relatedDogId,
+                    "status": status
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+    </script>
 {% endblock %}
 

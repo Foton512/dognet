@@ -24,23 +24,11 @@ def main(request):
     user = request.user
     if user.is_authenticated():
         if "currentDogId" in request.session:
-            dog = models.Dog.objects.get(id=request.session["currentDogId"])
-            ownDogs = models.Dog.objects.filter(user=request.user)
-
-            return render_to_response(
-                "dog.html",
-                context={
-                    "dog": dog,
-                    "ownDogs": ownDogs,
-                    "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
-                },
-                context_instance=RequestContext(request)
-            )
+            return redirect("/dog/{}/".format(request.session["currentDogId"]))
         else:
             try:
                 lastDog = models.Dog.objects.filter(user=user).latest("id")
-                request.session["currentDogId"] = lastDog.id
-                return redirect("/")
+                return redirect("/dog/{}/".format(lastDog.id))
             except models.Dog.DoesNotExist:
                 return render_to_response(
                     "blank.html",
@@ -80,6 +68,7 @@ def edit(request, dogId):
         context_instance=RequestContext(request)
     )
 
+
 def add(request):
     ownDogs = models.Dog.objects.filter(user=request.user)
     return render_to_response(
@@ -94,15 +83,32 @@ def add(request):
 
 
 def friends(request):
+    params = request.REQUEST
     dogId = request.session.get("currentDogId", None)
     dog = models.Dog.objects.get(id=dogId) if dogId else None
     ownDogs = models.Dog.objects.filter(user=request.user)
+
+    filter = params.get("filter", "all")
+    if filter == "friends":
+        status = [1]
+    elif filter == "enemies":
+        status = [-1]
+    else:
+        status = [-1, 1]
+    relations = models.DogRelation.objects.filter(dog=dog, status__in=status)
+    for relation in relations:
+        relation.relatedDog.onWalk = models.Walk.objects.filter(dog=relation.relatedDog, inProgress=True).exists()
+    if filter == "walk":
+        relations = [relation for relation in relations if relation.relatedDog.onWalk]
+
     return render_to_response(
         "friends.html",
         context={
             "dog": dog,
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+            "relations": relations,
+            "filter": filter,
         },
         context_instance=RequestContext(request)
     )
@@ -132,8 +138,20 @@ def news(request):
 
 
 def dog(request, dogId):
-    request.session["currentDogId"] = dogId
-    return redirect("/")
+    dog = models.Dog.objects.get(id=dogId)
+    if dog.user == request.user:
+        request.session["currentDogId"] = dogId
+    ownDogs = models.Dog.objects.filter(user=request.user)
+
+    return render_to_response(
+        "dog.html",
+        context={
+            "dog": dog,
+            "ownDogs": ownDogs,
+            "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+        },
+        context_instance=RequestContext(request)
+    )
 
 
 def uploadPhoto(request):
