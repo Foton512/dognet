@@ -17689,18 +17689,22 @@ th {
   more info: http://www.findmebyip.com/litmus/#css3-properties
 
 ------------------------------------------------------------- */
-html, body,
-#wrapper {
-  height: 100%;
-  min-height: 100%; }
+html, body {
+  height: 100%; }
 
-.off-canvas-wrap,
+#wrapper {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto -45px; }
+
+/*.off-canvas-wrap,
 .inner-wrap,
 .left-off-canvas-menu {
-  min-height: 100%; }
-
+  min-height: 100%;
+}*/
 .left-off-canvas-menu {
-  overflow: visible; }
+  /*overflow: visible;*/ }
   .left-off-canvas-menu .off-canvas-list {
     background-color: #F7F2ED; }
     .left-off-canvas-menu .off-canvas-list > .section-container {
