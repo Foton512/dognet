@@ -9,8 +9,8 @@
         {% endfor %}
     </p>
 {% elif comment.type == 2 %}
-    <p>Фоточка</p>
     <p>{{ comment.text }}</p>
+    <p>Фоточка</p>
 {% elif comment.type == 3 %}
     {% if comment.relation.status == 1 %}
         <p>Новый друг - {{ comment.relation.relatedDog.nick }}</p>
