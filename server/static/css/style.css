@@ -17689,6 +17689,96 @@ th {
   more info: http://www.findmebyip.com/litmus/#css3-properties
 
 ------------------------------------------------------------- */
+[class^="achiv-"] {
+  background: url("/media/achivments.png") no-repeat;
+  width: 122px;
+  height: 122px; }
+
+.achiv-1 {
+  background-position: 0 0; }
+
+.achiv-2 {
+  background-position: -149px 0; }
+
+.achiv-3 {
+  background-position: -297px 0; }
+
+.achiv-4 {
+  background-position: -445px 0; }
+
+.achiv-5 {
+  background-position: -591px 0; }
+
+.achiv-6 {
+  background-position: 0 -136px; }
+
+.achiv-7 {
+  background-position: -149px -136px; }
+
+.achiv-8 {
+  background-position: -297px -136px; }
+
+.achiv-9 {
+  background-position: -445px -136px; }
+
+.achiv-10 {
+  background-position: -591px -136px; }
+
+.split.button {
+  width: 100%; }
+  .split.button.fb {
+    background: #3b5998;
+    text-transform: uppercase; }
+    .split.button.fb span {
+      background: #2d4373; }
+      .split.button.fb span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -0.9rem; }
+  .split.button.vk {
+    background: #54769B;
+    text-transform: uppercase; }
+    .split.button.vk span {
+      background: #425d7a; }
+      .split.button.vk span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -1rem; }
+  .split.button.win {
+    background: #58B3ED;
+    text-transform: uppercase; }
+    .split.button.win span {
+      background: #2a9ee8; }
+      .split.button.win span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -1rem; }
+  .split.button.google {
+    background: #d50f25;
+    text-transform: uppercase; }
+    .split.button.google span {
+      background: #a50c1d; }
+      .split.button.google span:after {
+        border: none;
+        font-family: "FontAwesome";
+        content: "";
+        font-size: 2rem;
+        line-height: 0.25rem;
+        margin-left: -1rem; }
+  .split.button.left-icon {
+    text-align: right; }
+    .split.button.left-icon span {
+      left: 0; }
+
 html, body {
   height: 100%; }
 
@@ -17698,18 +17788,11 @@ html, body {
   height: 100%;
   margin: 0 auto -45px; }
 
-/*.off-canvas-wrap,
-.inner-wrap,
-.left-off-canvas-menu {
-  min-height: 100%;
-}*/
-.left-off-canvas-menu {
-  /*overflow: visible;*/ }
-  .left-off-canvas-menu .off-canvas-list {
-    background-color: #F7F2ED; }
-    .left-off-canvas-menu .off-canvas-list > .section-container {
-      width: 178px;
-      margin: 0 auto; }
+.left-off-canvas-menu .off-canvas-list {
+  background-color: #F7F2ED; }
+  .left-off-canvas-menu .off-canvas-list > .section-container {
+    width: 178px;
+    margin: 0 auto; }
 
 .move-right .exit-off-canvas {
   box-shadow: none; }
@@ -17724,6 +17807,17 @@ html, body {
 
 .add-comment {
   width: 100%; }
+
+.achivments [class^="achiv-"] {
+  margin: 0 auto; }
+
+.achivments .process {
+  opacity: 0.5; }
+
+.achivments .description {
+  text-align: center;
+  font-size: 1.2em;
+  color: #0F92BD; }
 
 input[type='file'] {
   visibility: hidden; }
@@ -17812,61 +17906,6 @@ input[type='file'] {
 
 .fa-2x {
   vertical-align: -20%; }
-
-.split.button {
-  width: 100%; }
-  .split.button.fb {
-    background: #3b5998;
-    text-transform: uppercase; }
-    .split.button.fb span {
-      background: #2d4373; }
-      .split.button.fb span:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: "";
-        font-size: 2rem;
-        line-height: 0.25rem;
-        margin-left: -0.9rem; }
-  .split.button.vk {
-    background: #54769B;
-    text-transform: uppercase; }
-    .split.button.vk span {
-      background: #425d7a; }
-      .split.button.vk span:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: "";
-        font-size: 2rem;
-        line-height: 0.25rem;
-        margin-left: -1rem; }
-  .split.button.win {
-    background: #58B3ED;
-    text-transform: uppercase; }
-    .split.button.win span {
-      background: #2a9ee8; }
-      .split.button.win span:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: "";
-        font-size: 2rem;
-        line-height: 0.25rem;
-        margin-left: -1rem; }
-  .split.button.google {
-    background: #d50f25;
-    text-transform: uppercase; }
-    .split.button.google span {
-      background: #a50c1d; }
-      .split.button.google span:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: "";
-        font-size: 2rem;
-        line-height: 0.25rem;
-        margin-left: -1rem; }
-  .split.button.left-icon {
-    text-align: right; }
-    .split.button.left-icon span {
-      left: 0; }
 
 @media only screen and (max-width: 64em) {
   #dogIntro {

@@ -4,6 +4,8 @@
 @import 'font-awesome';
 @import 'font';
 @import "css3-mixins";
+@import "achivments";
+@import "social-btn";
 
 html, body {
     height: 100%;
@@ -14,13 +16,7 @@ html, body {
   height: 100%;
   margin: 0 auto -45px;
 }
-/*.off-canvas-wrap,
-.inner-wrap,
 .left-off-canvas-menu {
-  min-height: 100%;
-}*/
-.left-off-canvas-menu {
-  /*overflow: visible;*/
   .off-canvas-list {
     background-color: $panel-bg;
     > .section-container {
@@ -43,6 +39,20 @@ html, body {
 }
 .add-comment {
   width: 100%;
+}
+
+.achivments {
+  [class^="achiv-"] {
+    margin: 0 auto;
+  }
+  .process {
+    opacity: 0.5;
+  }
+  .description {
+    text-align: center;
+    font-size: 1.2em;
+    color: #0F92BD;
+  }
 }
 
 $background: #0F92BD;
@@ -156,97 +166,6 @@ input[type='file'] {
 
 .fa-2x {
   vertical-align: -20%;
-}
-
-$facebook-color: #3b5998;
-$vk-color: #54769B;
-$google-color: #d50f25;
-$win-color: #58B3ED;
-$text-transform: uppercase;
-$icon-size: 2rem;
-
-.split.button {
-  width: 100%;
-
-  &.fb {
-    background: $facebook-color;
-    text-transform: $text-transform;
-
-    span {
-      background: darken( $facebook-color, 10% );
-
-      &:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: $fa-var-facebook-official;
-        font-size: $icon-size;
-        line-height: 0.25rem;
-        margin-left: -0.9rem;
-      }
-    }
-  }
-
-  &.vk {
-    background: $vk-color;
-    text-transform: $text-transform;
-
-    span {
-      background: darken( $vk-color, 10% );
-
-      &:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: $fa-var-vk;
-        font-size: $icon-size;
-        line-height: 0.25rem;
-        margin-left: -1rem;
-      }
-    }
-  }
-
-  &.win {
-    background: $win-color;
-    text-transform: $text-transform;
-
-    span {
-      background: darken( $win-color, 10% );
-
-      &:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: $fa-var-windows;
-        font-size: $icon-size;
-        line-height: 0.25rem;
-        margin-left: -1rem;
-      }
-    }
-  }
-
-  &.google {
-    background: $google-color;
-    text-transform: $text-transform;
-
-
-    span {
-      background: darken( $google-color, 10% );
-
-      &:after {
-        border: none;
-        font-family: "FontAwesome";
-        content: $fa-var-google-plus;
-        font-size: $icon-size;
-        line-height: 0.25rem;
-        margin-left: -1rem;
-      }
-    }
-  }
-
-  &.left-icon {
-    text-align: right;
-    span {
-      left: 0;
-    }
-  }
 }
 
 @media only screen and (max-width: 64em) {
