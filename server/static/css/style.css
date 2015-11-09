@@ -17699,9 +17699,13 @@ html, body,
 .left-off-canvas-menu {
   min-height: 100%; }
 
-.off-canvas-list > .section-container {
-  width: 178px;
-  margin: 0 auto; }
+.left-off-canvas-menu {
+  overflow: visible; }
+  .left-off-canvas-menu .off-canvas-list {
+    background-color: #F7F2ED; }
+    .left-off-canvas-menu .off-canvas-list > .section-container {
+      width: 178px;
+      margin: 0 auto; }
 
 .move-right .exit-off-canvas {
   box-shadow: none; }
@@ -17862,4 +17866,7 @@ input[type='file'] {
 
 @media only screen and (max-width: 64em) {
   #dogIntro {
-    display: none; } }
+    display: none; }
+  .top-bar {
+    box-shadow: none;
+    margin-bottom: 0; } }
