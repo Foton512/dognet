@@ -226,9 +226,9 @@ $('.fdatepicker').fdatepicker({
 		          $wrap = $('<div class="file-upload-wrapper row collapse">'),
 		          $input = $('<div class="small-9 columns"><input type="text" class="file-upload-input" /></div>'),
 		          // Button that will be used in non-IE browsers
-		          $button = $('<div class="small-3 columns"><button type="button" class="file-upload-button button postfix">Выбрать файл</button></div>'),
+		          $button = $('<div class="small-3 columns"><button type="button" class="file-upload-button button postfix">Р’С‹Р±СЂР°С‚СЊ С„Р°Р№Р»</button></div>'),
 		          // Hack for IE
-		          $label = $('<label class="file-upload-button" for="'+ $file[0].id +'">Выбрать файл</label>');
+		          $label = $('<label class="file-upload-button" for="'+ $file[0].id +'">Р’С‹Р±СЂР°С‚СЊ С„Р°Р№Р»</label>');
 
 		      // Hide by shifting to the left so we
 		      // can still trigger events
