@@ -4,3 +4,5 @@
 *.pyc
 .idea/
 node_modules/
+dog/migrations/
+media/
