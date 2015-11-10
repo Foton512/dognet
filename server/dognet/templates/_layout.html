@@ -85,12 +85,61 @@
         </div>
         </div>
     </div>
+    <div class="hide">
+        <form id="notyForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ dog.id }}">
+            <input type="hidden" name="fields" value="comments&event_counter=1">
+        </form>
+    </div>
 
     <script src="/static/js/foundation.min.js"></script>
     <script src="/static/js/foundation-datepicker.js"></script>
     <script src="/static/js/jquery.scrollTo.js"></script>
+    <script src="/static/js/noty/packaged/jquery.noty.packaged.js"></script>
     <script src="/static/js/main.js"></script>
     <script src="/static/js/app.js"></script>
+    <script type="application/javascript">
+        var getNoty = function() {
+            var data = new FormData($('#notyForm').get(0));
+            $.ajax({
+                url: "/api/dog/get_events/",
+                type: "GET",
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    addNoty(result);
+                },
+            });
+        };
+        var addNoty = function(result) {
+            var res = JSON.parse(result);
+            if (res.comments.length > 0){
+                var n = noty({
+                    text: 'Новых комментов: ' + res.comments.length,
+                    layout: 'top',
+                    theme: 'defaultTheme', // or 'relax'
+                    type: 'information',
+                    animation: {
+                        open: {height: 'toggle'}, // jQuery animate function property object
+                        close: {height: 'toggle'}, // jQuery animate function property object
+                        easing: 'swing', // easing
+                        speed: 500 // opening & closing animation speed
+                    }
+                });
+            }
+
+        };
+        var dolbilka = function() {
+            getNoty();
+            setTimeout(dolbilka(), 10000);
+        };
+        $(document).ready(function(){
+            dolbilka();
+        });
+    </script>
     {% block script-block %}
     {% endblock %}
 </div></body>
