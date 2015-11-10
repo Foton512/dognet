@@ -90,7 +90,7 @@
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
             <input type="hidden" name="fields" value="comments,event_counter">
-            <input type="hidden" name="event_counter" value="1">
+            <input type="hidden" name="event_counter" value="{{ dog.eventCounter }}">
         </form>
     </div>
 
@@ -107,20 +107,18 @@
                 url: "/api/dog/get_events/",
                 type: "POST",
                 data: data,
+                dataType: "json",
                 cache: false,
                 processData: false,
                 contentType: false,
-                success: function () {
-                    addNoty(result);
-                },
+            }).done(function(data) {
+                addNoty(data)
             });
         };
         var addNoty = function(result) {
-            console.log(result);
-            var res = JSON.parse(result);
-            if (res.comments.length > 0){
+            if (result.comments.length > 0){
                 var n = noty({
-                    text: 'Новых комментов: ' + res.comments.length,
+                    text: 'Новых комментов: ' + result.comments.length,
                     layout: 'top',
                     theme: 'defaultTheme', // or 'relax'
                     type: 'information',
@@ -134,13 +132,7 @@
             }
 
         };
-        var dolbilka = function() {
-            getNoty();
-            setTimeout(dolbilka(), 10000);
-        };
-        $(document).ready(function(){
-            dolbilka();
-        });
+        setInterval(getNoty, 1000);
     </script>
     {% block script-block %}
     {% endblock %}
