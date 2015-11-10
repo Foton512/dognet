@@ -89,7 +89,8 @@
         <form id="notyForm" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
-            <input type="hidden" name="fields" value="comments&event_counter=1">
+            <input type="hidden" name="fields" value="comments,event_counter">
+            <input type="hidden" name="event_counter" value="1">
         </form>
     </div>
 
@@ -104,7 +105,7 @@
             var data = new FormData($('#notyForm').get(0));
             $.ajax({
                 url: "/api/dog/get_events/",
-                type: "GET",
+                type: "POST",
                 data: data,
                 cache: false,
                 processData: false,
@@ -115,6 +116,7 @@
             });
         };
         var addNoty = function(result) {
+            console.log(result);
             var res = JSON.parse(result);
             if (res.comments.length > 0){
                 var n = noty({

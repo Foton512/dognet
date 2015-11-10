@@ -83,6 +83,12 @@ class Walk(models.Model):
             (float(point.lat), float(point.lon)) for point in walkPoints
         ]
 
+    def toDict(self):
+        return {
+            "length": self.length,
+            "path": self.getPath(),
+        }
+
 
 class Home(models.Model):
     lat = models.DecimalField(max_digits=9, decimal_places=6)
