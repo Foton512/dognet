@@ -17896,13 +17896,19 @@ input[type='file'] {
   margin-top: 10px;
   margin-bottom: 0; }
 
+.comment-text .commenting-field {
+  margin-bottom: 5px; }
+
 .comment-text .textarea-wrapper textarea {
   height: 60px; }
 
+.post > .comment-text hr {
+  margin: 5px 0; }
+  .post > .comment-text hr:last-of-type {
+    display: none; }
+
 .post > .comment-text > .row:last-of-type {
   margin-bottom: 10px; }
-  .post > .comment-text > .row:last-of-type > hr {
-    display: none; }
 
 .fa-2x {
   vertical-align: -20%; }

@@ -30,48 +30,59 @@
             </div>
         </form>
     </div>
-    {% for comment in comments %}
-        {% if not comment.parentComment %}
-            <div class="row post">
-                <div class="large-2 columns small-3">
-                    <img
-                    {% if comment.dog.avatarFile %}
-                        src="{{ comment.dog.avatarFile.url }}"
-                    {% else %}
-                        src="/media/none-img.png"
-                    {% endif %}
-                    width="80px" height="80px"/>
-                </div>
-                <div class="large-10 columns comment-text" data-comment-id="{{ comment.id }}">
-                    <p><strong>{{ comment.dog.nick }}</strong></p>
-                    {% include "comment.html" with comment=comment %}
-                    <ul class="inline-list">
-                        <li><a class="addComment">Reply</a></li>
-                        <li><a href="">Share</a></li>
-                    </ul>
-                    {% comment %}<h6>{{ comment.comment_set.count }} Comments</h6>{% endcomment %}
-                    {% for reply in comment.comment_set.all %}
-                        <div class="row">
-                            <div class="large-2 columns small-3">
-                                <img
-                                    {% if reply.dog.avatarFile %}
-                                        src="{{ reply.dog.avatarFile.url }}"
-                                    {% else %}
-                                        src="http://placehold.it/80x80&text=[img]"
-                                    {% endif %}
-                                        width="50px" height="50px"/>
-                            </div>
-                            <div class="large-10 columns">
-                                {% include "comment.html" with comment=reply %}
+    <div id="newsList">
+        {% for comment in comments %}
+            {% if not comment.parentComment %}
+                <div class="row post">
+                    <div class="large-2 columns small-3">
+                        <img
+                        {% if comment.dog.avatarFile %}
+                            src="{{ comment.dog.avatarFile.url }}"
+                        {% else %}
+                            src="/media/none-img.png"
+                        {% endif %}
+                        width="80px" height="80px"/>
+                    </div>
+                    <div class="large-10 columns comment-text" id="{{ comment.id }}">
+                        <p><strong>{{ comment.dog.nick }}</strong></p>
+                        {% include "comment.html" with comment=comment %}
+                        <ul class="inline-list">
+                            <li><a class="addComment">Reply</a></li>
+                            <li><a href="">Share</a></li>
+                        </ul>
+                        {% comment %}<h6>{{ comment.comment_set.count }} Comments</h6>{% endcomment %}
+                        {% for reply in comment.comment_set.all %}
+                            <div class="row">
+                                <div class="large-2 columns small-3">
+                                    <img
+                                        {% if reply.dog.avatarFile %}
+                                            src="{{ reply.dog.avatarFile.url }}"
+                                        {% else %}
+                                            src="/media/none-img.png"
+                                        {% endif %}
+                                            width="50px" height="50px"/>
+                                </div>
+                                <div class="large-10 columns">
+                                    <p><strong>{{ reply.dog.nick }}</strong></p>
+                                    {% include "comment.html" with comment=reply %}
+                                </div>
                             </div>
                             <hr/>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <hr/>
                 </div>
-                <hr/>
-            </div>
-        {% endif %}
-    {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="hide">
+        <form id="newsUpdateForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ dog.id }}">
+            <input type="hidden" name="fields" value="comments,event_counter">
+            <input type="hidden" name="event_counter" value="{{ dog.eventCounter }}">
+        </form>
+    </div>
 {% endblock %}
 
 {% block script-block %}
@@ -104,7 +115,7 @@
                     "<form id=\"addReply\" enctype=\"multipart/form-data\">" +
                     "{% csrf_token %}" +
                      "<input type=\"hidden\" name=\"id\" value=\"{{ dog.id }}\">" +
-                    "<input type=\"hidden\" name=\"parent_comment_id\" value=\""+ $(parentComment).attr('data-comment-id') +"\">" +
+                    "<input type=\"hidden\" name=\"parent_comment_id\" value=\""+ $(parentComment).attr('id') +"\">" +
                          "<div class=\"row commenting-field\"><div class=\"large-2 columns small-3 img-container\"><img " +
                     {% if dog.avatarFile %} "src=\"{{ dog.avatarFile.url }}\"" {% else %} "src=\"/media/none-img.png\"" {% endif %} +
                          "/></div><div class=\"large-10 columns textarea-wrapper\"><textarea name=\"text\" placeholder=\"Ваш комментарий\"></textarea>" +
@@ -132,6 +143,61 @@
                 });
             });
         });
+    </script>
+    <script type="application/javascript">
+        var getNews = function(event_counter) {
+            var data = new FormData($('#newsUpdateForm').get(0));
+            if(event_counter)
+                data.append("event_counter", event_counter);
+            $.ajax({
+                url: "/api/dog/get_events/",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                cache: false,
+                processData: false,
+                contentType: false,
+            }).done(function(data) {
+                setTimeout(getNews(data.event_counter), 1000);
+                updateNewsList(data);
+            });
+        };
+        var updateNewsList = function(result) {
+            result.comments.forEach(function(comment) {
+                var img;
+                if (comment.img)
+                    img = comment.img;
+                else
+                    img = "/media/none-img.png";
+                if (comment.parent_comment_id) {
+                    $('#'+comment.parent_comment_id).append(
+                            "<div class='row'><div class='large-2 columns small-3'>" +
+                                "<img src='" + img + "' " +
+                                "width='50px' height='50px'/>" +
+                            "</div><div class='large-10 columns'><p><strong>" +
+                                {% comment %} comment.dog.nick +{% endcomment %}
+                                    "ТУТ ИМЯ ВЫТАЩИ МНЕ ДИМАААА!!111" +
+                                "</strong></p>" +
+                                comment.text +
+                            "</div></div><hr/>"
+                    );
+                }
+                else {
+                    $('#newsList').prepend(
+                            "<div class='row post'><div class='large-2 columns small-3'>" +
+                                "<img src='" + img + "' " +
+                                "width='80px' height='80px'/>" +
+                            "</div><div class='large-10 columns comment-text' id='"+ comment.id +"'><p><strong>" +
+                               {% comment %} comment.dog.nick +{% endcomment %}
+                                    "ТУТ ИМЯ ВЫТАЩИ МНЕ ДИМАААА!!111" +
+                                "</strong></p>" +
+                                comment.text +
+                            "</div><ul class='inline-list'><li><a class='addComment'>Reply</a></li><li><a href=''>Share</a></li></ul></div><hr/>"
+                    );
+                }
+            });
+        };
+        getNews();
     </script>
 {% endblock %}
 

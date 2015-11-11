@@ -151,16 +151,24 @@ input[type='file'] {
   }
 }
 .comment-text {
+  .commenting-field {
+    margin-bottom: 5px;
+  }
   .textarea-wrapper {
     textarea {
       height: 60px;
     }
   }
 }
-.post > .comment-text > .row:last-of-type {
-  margin-bottom: 10px;
-  > hr  {
-    display: none;
+.post > .comment-text {
+  hr {
+    margin: 5px 0;
+    &:last-of-type {
+      display: none;
+    }
+  }
+  > .row:last-of-type {
+    margin-bottom: 10px;
   }
 }
 

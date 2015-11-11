@@ -89,7 +89,7 @@
         <form id="notyForm" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
-            <input type="hidden" name="fields" value="comments,event_counter">
+            <input type="hidden" name="fields" value="comments,likes,achievements,event_counter">
             <input type="hidden" name="event_counter" value="{{ dog.eventCounter }}">
         </form>
     </div>
@@ -101,8 +101,10 @@
     <script src="/static/js/main.js"></script>
     <script src="/static/js/app.js"></script>
     <script type="application/javascript">
-        var getNoty = function() {
+        var getNoty = function(event_counter) {
             var data = new FormData($('#notyForm').get(0));
+            if(event_counter)
+                data.append("event_counter", event_counter);
             $.ajax({
                 url: "/api/dog/get_events/",
                 type: "POST",
@@ -112,14 +114,15 @@
                 processData: false,
                 contentType: false,
             }).done(function(data) {
-                addNoty(data)
+                setTimeout(getNoty(data.event_counter), 1000);
+                addNoty(data);
             });
         };
         var addNoty = function(result) {
             if (result.comments.length > 0){
                 var n = noty({
-                    text: 'Новых комментов: ' + result.comments.length,
-                    layout: 'top',
+                    text: 'Новых коментов: ' + result.comments.length,
+                    layout: 'topRight',
                     theme: 'defaultTheme', // or 'relax'
                     type: 'information',
                     animation: {
@@ -130,9 +133,38 @@
                     }
                 });
             }
-
+            if (result.likes.length > 0){
+                var n = noty({
+                    text: 'Новых лайков: ' + result.likes.length,
+                    layout: 'topRight',
+                    theme: 'defaultTheme', // or 'relax'
+                    type: 'information',
+                    animation: {
+                        open: {height: 'toggle'}, // jQuery animate function property object
+                        close: {height: 'toggle'}, // jQuery animate function property object
+                        easing: 'swing', // easing
+                        speed: 500 // opening & closing animation speed
+                    }
+                });
+            }
+            if (result.achievements.length > 0){
+                result.achievements.forEach(function(achiv) {
+                    var n = noty({
+                        text: 'Вы получили достижение: ' + achiv.type,
+                        layout: 'topRight',
+                        theme: 'defaultTheme', // or 'relax'
+                        type: 'success',
+                        animation: {
+                            open: {height: 'toggle'}, // jQuery animate function property object
+                            close: {height: 'toggle'}, // jQuery animate function property object
+                            easing: 'swing', // easing
+                            speed: 500 // opening & closing animation speed
+                        }
+                    });
+                })
+            }
         };
-        setInterval(getNoty, 1000);
+        getNoty();
     </script>
     {% block script-block %}
     {% endblock %}
