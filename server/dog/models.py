@@ -122,6 +122,8 @@ class Comment(models.Model):
         result = {
             "id": self.id,
             "dog_id": self.dog_id,
+            "nick": self.dog.nick,
+            "avatar": self.dog.avatarFile.url if self.dog.avatarFile else None,
             "text": self.text,
             "type": {
                 0: "text",
