@@ -147,6 +147,26 @@ class Comment(models.Model):
         return result
 
 
+class State(models.Model):
+    eventCounter = models.PositiveIntegerField(default=0)
+
+    # relatedObjects must not be not saved yet
+    def incEventCounter(self, relatedObjects):
+        with transaction.atomic():
+            self.eventCounter = F('eventCounter') + 1
+            self.save()
+            self.refresh_from_db(fields=["eventCounter"])
+            for obj in relatedObjects:
+                obj.eventCounter = self.eventCounter
+                obj.save()
+
+    @classmethod
+    def getState(cls):
+        with transaction.atomic():
+            state = cls.objects.get_or_create(id=1)[0]
+        return state
+
+
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
     breed = models.CharField(max_length=100, null=True)
@@ -157,7 +177,6 @@ class Dog(models.Model):
     collarIdHash = models.CharField(max_length=32, null=True)
     lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     lon = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    eventCounter = models.PositiveIntegerField(default=0)
     totalWalkLength = models.FloatField(default=0)
 
     def __unicode__(self):
@@ -195,7 +214,7 @@ class Dog(models.Model):
                 walkInProgress.save()
 
                 comment = Comment(dog=self, text="", type=1, walk=walkInProgress)
-                self.incEventCounter([comment])
+                State.getState().incEventCounter([comment])
 
                 return None
             else:
@@ -210,16 +229,6 @@ class Dog(models.Model):
             self.save()
         return walkInProgress
 
-    # relatedObjects must not be not saved yet
-    def incEventCounter(self, relatedObjects):
-        with transaction.atomic():
-            self.eventCounter = F('eventCounter') + 1
-            self.save()
-            self.refresh_from_db(fields=["eventCounter"])
-            for obj in relatedObjects:
-                obj.eventCounter = self.eventCounter
-                obj.save()
-
     def createWalkPoint(self, walk, time, deviceTime, lat, lon):
         walkPoint = WalkPoint(
             walk=walk,
@@ -228,7 +237,7 @@ class Dog(models.Model):
             lat=lat,
             lon=lon
         )
-        self.incEventCounter([walkPoint])
+        State.getState().incEventCounter([walkPoint])
 
     def getNearestHome(self):
         nearestHome = None
@@ -290,6 +299,11 @@ class Achievement(models.Model):
         return {
             "dog_id": self.dog_id,
             "type": self.type,
+            "description": {
+                1: u"Завел своего первого друга!",
+                2: u"Нажил первого врага!",
+                3: u"Преодолел 50 метров!",
+            }[self.type],
         }
 
     @classmethod
@@ -297,6 +311,6 @@ class Achievement(models.Model):
         if cls.objects.filter(dog=dog, type=type).exists():
             return
         achievement = cls(dog=dog, type=type)
-        dog.incEventCounter([achievement])
+        State.getState().incEventCounter([achievement])
         comment = Comment(dog=dog, text="", type=4, achievement=achievement)
-        dog.incEventCounter([comment])
+        State.getState().incEventCounter([comment])

@@ -149,7 +149,7 @@ def news(request):
     dogsWithComments = list(ownDogs) + [
         userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
     ]
-    comments = models.Comment.objects.filter(dog__in=dogsWithComments).prefetch_related("comment_set").order_by("-time")
+    comments = models.Comment.objects.filter(dog__in=dogsWithComments).prefetch_related("comment_set").order_by("-eventCounter")
 
     return render_to_response(
         "news.html",
@@ -158,6 +158,7 @@ def news(request):
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
             "comments": comments,
+            "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)
     )
@@ -265,7 +266,7 @@ def setDogRelation(request):
 
     if relation.status in [-1, 1]:
         comment = models.Comment(dog=dog, text="", type=3, relation=relation)
-        dog.incEventCounter([comment])
+        models.State.getState().incEventCounter([comment])
 
         if relation.status == 1:
             nFriends = models.DogRelation.objects.filter(dog=dog, status=1).count()
@@ -319,7 +320,7 @@ def addCloseDogEvents(dog, relatedDogs, added, relatedDogIdToStatus):
             added=added,
             status=getDogStatus(relatedDog.id, relatedDogIdToStatus)
         )
-        dog.incEventCounter([closeDogEvent])
+        models.State.getState().incEventCounter([closeDogEvent])
 
 
 def addWalkPoint(request):
@@ -394,7 +395,7 @@ def addWalkPoint(request):
         models.CloseDogRelation.objects.filter(dog=dog, relatedDog__in=dogsRemoved).delete()
         addCloseDogEvents(dog, dogsRemoved, False, relatedDogIdToStatus)
 
-        models.CloseDogEvent.removeOldEvents(dog.eventCounter)
+        models.CloseDogEvent.removeOldEvents(models.State.getState().eventCounter)
 
         closeDogsStatus = [relatedDogIdToStatus[dog.id] for dog in newCloseDogs]
 
@@ -434,7 +435,7 @@ def addTextComment(request):
         type=0,
         parentComment_id=params["parent_comment_id"] if "parent_comment_id" in params else None
     )
-    dog.incEventCounter([comment])
+    models.State.getState().incEventCounter([comment])
     return JsonResponse(comment.toDict())
 
 
@@ -447,7 +448,7 @@ def addPhotoComment(request):
             "error": "You don't have rights to execute this method",
         })
     comment = models.Comment(dog=dog, text=params["text"], type=2)
-    dog.incEventCounter([comment])
+    models.State.getState().incEventCounter([comment])
     return JsonResponse(comment.toDict())
 
 
@@ -468,7 +469,7 @@ def deleteComment(request):
 def like(request):
     params = request.REQUEST
     like = models.Like(comment_id=params["comment_id"], user=request.user)[0]
-    dog.incEventCounter([like])
+    models.State.getState().incEventCounter([like])
     return JsonResponse(like.toDict())
 
 
@@ -481,7 +482,7 @@ def unlike(request):
     return JsonResponse(response)
 
 
-def fillResponseWithField(fields, fieldName, model, dogField, dog, eventCounter, response):
+def fillResponseWithField(fields, fieldName, model, dogField, dog, eventCounter, currentEventCounter, response):
     if fieldName in fields:
         xargs = {
             dogField: dog
@@ -489,7 +490,7 @@ def fillResponseWithField(fields, fieldName, model, dogField, dog, eventCounter,
         objects = model.objects.filter(
             eventCounter__range=[
                 (eventCounter if eventCounter else 0) + 1,
-                dog.eventCounter
+                currentEventCounter
             ],
             **xargs
         ).order_by("eventCounter")
@@ -501,6 +502,7 @@ def fillResponseWithField(fields, fieldName, model, dogField, dog, eventCounter,
 
 @view_decorators.apiLoginRequired
 def getDogEvents(request):
+    currentEventCounter = models.State.getState().eventCounter
     params = request.REQUEST
     eventCounter = int(params["event_counter"]) if "event_counter" in params else None
     fields = params["fields"].split(",")
@@ -509,9 +511,10 @@ def getDogEvents(request):
         return JsonResponse({
             "error": "You don't have rights to execute this method",
         })
+    user = request.user
     response = {
         "dog_id": dog.id,
-        "event_counter": dog.eventCounter,
+        "event_counter": currentEventCounter,
     }
 
     if "lat" in fields or "lon" in fields or "walk" in fields:
@@ -524,14 +527,14 @@ def getDogEvents(request):
     if "walk" in fields:
         response["walk"] = {
             "id": walkInProgress.id,
-            "path": walkInProgress.getPathWithinPeriod(eventCounter, dog.eventCounter),
+            "path": walkInProgress.getPathWithinPeriod(eventCounter, currentEventCounter),
         } if walkInProgress else None
     if "close_dogs_events" in fields:
         if eventCounter:
             closeDogEvents = models.CloseDogEvent.objects.filter(dog=dog,
                                                                  eventCounter__range=[
                                                                      eventCounter + 1,
-                                                                     dog.eventCounter
+                                                                     currentEventCounter
                                                                  ]).order_by("eventCounter")
             response["close_dogs_events"] = [
                 {
@@ -556,8 +559,26 @@ def getDogEvents(request):
                     "status": getDogStatus(closeDogRelation.relatedDog_id, closeDogIdToStatus)
                 } for closeDogRelation in closeDogRelations
             ]
-    response = fillResponseWithField(fields, "comments", models.Comment, "dog", dog, eventCounter, response)
-    response = fillResponseWithField(fields, "likes", models.Like, "comment__dog", dog, eventCounter, response)
-    response = fillResponseWithField(fields, "achievements", models.Achievement, "dog", dog, eventCounter, response)
+    if "comments" in fields:
+        ownDogs = models.Dog.objects.filter(user=user)
+        dogsWithComments = list(ownDogs) + [
+            userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
+        ]
+        comments = models.Comment.objects.filter(
+            dog__in=dogsWithComments,
+        )
+        if eventCounter:
+            comments = comments.filter(
+                eventCounter__range=[
+                    eventCounter + 1,
+                    currentEventCounter
+                ]
+            )
+        comments = comments.order_by("-eventCounter")
+        response["comments"] = [
+            comment.toDict() for comment in comments
+        ]
+    response = fillResponseWithField(fields, "likes", models.Like, "comment__dog", dog, eventCounter, currentEventCounter, response)
+    response = fillResponseWithField(fields, "achievements", models.Achievement, "dog", dog, eventCounter, currentEventCounter, response)
 
     return JsonResponse(response)

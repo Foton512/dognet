@@ -80,7 +80,7 @@
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
             <input type="hidden" name="fields" value="comments,event_counter">
-            <input type="hidden" name="event_counter" value="{{ dog.eventCounter }}">
+            <input type="hidden" name="event_counter" value="{{ eventCounter }}">
         </form>
     </div>
 {% endblock %}
