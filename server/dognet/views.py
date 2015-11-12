@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.db.models import Q
+from django.template import loader, Context
 from social.apps.django_app.utils import psa
 from django.utils import timezone
 import geopy
@@ -560,24 +561,30 @@ def getDogEvents(request):
                 } for closeDogRelation in closeDogRelations
             ]
     if "comments" in fields:
-        ownDogs = models.Dog.objects.filter(user=user)
-        dogsWithComments = list(ownDogs) + [
-            userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
-        ]
-        comments = models.Comment.objects.filter(
-            dog__in=dogsWithComments,
-        )
-        if eventCounter:
-            comments = comments.filter(
-                eventCounter__range=[
-                    eventCounter + 1,
-                    currentEventCounter
-                ]
+            ownDogs = models.Dog.objects.filter(user=user)
+            dogsWithComments = list(ownDogs) + [
+                userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
+            ]
+            comments = models.Comment.objects.filter(
+                dog__in=dogsWithComments,
             )
-        comments = comments.order_by("-eventCounter")
-        response["comments"] = [
-            comment.toDict() for comment in comments
-        ]
+            if eventCounter:
+                comments = comments.filter(
+                    eventCounter__range=[
+                        eventCounter + 1,
+                        currentEventCounter
+                    ]
+                )
+            comments = comments.order_by("-eventCounter")
+            commentTemplate = loader.get_template('comment.html')
+            response["comments"] = [
+                {
+                    "avatar": comment.dog.avatarFile.url if comment.dog.avatarFile else None,
+                    "id": comment.id,
+                    "parent_comment_id": comment.parentComment.id if comment.parentComment else None,
+                    "html": commentTemplate.render(Context({"comment": comment}))
+                } for comment in comments
+            ]
     response = fillResponseWithField(fields, "likes", models.Like, "comment__dog", dog, eventCounter, currentEventCounter, response)
     response = fillResponseWithField(fields, "achievements", models.Achievement, "dog", dog, eventCounter, currentEventCounter, response)
 
