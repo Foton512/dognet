@@ -31,6 +31,10 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 
     <link href="css/app.css" rel="stylesheet">
+    <link href="css/font.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/foundation.css" rel="stylesheet">
+    <link href="css/social-btn.css" rel="stylesheet">
 
     <script type="text/javascript" src="lib/ms-open-tech/winstore-jscompat.js"></script>
 
@@ -43,6 +47,8 @@
     <script type="text/javascript" src="lib/ya-map-2.1.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="lib/jquery/jquery.highlight.js"></script>
+    <script type="text/javascript" src="lib/mm-foundation-0.8.0.js"></script>
+    <script type="text/javascript" src="lib/mm-foundation-tpls-0.8.0.js"></script>
 
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 
@@ -68,6 +74,31 @@
 </head>
 
 <body ng-controller="MainCtrl" id="body">
-<ui-view></ui-view>
+
+<div class="off-canvas-wrap">
+    <div class="inner-wrap">
+        <nav class="tab-bar">
+            <section class="left-small">
+                <a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+            </section>
+
+            <section class="middle tab-bar-section">
+                <h1 class="title">OffCanvas</h1>
+            </section>
+
+        </nav>
+        <aside class="left-off-canvas-menu">
+            <ul class="off-canvas-list">
+                <li><a href="#/app/dog/2">Left Sidebar</a></li>
+            </ul>
+        </aside>
+        <section class="main-section">
+            <ui-view></ui-view>
+        </section>
+        <a class="exit-off-canvas"></a>
+    </div>
+</div>
+
+
 </body>
 </html>

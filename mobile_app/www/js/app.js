@@ -7,5 +7,7 @@ var app = angular.module('app', [
 	'mobile-angular-ui',
 	'ngTouch',
     'ng',
-    'ngRoute'
+    'ngRoute',
+    'mm.foundation',
+    'mm.foundation.offcanvas'
 ]);
