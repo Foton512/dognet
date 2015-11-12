@@ -199,7 +199,7 @@ class Dog(models.Model):
             "on_walk": Walk.objects.filter(dog=self, inProgress=True).exists(),
             "avatar": self.avatarFile.url if self.avatarFile else None,
             "lat": self.lat,
-            "lon": self.lon
+            "lon": self.lon,
             "total_walk_length": self.totalWalkLength
         }
 
