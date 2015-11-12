@@ -1,0 +1,24 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "android.support.v4": {
+            "PACKAGE_NAME": "HelloCordova"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "HelloCordova"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "HelloCordova"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "HelloCordova"
+        }
+    },
+    "dependent_plugins": {}
+}

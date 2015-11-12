@@ -1,0 +1,10 @@
+<div class="app">
+    <div ng-repeat="dog in vm.dogs" ng-show="!vm.hidden">
+        <ul>
+            <li>Имя: {{dog.nick}}</li>
+            <li>Вес: {{dog.weight}} кг</li>
+            <li><a href="#/app/dog/{{::dog.id}}">Go!</a></li>
+        </ul>
+    </div>
+    <div ng-show="vm.hidden"><h2>НЕТ СОБАК!</h2></div>
+</div>
