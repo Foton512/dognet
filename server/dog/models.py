@@ -85,6 +85,8 @@ class Walk(models.Model):
 
     def toDict(self):
         return {
+            "dog": self.dog.toDict(),
+            "in_progress": self.inProgress,
             "length": self.length,
             "path": self.getPath(),
         }
@@ -121,6 +123,7 @@ class Comment(models.Model):
     def toDict(self):
         result = {
             "id": self.id,
+            "dog": self.dog.toDict(),
             "dog_id": self.dog_id,
             "nick": self.dog.nick,
             "avatar": self.dog.avatarFile.url if self.dog.avatarFile else None,
@@ -185,6 +188,7 @@ class Dog(models.Model):
     def toDict(self):
         return {
             "id": self.id,
+            "breed": self.breed,
             "nick": self.nick,
             "birth_date": self.birthDate.strftime("%Y%m%d") if self.birthDate else "",
             "weight": self.weight,
@@ -193,6 +197,10 @@ class Dog(models.Model):
             "user_second_name": self.user.last_name,
             "user_url": util.getSocialUrlByUser(self.user),
             "on_walk": Walk.objects.filter(dog=self, inProgress=True).exists(),
+            "avatar": self.avatarFile.url if self.avatarFile else None,
+            "lat": self.lat,
+            "lon": self.lon
+            "total_walk_length": self.totalWalkLength
         }
 
     def getWalkInProgress(self):
@@ -261,6 +269,8 @@ class DogRelation(models.Model):
         return {
             "id": self.dog_id,
             "related_id": self.relatedDog_id,
+            "dog": self.dog.toDict(),
+            "related_dog": self.relatedDog.toDict(),
             "status": self.status,
         }
 
@@ -273,6 +283,7 @@ class UserDogSubscription(models.Model):
         return {
             "user_id": self.user_id,
             "dog_id": self.dog_id,
+            "dog": self.dog.toDict(),
         }
 
 
@@ -285,6 +296,7 @@ class Like(models.Model):
         return {
             "comment_id": self.comment_id,
             "user_id": self.user_id,
+            "comment": self.comment.toDict(),
         }
 
 
@@ -298,6 +310,7 @@ class Achievement(models.Model):
     def toDict(self):
         return {
             "dog_id": self.dog_id,
+            "dog": self.dog.toDict(),
             "type": self.type,
             "description": {
                 1: u"Завел своего первого друга!",
