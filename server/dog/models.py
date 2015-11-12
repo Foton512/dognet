@@ -307,16 +307,19 @@ class Achievement(models.Model):
     dog = models.ForeignKey(Dog)
     eventCounter = models.PositiveIntegerField(default=0)
 
+    def getDescription(self):
+        return {
+            1: u"Завел своего первого друга!",
+            2: u"Нажил первого врага!",
+            3: u"Преодолел 50 метров!",
+        }[self.type]
+
     def toDict(self):
         return {
             "dog_id": self.dog_id,
             "dog": self.dog.toDict(),
             "type": self.type,
-            "description": {
-                1: u"Завел своего первого друга!",
-                2: u"Нажил первого врага!",
-                3: u"Преодолел 50 метров!",
-            }[self.type],
+            "description": self.getDescription(),
         }
 
     @classmethod

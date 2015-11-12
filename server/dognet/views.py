@@ -560,7 +560,7 @@ def getDogEvents(request):
                     "status": getDogStatus(closeDogRelation.relatedDog_id, closeDogIdToStatus)
                 } for closeDogRelation in closeDogRelations
             ]
-    if "comments" in fields:
+    if "comments" in fields or "replies" in fields:
             ownDogs = models.Dog.objects.filter(user=user)
             dogsWithComments = list(ownDogs) + [
                 userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
@@ -576,16 +576,46 @@ def getDogEvents(request):
                     ]
                 )
             comments = comments.order_by("-eventCounter")
+            replies = comments.filter(~Q(dog=dog), Q(parentComment__isnull=False))
             commentTemplate = loader.get_template('comment.html')
-            response["comments"] = [
-                {
-                    "avatar": comment.dog.avatarFile.url if comment.dog.avatarFile else None,
-                    "id": comment.id,
-                    "parent_comment_id": comment.parentComment.id if comment.parentComment else None,
-                    "html": commentTemplate.render(Context({"comment": comment}))
-                } for comment in comments
-            ]
+            if "comments" in fields:
+                response["comments"] = [
+                    {
+                        "avatar": comment.dog.avatarFile.url if comment.dog.avatarFile else None,
+                        "id": comment.id,
+                        "parent_comment_id": comment.parentComment.id if comment.parentComment else None,
+                        "html": commentTemplate.render(Context({"comment": comment}))
+                    } for comment in comments
+                ]
+            if "replies" in fields:
+                response["replies"] = [
+                    {
+                        "avatar": comment.dog.avatarFile.url if comment.dog.avatarFile else None,
+                        "id": comment.id,
+                        "parent_comment_id": comment.parentComment.id if comment.parentComment else None,
+                        "html": commentTemplate.render(Context({"comment": comment}))
+                    } for comment in replies
+                ]
+
+    if "achievements" in fields:
+        achievements = models.Achievement.objects.filter(
+            dog=dog,
+            eventCounter__range=[
+                (eventCounter if eventCounter else 0) + 1,
+                currentEventCounter
+            ],
+        ).order_by("eventCounter")
+        achievementTemplate = loader.get_template("achievement.html")
+        for achievement in achievements:
+            achievement.description = achievement.getDescription()
+        response["achievements"] = [
+            {
+                "html": achievementTemplate.render(Context({"achievement": achievement}))
+            } for achievement in achievements
+        ]
+
     response = fillResponseWithField(fields, "likes", models.Like, "comment__dog", dog, eventCounter, currentEventCounter, response)
-    response = fillResponseWithField(fields, "achievements", models.Achievement, "dog", dog, eventCounter, currentEventCounter, response)
+
+    print response
 
     return JsonResponse(response)
