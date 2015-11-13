@@ -63,7 +63,7 @@ def edit(request, dogId):
         context={
             "dog": dog,
             "ownDogs": ownDogs,
-            "dogForm": forms.DogForm(initial={"breed": "Сиба Ину"}),
+            "dogForm": forms.DogForm(instance=dog, initial={"breed": "Сиба Ину"}),
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
             "eventCounter": models.State.getState().eventCounter,
         },
