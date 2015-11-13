@@ -70,9 +70,9 @@
                     {% if user.is_authenticated %}
                         <div><h3>Учавствуй в жизни своего питомца</h3></div>
                         {% if dog.id %}
-                            <a class="btn btn-vk" href="/news"><i class="fa fa-hacker-news fa-2x"></i> Посмотреть что нового у {{ dog.nick }}</a>
+                            <a class="button" href="/news"><i class="fa fa-hacker-news fa-2x right"></i> Посмотреть что нового у {{ dog.nick }}</a>
                         {% else %}
-                            <a class="btn btn-vk" href="/dog/add"><i class="fa fa-plus-circle fa-2x"></i> У меня есть питомец</a>
+                            <a class="button" href="/dog/add"><i class="fa fa-plus-circle fa-2x right"></i> У меня есть питомец</a>
                         {% endif %}
                     {% else %}
                         <div><h3>Авторизуйтесь плизки</h3></div>

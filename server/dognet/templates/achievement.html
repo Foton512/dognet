@@ -1,2 +1,12 @@
-{{ achievement.type }}<br>
-{{ achievement.description }}
+<div class="row">
+    <div class="img-noty">
+        <img src="/media/achivments/{{ achievement.type }}.png">
+    </div>
+
+    <div class="content-noty">
+        Поздравляем!<br>
+        Вы получили достижение:<br>
+        <strong>{{ achievement.description }}</strong><br><br>
+        <a href="/achievements">Посмотреть все достижения</a>
+    </div>
+</div>

@@ -5,9 +5,41 @@
     <p>Прогулочка</p>
     <p>
         Длина: {{ comment.walk.length }}м. Маршрут:
-        {% for point in comment.walk.getPath %}
+        <div class="map-wrapper">
+            <div id="map{{ comment.id }}" style="width: 100%; height: 300px"></div>
+        </div>
+        {% comment %}{% for point in comment.walk.getPath %}
             ({{ point.0 }}, {{ point.1 }}),
-        {% endfor %}
+        {% endfor %}{% endcomment %}
+        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+        <script type="text/javascript">
+            ymaps.ready(init);
+            var map;
+            var walk;
+
+            function init() {
+                map = new ymaps.Map("map{{ comment.id }}", {
+                    center: [{{ comment.walk.getPath.first.0 }}, {{ comment.walk.getPath.first.1 }}],
+                    zoom: 15
+                });
+                walk = new ymaps.Polyline([
+                    {% for point in comment.walk.getPath %}
+                        [{{ point.0 }}, {{ point.1 }}],
+                    {% endfor %}
+                ], {}, {
+                    balloonCloseButton: false,
+                    strokeColor: "#0F7FA4",
+                    strokeWidth: 4,
+                    strokeOpacity: 0.7
+                });
+
+                map.geoObjects.add(walk);
+
+                map.controls.remove('searchControl');
+                map.controls.remove('trafficControl');
+                map.controls.remove('geolocationControl');
+            }
+        </script>
     </p>
 {% elif comment.type == 2 %}
     <p>{{ comment.text }}</p>
@@ -23,26 +55,12 @@
     </div>
 {% elif comment.type == 4 %}
     <p>Ачивка</p>
-    {% if comment.achievement.type == 1 %}
+    <div class="achivments text-center">
         <div class="done">
-            <div class="achiv-1 "></div>
+            <img src="/media/achivments/{{ comment.achievement.type }}.png">
         </div>
-        <div class="description text-center">
-            <p>"Первый друг"</p>
+        <div class="description">
+            <p>{{ comment.achievement.description }}</p>
         </div>
-    {% elif comment.achievement.type == 2 %}
-         <div class="done">
-            <div class="achiv-7 "></div>
-        </div>
-        <div class="description text-center">
-            <p>"Первый враг"</p>
-        </div>
-    {% elif comment.achievement.type == 3 %}
-        <div class="done">
-            <div class="achiv-2 "></div>
-        </div>
-        <div class="description text-center">
-            <p>"Пройдено 50 метров"</p>
-        </div>
-    {% endif %}
+    </div>
 {% endif %}

@@ -4,7 +4,6 @@
 @import 'font-awesome';
 @import 'font';
 @import "css3-mixins";
-@import "achivments";
 @import "social-btn";
 
 html, body {
@@ -52,9 +51,6 @@ html, body {
 
 /*** Achivments ***/
 
-[class^="achiv-"] {
-  margin: 0 auto;
-}
 .achivments {
   .process {
     opacity: 0.5;
@@ -75,6 +71,27 @@ html, body {
     position: absolute;
     .button {
       margin-bottom: 0;
+    }
+  }
+}
+
+/*** Notyfication ***/
+.row {
+  > .img-noty {
+    display: inline-block;
+    float: left;
+    width: 30%;
+    > img {
+      width: 100%;
+    }
+  }
+  > .content-noty {
+    display: inline-block;
+    float: left;
+    width: 65%;
+    margin-left: 5%;
+    p {
+      margin-bottom: 0.5rem;
     }
   }
 }
@@ -123,7 +140,7 @@ input[type='file'] {
     @include transition(all 0.2s ease-in);
     float: left; /* IE 9 Fix */
     &:hover, &:focus {
-        background-color: lighten($file-upload-color, 55);
+        background-color: #F3F3F3;
         outline: none;
     }
 }
@@ -186,6 +203,23 @@ input[type='file'] {
   }
 }
 .comment-text {
+  .inline-list {
+    margin: 5px 0;
+    > li > a {
+      color: #7d7d7d;
+      font-size: 0.8em;
+      .active {
+        color: #0F7FA4;
+      }
+      &:hover {
+        color: #0F7FA4;
+      }
+    }
+    li:first-of-type {
+      margin-left: 0;
+    }
+  }
+
   p {
     margin-bottom: 0.5rem;
   }

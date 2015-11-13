@@ -17689,41 +17689,6 @@ th {
   more info: http://www.findmebyip.com/litmus/#css3-properties
 
 ------------------------------------------------------------- */
-[class^="achiv-"] {
-  background: url("/media/achivments.png") no-repeat;
-  width: 122px;
-  height: 122px; }
-
-.achiv-1 {
-  background-position: 0 0; }
-
-.achiv-2 {
-  background-position: -149px 0; }
-
-.achiv-3 {
-  background-position: -297px 0; }
-
-.achiv-4 {
-  background-position: -445px 0; }
-
-.achiv-5 {
-  background-position: -591px 0; }
-
-.achiv-6 {
-  background-position: 0 -136px; }
-
-.achiv-7 {
-  background-position: -149px -136px; }
-
-.achiv-8 {
-  background-position: -297px -136px; }
-
-.achiv-9 {
-  background-position: -445px -136px; }
-
-.achiv-10 {
-  background-position: -591px -136px; }
-
 /*!
  *  Font Awesome 4.4.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -19835,9 +19800,6 @@ html, body {
     max-height: 300px; }
 
 /*** Achivments ***/
-[class^="achiv-"] {
-  margin: 0 auto; }
-
 .achivments .process {
   opacity: 0.5; }
 
@@ -19855,6 +19817,22 @@ html, body {
     position: absolute; }
     .friend-info .button-group .button {
       margin-bottom: 0; }
+
+/*** Notyfication ***/
+.row > .img-noty {
+  display: inline-block;
+  float: left;
+  width: 30%; }
+  .row > .img-noty > img {
+    width: 100%; }
+
+.row > .content-noty {
+  display: inline-block;
+  float: left;
+  width: 65%;
+  margin-left: 5%; }
+  .row > .content-noty p {
+    margin-bottom: 0.5rem; }
 
 /*** Maps ***/
 /*@media only screen and (min-width: 64.063em) and (max-width: 90em) {
@@ -19892,7 +19870,7 @@ input[type='file'] {
   float: left;
   /* IE 9 Fix */ }
   .file-upload-input:hover, .file-upload-input:focus {
-    background-color: #e7f8fd;
+    background-color: #F3F3F3;
     outline: none; }
 
 .file-upload-button {
@@ -19940,6 +19918,18 @@ input[type='file'] {
 .commenting-field .textarea-wrapper .control-row button {
   margin-top: 10px;
   margin-bottom: 0; }
+
+.comment-text .inline-list {
+  margin: 5px 0; }
+  .comment-text .inline-list > li > a {
+    color: #7d7d7d;
+    font-size: 0.8em; }
+    .comment-text .inline-list > li > a .active {
+      color: #0F7FA4; }
+    .comment-text .inline-list > li > a:hover {
+      color: #0F7FA4; }
+  .comment-text .inline-list li:first-of-type {
+    margin-left: 0; }
 
 .comment-text p {
   margin-bottom: 0.5rem; }

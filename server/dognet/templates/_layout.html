@@ -90,7 +90,7 @@
         <form id="notyForm" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
-            <input type="hidden" name="fields" value="comments,likes,achievements,event_counter">
+            <input type="hidden" name="fields" value="replies,likes,achievements,event_counter">
             <input type="hidden" name="event_counter" value="{{ eventCounter }}">
         </form>
     </div>
@@ -120,46 +120,54 @@
             });
         };
         var addNoty = function(result) {
-            if (result.comments.length > 0){
-                var n = noty({
-                    text: 'Новых коментов: ' + result.comments.length,
-                    layout: 'topRight',
-                    theme: 'defaultTheme', // or 'relax'
-                    type: 'information',
-                    animation: {
-                        open: {height: 'toggle'}, // jQuery animate function property object
-                        close: {height: 'toggle'}, // jQuery animate function property object
-                        easing: 'swing', // easing
-                        speed: 500 // opening & closing animation speed
-                    }
-                });
+            if (result.replies.length > 0){
+                result.replies.forEach(function(comment) {
+                    var n = noty({
+                        text: '<div class="row">' +
+                        '<div class="img-noty">' +
+                        '<img src="' + comment.avatar + '">' +
+                        '</div>' +
+                        '<div class="content-noty">' + comment.html + '</div></div>',
+                        layout: 'topRight',
+                        theme: 'relax',
+                        type: 'alert',
+                        closeWith: ['click'],
+                        animation: {
+                            open: {height: 'toggle'},
+                            close: {height: 'toggle'},
+                            easing: 'swing',
+                            speed: 500
+                        }
+                    });
+                })
             }
             if (result.likes.length > 0){
                 var n = noty({
-                    text: 'Новых лайков: ' + result.likes.length,
+                    text: 'Новых лайков: <strong>' + result.likes.length + '</strong>',
                     layout: 'topRight',
-                    theme: 'defaultTheme', // or 'relax'
+                    theme: 'defaultTheme',
                     type: 'information',
                     animation: {
-                        open: {height: 'toggle'}, // jQuery animate function property object
-                        close: {height: 'toggle'}, // jQuery animate function property object
-                        easing: 'swing', // easing
-                        speed: 500 // opening & closing animation speed
+                        open: {height: 'toggle'},
+                        close: {height: 'toggle'},
+                        easing: 'swing',
+                        speed: 500
                     }
                 });
             }
             if (result.achievements.length > 0){
                 result.achievements.forEach(function(achiv) {
                     var n = noty({
-                        text: 'Вы получили достижение: ' + achiv.type,
+                        text: achiv.html,
                         layout: 'topRight',
-                        theme: 'defaultTheme', // or 'relax'
-                        type: 'success',
+                        theme: 'relax',
+                        type: 'alert',
+                        closeWith: ['click'],
                         animation: {
-                            open: {height: 'toggle'}, // jQuery animate function property object
-                            close: {height: 'toggle'}, // jQuery animate function property object
-                            easing: 'swing', // easing
-                            speed: 500 // opening & closing animation speed
+                            open: {height: 'toggle'},
+                            close: {height: 'toggle'},
+                            easing: 'swing',
+                            speed: 500
                         }
                     });
                 })

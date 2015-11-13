@@ -8,7 +8,7 @@
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
             <div class="row commenting-field">
-                <div class="large-2 columns small-3 img-container">
+                <div class="medium-2 columns small-3 img-container">
                     <img
                     {% if dog.avatarFile %}
                         src="{{ dog.avatarFile.url }}"
@@ -17,7 +17,7 @@
                     {% endif %}
                     />
                 </div>
-                <div class="large-10 columns textarea-wrapper">
+                <div class="medium-10 columns small-9 textarea-wrapper">
                     <textarea id="addNew" name="text" placeholder="Что у вашего питомца нового..."></textarea>
                     <div class="control-row" style="display: none;">
                         <button class="button tiny success" type="submit">Отправить</button>
@@ -34,7 +34,7 @@
         {% for comment in comments %}
             {% if not comment.parentComment %}
                 <div class="row post">
-                    <div class="large-2 columns small-3">
+                    <div class="medium-2 columns small-3">
                         <img
                         {% if comment.dog.avatarFile %}
                             src="{{ comment.dog.avatarFile.url }}"
@@ -43,16 +43,17 @@
                         {% endif %}
                         width="80px" height="80px"/>
                     </div>
-                    <div class="large-10 columns comment-text" id="{{ comment.id }}">
+                    <div class="medium-10 columns small-9 comment-text" id="{{ comment.id }}">
                         {% include "comment.html" with comment=comment %}
                         <ul class="inline-list">
-                            <li><a class="addComment">Reply</a></li>
-                            <li><a href="">Share</a></li>
+                            <li><a class="addComment">Комментировать</a></li>
+                            <li><a href="addLike"><i class="fa fa-thumbs-up"></i> Like</a></li>
+                            <li><a href="addDislike"><i class="fa fa-thumbs-down"></i> Dislike</a></li>
                         </ul>
                         {% comment %}<h6>{{ comment.comment_set.count }} Comments</h6>{% endcomment %}
                         {% for reply in comment.comment_set.all %}
                             <div class="row">
-                                <div class="large-2 columns small-3">
+                                <div class="medium-2 columns small-3">
                                     <img
                                         {% if reply.dog.avatarFile %}
                                             src="{{ reply.dog.avatarFile.url }}"
@@ -61,7 +62,7 @@
                                         {% endif %}
                                             width="50px" height="50px"/>
                                 </div>
-                                <div class="large-10 columns">
+                                <div class="medium-10 columns small-9">
                                     {% include "comment.html" with comment=reply %}
                                 </div>
                             </div>
@@ -111,15 +112,16 @@
                     "{% csrf_token %}" +
                      "<input type=\"hidden\" name=\"id\" value=\"{{ dog.id }}\">" +
                     "<input type=\"hidden\" name=\"parent_comment_id\" value=\""+ $(parentComment).attr('id') +"\">" +
-                         "<div class=\"row commenting-field\"><div class=\"large-2 columns small-3 img-container\"><img " +
+                         "<div class=\"row commenting-field\"><div class=\"medium-2 columns small-3 img-container\"><img " +
                     {% if dog.avatarFile %} "src=\"{{ dog.avatarFile.url }}\"" {% else %} "src=\"/media/none-img.png\"" {% endif %} +
-                         "/></div><div class=\"large-10 columns textarea-wrapper\"><textarea name=\"text\" placeholder=\"Ваш комментарий\"></textarea>" +
+                         "/></div><div class=\"medium-10 columns small-9 textarea-wrapper\"><textarea name=\"text\" placeholder=\"Ваш комментарий\"></textarea>" +
                     "<div class=\"control-row\"><button class=\"button tiny success\" type=\"submit\">Отправить</button>" +
                         "<button data-dropdown=\"drop{{ dog.id }}\" aria-controls=\"drop\" aria-expanded=\"false\" class=\"tiny button dropdown\">Прикрепить</button>" +
                         "<ul id=\"drop{{ dog.id }}\" data-dropdown-content class=\"f-dropdown\" aria-hidden=\"true\"><li><a href=\"#\">Загрузить фотаньку</a></li></ul>" +
                     "</div></div></div></form>"
                 );
                 $.scrollTo($(this),800);
+                $("#addReply textarea").focus();
                 $(parentComment).find('form').on("submit", function(event) {
                     event.preventDefault();
                     var data = new FormData($(this).get(0));
@@ -188,10 +190,10 @@
                 if (comment.parent_comment_id) {
                     $('#'+comment.parent_comment_id).append(
                         "<div class='row'>" +
-                            "<div class='large-2 columns small-3'>" +
+                            "<div class='medium-2 columns small-3'>" +
                                 "<img src='" + img + "' " + "width='50px' height='50px'/>" +
                             "</div>" +
-                            "<div class='large-10 columns'>" +
+                            "<div class='medium-10 columns small-9'>" +
                                 comment.html +
                             "</div>" +
                         "</div><hr/>"
@@ -200,14 +202,16 @@
                 else {
                     $('#newsList').prepend(
                         "<div class='row post'>" +
-                            "<div class='large-2 columns small-3'>" +
+                            "<div class='medium-2 columns small-3'>" +
                                 "<img src='" + img + "' " + "width='80px' height='80px'/>" +
                             "</div>" +
-                            "<div class='large-10 columns comment-text' id='" + comment.id + "'>" +
+                            "<div class='medium-10 columns small-9 comment-text' id='" + comment.id + "'>" +
                                 comment.html +
+                                "<ul class='inline-list'><li><a class='addComment'>Комментировать</a></li>" +
+                                "<li><a href='addLike'><i class='fa fa-thumbs-up'></i> Like</a></li>" +
+                                "<li><a href='addDislike'><i class='fa fa-thumbs-down'></i> Dislike</a></li></ul>" +
                             "</div>" +
-                            "<ul class='inline-list'><li><a class='addComment'>Reply</a></li><li><a href=''>Share</a></li></ul>" +
-                        "</div><hr/>"
+                        "<hr/></div>"
                     );
                 }
             });
