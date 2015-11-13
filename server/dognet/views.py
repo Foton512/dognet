@@ -553,8 +553,7 @@ def getDogEvents(request):
         "event_counter": currentEventCounter,
     }
 
-    if "lat" in fields or "lon" in fields or "walk" in fields:
-        walkInProgress = dog.checkFinishedWalks()
+    walkInProgress = dog.checkFinishedWalks()
 
     if "lat" in fields:
         response["lat"] = float(dog.lat) if dog.lat else None
