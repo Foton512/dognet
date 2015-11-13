@@ -20,6 +20,7 @@
     <script type="text/javascript">
         ymaps.ready(init);
         var map;
+        var home, myDog, friends, enemy, walk;
 
         function init() {
             map = new ymaps.Map("map", {
@@ -27,7 +28,7 @@
                 zoom: 15
             });
 
-            var home = new ymaps.Placemark([57.62545757, 39.88520444],
+             home = new ymaps.Placemark([57.62545757, 39.88520444],
                     {
                         hintContent: 'Дом!'
                     },
@@ -39,7 +40,7 @@
                     }
             );
 
-            var myDog = new ymaps.Placemark([57.62572234, 39.88755405],
+            myDog = new ymaps.Placemark([57.62572234, 39.88755405],
                     {
                         hintContent: '{{ dog.nick }}'
                     },
@@ -51,7 +52,7 @@
                     }
             );
 
-            var friends = new ymaps.Placemark([57.62632958, 39.88450170],
+            friends = new ymaps.Placemark([57.62632958, 39.88450170],
                     {
                         hintContent: 'Друг'
                     },
@@ -63,7 +64,7 @@
                     }
             );
 
-            var enemy = new ymaps.Placemark([57.62645045, 39.88343418],
+            enemy = new ymaps.Placemark([57.62645045, 39.88343418],
                     {
                         hintContent: 'Враг'
                     },
@@ -75,7 +76,7 @@
                     }
             );
 
-            var walk = new ymaps.Polyline([
+            walk = new ymaps.Polyline([
                 [57.62545757, 39.88520444],
                 [57.62539426, 39.88437295],
                 [57.62586624, 39.88408327],
@@ -94,27 +95,28 @@
             {% if filter == "friends" %} map.geoObjects.add(friends); {% endif %}
             {% if filter == "enemies" %} map.geoObjects.add(enemy); {% endif %}
             {% if filter == "all" %} map.geoObjects.add(walk).add(myDog).add(home).add(friends).add(enemy); {% endif %}
+
             map.controls.remove('searchControl');
             map.controls.remove('trafficControl');
             map.controls.remove('geolocationControl');
         }
-
-
-    </script>
-    <script>
-        function setRelation(dogId, relatedDogId, status) {
-            $.ajax({
-                url: "/api/dog/set_relation/",
-                type: "get",
-                data: {
-                    "id": dogId,
-                    "related_id": relatedDogId,
-                    "status": status
-                },
-                success: function () {
-                    location.reload();
-                }
+        var updateWalk = function() {
+            map.geoObjects.remove(walk);
+            walk = new ymaps.Polyline([
+                [57.62604755, 39.88513470],
+                [57.62552952, 39.88591254],
+                [57.62572234, 39.88755405]
+            ], { }, {
+                balloonCloseButton: false,
+                strokeColor: "#0F7FA4",
+                strokeWidth: 4,
+                strokeOpacity: 0.7
             });
+            map.geoObjects.add(walk);
+        }
+        var setCenter = function(lat, lon) {
+            var point = new Object([lat, lon]);
+            map.setCenter(point);
         }
     </script>
 {% endblock %}
