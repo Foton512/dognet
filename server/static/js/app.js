@@ -189,8 +189,6 @@ $('.fdatepicker').fdatepicker({
   return tcon;
 }));
 
-  $(document).foundation();
-
   $('.fdatepicker').fdatepicker({
   });
 

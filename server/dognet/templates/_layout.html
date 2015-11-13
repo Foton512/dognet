@@ -13,6 +13,7 @@
     </title>
     <meta name="description" content="Тут нужно придумать какое-то здрыжне для поисковиков">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/media/animal-dog-icon.png">
 
     <link rel="stylesheet" href="/static/css/style.css">
 
@@ -90,7 +91,7 @@
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
             <input type="hidden" name="fields" value="comments,likes,achievements,event_counter">
-            <input type="hidden" name="event_counter" value="{{ dog.eventCounter }}">
+            <input type="hidden" name="event_counter" value="{{ eventCounter }}">
         </form>
     </div>
 

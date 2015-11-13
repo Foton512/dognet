@@ -23,7 +23,7 @@
                 {% endif %}
                     width="80px" height="80px"/>
             </div>
-            <div class="large-10 columns">
+            <div class="large-10 columns friend-info">
                 <div class="columns">
                     {% if filter == "new" %}
                         <a href="/dog/{{ relation.dog.id }}"><strong>{{ relation.dog.nick }}</strong></a>
@@ -40,21 +40,27 @@
                 </div>
                 <ul class="button-group">
                     {% if filter == "new" %}
-                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, 1)">В друзья</a>
-                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, -1)">Во враги</a>
-                        <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, 0)">Скрыть</a>
+                        <li>
+                            <a href="#" class="button tiny success" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, 1)">В друзья</a>
+                        </li>
+                        <li>
+                            <a href="#" class="button tiny alert" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, -1)">Во враги</a>
+                        </li>
+                        <li>
+                            <a href="#" class="button tiny secondary" onclick="setRelation({{ dog.id }}, {{ relation.dog.id }}, 0)">Скрыть</a>
+                        </li>
                     {% else %}
                         {% if relation.status == 1 %}
                             <li>
-                                <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, -1)">Во враги</a>
+                                <a href="#" class="button tiny alert" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, -1)">Во враги</a>
                             </li>
                         {% else %}
                             <li>
-                                <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 1)">В друзья</a>
+                                <a href="#" class="button tiny success" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 1)">В друзья</a>
                             </li>
                         {% endif %}
                         <li>
-                            <a href="#" class="button" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 0)">Перестать отслеживать</a>
+                            <a href="#" class="button tiny" onclick="setRelation({{ dog.id }}, {{ relation.relatedDog.id }}, 0)">Перестать отслеживать</a>
                         </li>
                     {% endif %}
                 </ul>

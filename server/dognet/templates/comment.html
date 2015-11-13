@@ -12,18 +12,36 @@
     <p>{{ comment.text }}</p>
     <p>Фоточка</p>
 {% elif comment.type == 3 %}
-    {% if comment.relation.status == 1 %}
+     {% if comment.relation.status == 1 %}
         <p>Новый друг - {{ comment.relation.relatedDog.nick }}</p>
     {% elif comment.relation.status == -1 %}
         <p>Новый враг - {{ comment.relation.relatedDog.nick }}</p>
     {% endif %}
+    <div class="new-relation-img">
+        <img src="{% if comment.relation.relatedDog.avatarFile %}{{ comment.relation.relatedDog.avatarFile.url }}{% else %}/media/none-img.png{% endif %}">
+    </div>
 {% elif comment.type == 4 %}
     <p>Ачивка</p>
     {% if comment.achievement.type == 1 %}
-        <p>"Первый друг"</p>
+        <div class="done">
+            <div class="achiv-1 "></div>
+        </div>
+        <div class="description text-center">
+            <p>"Первый друг"</p>
+        </div>
     {% elif comment.achievement.type == 2 %}
-        <p>"Первый враг"</p>
+         <div class="done">
+            <div class="achiv-7 "></div>
+        </div>
+        <div class="description text-center">
+            <p>"Первый враг"</p>
+        </div>
     {% elif comment.achievement.type == 3 %}
-        <p>"Пройдено 50 метров"</p>
+        <div class="done">
+            <div class="achiv-2 "></div>
+        </div>
+        <div class="description text-center">
+            <p>"Пройдено 50 метров"</p>
+        </div>
     {% endif %}
 {% endif %}

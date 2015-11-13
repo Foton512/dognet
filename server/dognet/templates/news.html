@@ -97,9 +97,9 @@
                 cache: false,
                 processData: false,
                 contentType: false,
-                success: function () {
+                {% comment %}success: function () {
                     location.reload();
-                },
+                },{% endcomment %}
             });
             return false;
         });
@@ -136,8 +136,8 @@
                         processData: false,
                         contentType: false,
                         success: function () {
-                            location.reload();
-                        },
+                            $('#addReply').remove();
+                        }
                     });
                     return false;
                 });
@@ -165,10 +165,31 @@
         var updateNewsList = function(result) {
             result.comments.forEach(function(comment) {
                 var img;
+                var content;
+
                 if (comment.img)
                     img = comment.img;
                 else
                     img = comment.avatar ? comment.avatar : "/media/none-img.png";
+
+                if(comment.type == 0)
+                    content = "<p>" + comment.text + "</p>";
+                else
+                    if (comment.type == 1)
+                         content = "<p>Прогулочка</p><p>Длина:" + comment.walk.length + "м.</p>";
+                    else
+                        if (comment.type == 3)
+                         content = "<p>Или друг или враг или так</p>";
+                        else
+                            if (comment.type == 4) {
+                                if (comment.achievement.type == 1)
+                                     content = "<div class='done'><div class='achiv-1'></div></div><div class='description'><p>Первый друг</p></div>";
+                                if (comment.achievement.type == 2)
+                                     content = "<div class='done'><div class='achiv-1'></div></div><div class='description'><p>Первый враг</p></div>";
+                                if (comment.achievement.type == 3)
+                                     content = "<div class='done'><div class='achiv-1'></div></div><div class='description'><p>Пройдено 50 метров</p></div>";
+                            }
+
                 if (comment.parent_comment_id) {
                     $('#'+comment.parent_comment_id).append(
                             "<div class='row'><div class='large-2 columns small-3'>" +
@@ -177,7 +198,7 @@
                             "</div><div class='large-10 columns'><p><strong>" +
                                 comment.nick +
                                 "</strong></p>" +
-                                comment.text +
+                                content +
                             "</div></div><hr/>"
                     );
                 }
@@ -189,8 +210,8 @@
                             "</div><div class='large-10 columns comment-text' id='"+ comment.id +"'><p><strong>" +
                                 comment.nick +
                                 "</strong></p>" +
-                                comment.text +
-                            "</div><ul class='inline-list'><li><a class='addComment'>Reply</a></li><li><a href=''>Share</a></li></ul></div><hr/>"
+                               content +
+                            "<ul class='inline-list'><li><a class='addComment'>Reply</a></li><li><a href=''>Share</a></li></ul></div></div><hr/>"
                     );
                 }
             });

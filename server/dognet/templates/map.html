@@ -1,0 +1,66 @@
+{% extends "_layout.html" %}
+
+{% block title %}Карты{% endblock %}
+
+{% block content %}
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+    <dl class="sub-nav">
+        <dd {% if filter == "home" %}class="active"{% endif %}><a href="?filter=all">Дом</a></dd>
+        <dd {% if filter == "walk" %}class="active"{% endif %}><a href="?filter=enemies">Следить за прогулкой</a></dd>
+        <dd {% if filter == "friensWalk" %}class="active"{% endif %}><a href="?filter=walk">Нахождение друзей</a></dd>
+        <dd {% if filter == "enemyWalk" %}class="active"{% endif %}><a href="?filter=friends">Нахождение врагов</a></dd>
+    </dl>
+    <div class="map-wrapper">
+        <div id="map" style="width: 100%; height: 400px"></div>
+    </div>
+{% endblock %}
+
+{% block script-block %}
+    <script type="text/javascript">
+        ymaps.ready(init);
+        var map;
+
+        function init() {
+            map = new ymaps.Map("map", {
+                center: [57.62545757, 39.88520444],
+                zoom: 15
+            });
+
+            var home = new ymaps.Placemark([57.62545757, 39.88520444],
+                    {
+                        hintContent: 'Дом!'
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: '/media/dog.gif',
+                        iconImageSize: [42, 34],
+                        iconImageOffset: [0, 0]
+                    }
+            );
+
+            map.geoObjects.add(home);
+            map.controls.remove('searchControl');
+            map.controls.remove('trafficControl');
+            map.controls.remove('geolocationControl');
+        }
+
+
+    </script>
+    <script>
+        function setRelation(dogId, relatedDogId, status) {
+            $.ajax({
+                url: "/api/dog/set_relation/",
+                type: "get",
+                data: {
+                    "id": dogId,
+                    "related_id": relatedDogId,
+                    "status": status
+                },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+    </script>
+{% endblock %}
+

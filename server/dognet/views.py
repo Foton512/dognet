@@ -64,19 +64,39 @@ def edit(request, dogId):
             "ownDogs": ownDogs,
             "dogForm": forms.DogForm(instance=dog),
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+            "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)
     )
 
 
 def add(request):
-    ownDogs = models.Dog.objects.filter(user=request.user)
+    dogId = request.session.get("currentDogId", None)
+    dog = models.Dog.objects.get(id=dogId) if dogId else None
     return render_to_response(
         "addDog.html",
         context={
+            "dog": dog,
+            "eventCounter": models.State.getState().eventCounter,
+        },
+        context_instance=RequestContext(request)
+    )
+
+def maps(request):
+    params = request.REQUEST
+    dogId = request.session.get("currentDogId", None)
+    dog = models.Dog.objects.get(id=dogId) if dogId else None
+    ownDogs = models.Dog.objects.filter(user=request.user)
+
+    filter = params.get("filter", "home")
+
+    return render_to_response(
+        "map.html",
+        context={
+            "dog": dog,
             "ownDogs": ownDogs,
-            "dogForm": forms.DogForm(initial={"breed": "Сиба Ину"}),
-            "birthDate": "",
+            "filter": filter,
+            "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)
     )
@@ -115,6 +135,7 @@ def friends(request):
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
             "relations": relations,
             "filter": filter,
+            "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)
     )
@@ -135,6 +156,7 @@ def achievements(request):
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
             "achievements": achievements,
+            "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)
     )

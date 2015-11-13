@@ -37,14 +37,25 @@ html, body {
   margin-bottom: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
+
+/*** News ***/
+
 .add-comment {
   width: 100%;
 }
-
-.achivments {
-  [class^="achiv-"] {
-    margin: 0 auto;
+.new-relation-img {
+  text-align: center;
+  img {
+    max-height: 300px;
   }
+}
+
+/*** Achivments ***/
+
+[class^="achiv-"] {
+  margin: 0 auto;
+}
+.achivments {
   .process {
     opacity: 0.5;
   }
@@ -54,6 +65,30 @@ html, body {
     color: #0F92BD;
   }
 }
+
+/*** Friends ***/
+.friend-info {
+  padding-bottom: 50px;
+  .button-group {
+    left: 15px;
+    bottom: 0;
+    position: absolute;
+    .button {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/*** Maps ***/
+
+/*@media only screen and (min-width: 64.063em) and (max-width: 90em) {
+  #map {
+    width: 670px;
+    height: 400px;
+  }
+}*/
+
+/*** File-upload ***/
 
 $background: #0F92BD;
 $file-upload-color: #0F92BD;
@@ -151,6 +186,9 @@ input[type='file'] {
   }
 }
 .comment-text {
+  p {
+    margin-bottom: 0.5rem;
+  }
   .commenting-field {
     margin-bottom: 5px;
   }
