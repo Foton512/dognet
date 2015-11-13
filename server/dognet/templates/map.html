@@ -6,9 +6,10 @@
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <dl class="sub-nav">
         <dd {% if filter == "home" %}class="active"{% endif %}><a href="?filter=all">Дом</a></dd>
-        <dd {% if filter == "walk" %}class="active"{% endif %}><a href="?filter=enemies">Следить за прогулкой</a></dd>
-        <dd {% if filter == "friensWalk" %}class="active"{% endif %}><a href="?filter=walk">Нахождение друзей</a></dd>
-        <dd {% if filter == "enemyWalk" %}class="active"{% endif %}><a href="?filter=friends">Нахождение врагов</a></dd>
+        <dd {% if filter == "walk" %}class="active"{% endif %}><a href="?filter=walk">Следить за прогулкой</a></dd>
+        <dd {% if filter == "friends" %}class="active"{% endif %}><a href="?filter=friends">Нахождение друзей</a></dd>
+        <dd {% if filter == "enemies" %}class="active"{% endif %}><a href="?filter=enemies">Нахождение врагов</a></dd>
+        <dd {% if filter == "all" %}class="active"{% endif %}><a href="?filter=all">Всё</a></dd>
     </dl>
     <div class="map-wrapper">
         <div id="map" style="width: 100%; height: 400px"></div>
@@ -32,13 +33,67 @@
                     },
                     {
                         iconLayout: 'default#image',
-                        iconImageHref: '/media/dog.gif',
-                        iconImageSize: [42, 34],
-                        iconImageOffset: [0, 0]
+                        iconImageHref: '/media/dog-house.png',
+                        iconImageSize: [32, 32],
+                        iconImageOffset: [-16, -16]
                     }
             );
 
-            map.geoObjects.add(home);
+            var myDog = new ymaps.Placemark([57.62572234, 39.88755405],
+                    {
+                        hintContent: '{{ dog.nick }}'
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: '/media/dog.gif',
+                        iconImageSize: [42, 34],
+                        iconImageOffset: [-21, -24]
+                    }
+            );
+
+            var friends = new ymaps.Placemark([57.62632958, 39.88450170],
+                    {
+                        hintContent: 'Друг'
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: '/media/friend.png',
+                        iconImageSize: [36, 30],
+                        iconImageOffset: [-18, -15]
+                    }
+            );
+
+            var enemy = new ymaps.Placemark([57.62645045, 39.88343418],
+                    {
+                        hintContent: 'Враг'
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: '/media/enemy.gif',
+                        iconImageSize: [32, 32],
+                        iconImageOffset: [-16, -16]
+                    }
+            );
+
+            var walk = new ymaps.Polyline([
+                [57.62545757, 39.88520444],
+                [57.62539426, 39.88437295],
+                [57.62586624, 39.88408327],
+                [57.62604755, 39.88513470],
+                [57.62552952, 39.88591254],
+                [57.62572234, 39.88755405]
+            ], { }, {
+                balloonCloseButton: false,
+                strokeColor: "#0F7FA4",
+                strokeWidth: 4,
+                strokeOpacity: 0.7
+            });
+
+            {% if filter == "home" %} map.geoObjects.add(home); {% endif %}
+            {% if filter == "walk" %} map.geoObjects.add(walk).add(myDog); {% endif %}
+            {% if filter == "friends" %} map.geoObjects.add(friends); {% endif %}
+            {% if filter == "enemies" %} map.geoObjects.add(enemy); {% endif %}
+            {% if filter == "all" %} map.geoObjects.add(walk).add(myDog).add(home).add(friends).add(enemy); {% endif %}
             map.controls.remove('searchControl');
             map.controls.remove('trafficControl');
             map.controls.remove('geolocationControl');
