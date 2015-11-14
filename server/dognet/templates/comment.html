@@ -38,7 +38,10 @@
 
 
                 var obj = ymaps.util.bounds.getCenterAndZoom(map.geoObjects.getBounds(), map.container.getSize());
-                map.setCenter(obj.center, obj.zoom);
+                if(obj.zoom < 18)
+                    map.setCenter(obj.center, obj.zoom);
+                else
+                    map.setCenter(obj.center, 18);
             }
         </script>
     </p>
