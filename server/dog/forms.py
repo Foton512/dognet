@@ -15,4 +15,4 @@ class DogForm(forms.ModelForm):
 
     class Meta:
         model = models.Dog
-        fields = ["avatarFile", "nick", "weight", "birthDate", "breed"]
+        fields = ["avatarFile", "nick", "weight", "birthDate", "breed", "collar_id"]

@@ -3,35 +3,165 @@
 {% block title %}{{ dog.nick }}{% endblock %}
 
 {% block content %}
-<h1>{{ dog.nick }}</h1>
-
-    {% if dog.avatarFile %}
-        <img src="{{ dog.avatarFile.url }}" width="100px" height="100px"/>
-    {% endif %}
     <div class="row">
-        {% if dog.breed %}
-            <div class="small-12 medium-3 large-3 columns">
-                <span class="right inline">Порода:</span>
+        <div class='medium-4 columns small-6'>
+            {% if dog.avatarFile %}
+                <img src="{{ dog.avatarFile.url }}" width="200px" height="200px"/>
+            {%  else %}
+                <img src="/media/none-img.png" width="200px" height="200px"/>
+            {% endif %}
+        </div>
+        <div class='medium-8 columns small-6'>
+            <div class="row">
+                <h1>{{ dog.nick }}</h1>
+                {% if dog.breed %}
+                    <div class="small-12 medium-5 large-6 columns">
+                        <span class="inline">Порода:</span>
+                    </div>
+                    <div class="small-12 medium-7 large-6 columns">
+                        {{ dog.breed }}
+                    </div>
+                {% endif %}
+                {% if birthDate %}
+                    <div class="small-12 medium-5 large-6 columns">
+                        <span class="inline">Дата рождения:</span>
+                    </div>
+                    <div class="small-12 medium-7 large-6 columns">
+                        {{ birthDate }}
+                    </div>
+                {% endif %}
+                {% if dog.weight %}
+                    <div class="small-12 medium-5 large-6 columns">
+                        <span class="inline">Вес:</span>
+                    </div>
+                    <div class="small-12 medium-7 large-6 columns">
+                        {{ dog.weight }} кг
+                    </div>
+                {% endif %}
             </div>
-            <div class="small-12 medium-9 large-9 columns">
-                {{ dog.breed }}
-            </div>
-        {% endif %}
-        {% if birthDate %}
-            <div class="small-12 medium-3 large-3 columns">
-              <span class="right inline">Дата рождения:</span>
-            </div>
-            <div class="small-12 medium-9 large-9 columns">
-              {{ birthDate }}
-            </div>
-        {% endif %}
-        {% if dog.weight %}
-            <div class="small-12 large-3 medium-3 columns">
-              <span class="right inline">Вес:</span>
-            </div>
-            <div class="small-12 large-9 medium-9 columns">
-              {{ dog.weight }} кг
-            </div>
-        {% endif %}
+        </div>
     </div>
+    <div class="panel add-comment clearfix" style="margin-top: 20px; margin-bottom: 20px;">
+        <form id="addNewsForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ dog.id }}">
+            <div class="row commenting-field">
+                <div class="medium-0 columns small-0 img-container">
+                </div>
+                <div class="medium-12 columns small-12 textarea-wrapper">
+                    <textarea id="addNew" name="text" placeholder="Что у вашего питомца нового..."></textarea>
+                    <div class="control-row" style="display: none;">
+                        <button class="button tiny success" type="submit">Отправить</button>
+                        <button data-dropdown="drop" aria-controls="drop" aria-expanded="false" class="tiny button dropdown">Прикрепить</button>
+                        <ul id="drop" data-dropdown-content class="f-dropdown" aria-hidden="true">
+                            <li><a href="#">Загрузить фотаньку</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    {% for comment in comments %}
+        {% if not comment.parentComment %}
+            <div class="row post">
+                <div class="medium-2 columns small-3">
+                    <img
+                        {% if comment.dog.avatarFile %}
+                            src="{{ comment.dog.avatarFile.url }}"
+                        {% else %}
+                            src="/media/none-img.png"
+                        {% endif %}
+                            width="80px" height="80px"/>
+                </div>
+                <div class="medium-10 columns small-9 comment-text" id="{{ comment.id }}">
+                    {% include "comment.html" with comment=comment %}
+                    <ul class="inline-list">
+                        <li><a class="addComment">Комментировать</a></li>
+                        <li><a href="addLike"><i class="fa fa-thumbs-up"></i> Like</a></li>
+                        <li><a href="addDislike"><i class="fa fa-thumbs-down"></i> Dislike</a></li>
+                    </ul>
+                    {% comment %}<h6>{{ comment.comment_set.count }} Comments</h6>{% endcomment %}
+                    {% for reply in comment.comment_set.all %}
+                        <div class="row">
+                            <div class="medium-2 columns small-3">
+                                <img
+                                        {% if reply.dog.avatarFile %}
+                                            src="{{ reply.dog.avatarFile.url }}"
+                                        {% else %}
+                                            src="/media/none-img.png"
+                                        {% endif %}
+                                            width="50px" height="50px"/>
+                            </div>
+                            <div class="medium-10 columns small-9">
+                                {% include "comment.html" with comment=reply %}
+                            </div>
+                        </div>
+                        <hr/>
+                    {% endfor %}
+                </div>
+                <hr/>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
+
+{% block script-block %}
+    <script>
+        $('#addNewsForm').on("submit", function(event) {
+            event.preventDefault();
+            var data = new FormData($(this).get(0));
+            $.ajax({
+                url: "/api/comment/add_text/",
+                type: "post",
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false
+            });
+            return false;
+        });
+        $(document).ready(function()
+        {
+            $("#addNew").mousedown(function(){
+                $(this).animate({height: 65}, 1000);
+                $(this).parent().find('.control-row').fadeIn();
+            });
+            $(".addComment").one('click', function() {
+                var parentComment = $(this).closest('.comment-text');
+                $(parentComment).append(
+                        "<form id=\"addReply\" enctype=\"multipart/form-data\">" +
+                        "{% csrf_token %}" +
+                        "<input type=\"hidden\" name=\"id\" value=\"{{ dog.id }}\">" +
+                        "<input type=\"hidden\" name=\"parent_comment_id\" value=\""+ $(parentComment).attr('id') +"\">" +
+                        "<div class=\"row commenting-field\"><div class=\"medium-2 columns small-3 img-container\"><img " +
+                        {% if dog.avatarFile %} "src=\"{{ dog.avatarFile.url }}\"" {% else %} "src=\"/media/none-img.png\"" {% endif %} +
+                        "/></div><div class=\"medium-10 columns small-9 textarea-wrapper\"><textarea name=\"text\" placeholder=\"Ваш комментарий\"></textarea>" +
+                        "<div class=\"control-row\"><button class=\"button tiny success\" type=\"submit\">Отправить</button>" +
+                        "<button data-dropdown=\"drop{{ dog.id }}\" aria-controls=\"drop\" aria-expanded=\"false\" class=\"tiny button dropdown\">Прикрепить</button>" +
+                        "<ul id=\"drop{{ dog.id }}\" data-dropdown-content class=\"f-dropdown\" aria-hidden=\"true\"><li><a href=\"#\">Загрузить фотаньку</a></li></ul>" +
+                        "</div></div></div></form>"
+                );
+                $.scrollTo($(this),800);
+                $("#addReply textarea").focus();
+                $(parentComment).find('form').on("submit", function(event) {
+                    event.preventDefault();
+                    var data = new FormData($(this).get(0));
+                    $.ajax({
+                        url: "/api/comment/add_text/",
+                        type: "post",
+                        data: data,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function () {
+                            $('#addReply').remove();
+                            location.reload();
+                        }
+                    });
+                    return false;
+                });
+            });
+        });
+    </script>
 {% endblock %}

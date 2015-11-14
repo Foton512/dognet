@@ -79,7 +79,15 @@ def add(request):
         context={
             "dog": dog,
             "eventCounter": models.State.getState().eventCounter,
-            "dogForm": forms.DogForm(initial={"breed": "Сиба Ину"}),
+            "dogForm": forms.DogForm(
+                initial={
+                    "breed": "Сиба Ину",
+                    "nick": "Конь",
+                    "birthDate": "1990-10-23",
+                    "weight": 42,
+                    "collar_id": 1,
+                }
+            ),
         },
         context_instance=RequestContext(request)
     )
@@ -193,6 +201,7 @@ def dog(request, dogId):
     if dog.user == request.user:
         request.session["currentDogId"] = dogId
     ownDogs = models.Dog.objects.filter(user=request.user)
+    comments = models.Comment.objects.filter(dog=dog).prefetch_related("comment_set").order_by("-eventCounter")
 
     return render_to_response(
         "dog.html",
@@ -200,6 +209,7 @@ def dog(request, dogId):
             "dog": dog,
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
+            "comments": comments,
         },
         context_instance=RequestContext(request)
     )

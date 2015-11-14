@@ -40,6 +40,9 @@
         </section>
         {% if dog %}
             <section class="section">
+                <h5 class="title"><a href="/dog/{{ dog.id }}">Моя собака</a></h5>
+            </section>
+            <section class="section">
                 <h5 class="title"><a href="/dog/edit/{{ dog.id }}">Редактировать собаку</a></h5>
             </section>
             <section class="section">
@@ -54,11 +57,6 @@
             <section class="section">
               <h5 class="title"><a href="/achievements">Достижения</a></h5>
             </section>
-            {% comment %}{% for dog in ownDogs %}
-                <section class="section">
-                    <h5 class="title"><a href="/dog/{{ dog.id }}">{{ dog.nick }}</a></h5>
-                </section>
-            {% endfor %}{% endcomment %}
             <section class="section">
                 <h5 class="title">
                     <a href="/logout/"><span class="text">Выйти</span></a>
