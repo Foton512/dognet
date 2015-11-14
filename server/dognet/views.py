@@ -180,9 +180,9 @@ def news(request):
     dog = models.Dog.objects.get(id=dogId) if dogId else None
     ownDogs = models.Dog.objects.filter(user=user)
 
-    dogsWithComments = list(ownDogs) + [
-        userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
-    ]
+    dogsWithComments = list(set(list(ownDogs) + [
+        dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog, status__in=[-1, 1])
+    ]))
     comments = models.Comment.objects.filter(dog__in=dogsWithComments).prefetch_related("comment_set").order_by("-eventCounter")
 
     return render_to_response(
@@ -309,7 +309,6 @@ def setDogRelation(request):
             nFriends = models.DogRelation.objects.filter(dog=dog, status=1).count()
             if nFriends == 1:
                 models.Achievement.addAchievement(1, dog)
-            models.UserDogSubscription.objects.get_or_create(user=request.user, dog=relatedDog)
 
         if relation.status == -1:
             nEnemies = models.DogRelation.objects.filter(dog=dog, status=-1).count()
@@ -318,24 +317,6 @@ def setDogRelation(request):
 
 
     return JsonResponse(relation.toDict())
-
-
-@view_decorators.apiLoginRequired
-def subscribe(request):
-    params = request.REQUEST
-    dog = models.Dog.objects.get(id=params["id"])
-    subscription = models.UserDogSubscription.objects.get_or_create(user=request.user, dog=dog)[0]
-    return JsonResponse(subscription.toDict())
-
-
-@view_decorators.apiLoginRequired
-def unsubscribe(request):
-    params = request.REQUEST
-    dog = models.Dog.objects.get(id=params["id"])
-    subscription = models.UserDogSubscription.objects.get(user=request.user, dog=dog)
-    response = subscription.toDict()
-    subscription.delete()
-    return JsonResponse(response)
 
 
 @view_decorators.apiLoginRequired
@@ -609,9 +590,9 @@ def getDogEvents(request):
             ]
     if "comments" in fields or "replies" in fields:
             ownDogs = models.Dog.objects.filter(user=user)
-            dogsWithComments = list(ownDogs) + [
-                userDogSubscription.dog for userDogSubscription in models.UserDogSubscription.objects.filter(user=user)
-            ]
+            dogsWithComments = list(set(list(ownDogs) + [
+                dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog, status__in=[-1, 1])
+            ]))
             comments = models.Comment.objects.filter(
                 dog__in=dogsWithComments,
             )

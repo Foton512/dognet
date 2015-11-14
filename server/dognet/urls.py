@@ -45,8 +45,6 @@ urlpatterns = [
     url(r"^api/dog/get/$", views.getDog),
     url(r"^api/dog/get_list/$", views.getOwnDogs),
     url(r"^api/dog/set_relation/$", views.setDogRelation),
-    url(r"^api/dog/subscribe/$", views.subscribe),
-    url(r"^api/dog/unsubscribe/$", views.unsubscribe),
 
     url(r"^api/collar/add_point/$", views.addWalkPoint),
 
