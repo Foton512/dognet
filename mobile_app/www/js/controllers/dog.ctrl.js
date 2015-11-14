@@ -34,14 +34,14 @@
         function initializeMap() {
             ymaps.ready(init);
             $scope.fight();
-        };
+        }
 
         function init() {
             map = new ymaps.Map(document.getElementById("map"), {
                 center: [57.789939, 47.879478],
                 zoom: 17
             });
-        };
+        }
 
         $scope.fight = function() {
             if ( angular.isDefined(refresh) ) return;
@@ -56,12 +56,23 @@
                         if (status.close_dogs_events) {
                             for (var count = 0; count < status.close_dogs_events.length; count++) {
                                 if (arrayObjectIndexOf(close_dogs, status.close_dogs_events[count])  == -1) {
+                                    if(status.close_dogs_events[count].became_close)
+                                    {
+                                        if(status.close_dogs_events[count].status == 1)
+                                        {
+                                            alert("Friend: " + status.close_dogs_events[count].dog.nick);
+                                        }
+                                        else
+                                        {
+                                            alert("Enemy: " + status.close_dogs_events[count].dog.nick);
+                                        }
+                                    }
                                     close_dogs.push(status.close_dogs_events[count]);
                                     ctrl.hidden = true;
-                                    $rootScope["test"] = close_dogs;
+                                    $rootScope["close_dogs"] = close_dogs;
                                 }
                             }
-                        };
+                        }
                     }
                 });
 
