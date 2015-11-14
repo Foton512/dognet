@@ -74,8 +74,85 @@
 </head>
 
 <body ng-controller="MainCtrl" id="body">
+<div class="grid-frame">
+    <div zf-panel position="left" id="sidebar" class="medium-grid-block collapse medium-3 large-3 vertical">
+        <div class="grid-content collapse shrink hide-for-medium">
+            <a href="" class="secondary button expand" zf-close>Close</a>
+        </div>
+        <div class="grid-content collapse shrink">
+            Dognet
+        </div>
+        <div class="grid-content">
 
-<div class="off-canvas-wrap">
+            <section class="block-list">
+                <header>Rooms</header>
+                <ul>
+                    <li>
+                        <a href="#">
+                            Slam Book
+                            <span class="block-list-label">7</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            Foundation Chat
+                            <span class="block-list-label">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="success" href="#">
+                            LolCats
+                            <span class="block-list-label">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="block-list">
+                <header>People</header>
+                <ul>
+                    <li>
+                        <a href="#">
+                            Glen Coco
+                            <span class="block-list-label">2</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="success" href="#">
+                            Guy Guyerson
+                            <span class="block-list-label">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </section>
+        </div>
+        <div class="grid-content collapse shrink avatar-section">
+            <img src="http://placehold.it/50x50">
+            Regina George
+        </div>
+    </div>
+
+    <div class="grid-block collapse medium-12 vertical">
+        <div id="header" class="shrink collapse grid-content">
+            <ul class="menu-bar primary">
+                <li class="hide-for-medium"><a zf-open="sidebar" href="#">Menu</a></li>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+                <li><a href="#">Link 3</a></li>
+            </ul>
+        </div>
+        <div class="grid-block">
+            <div class="grid-block small-12 medium-9 vertical">
+                <div class="grid-content">
+                    <ui-view></ui-view>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!--<div class="off-canvas-wrap">
     <div class="inner-wrap">
         <nav class="tab-bar">
             <section class="left-small">
@@ -97,7 +174,7 @@
         </section>
         <a class="exit-off-canvas"></a>
     </div>
-</div>
+</div>-->
 
 
 </body>
