@@ -5,11 +5,11 @@
 {% block content %}
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
     <dl class="sub-nav">
+        <dd {% if filter == "all" %}class="active"{% endif %}><a href="?filter=all">Всё</a></dd>
         <dd {% if filter == "home" %}class="active"{% endif %}><a href="?filter=all">Дом</a></dd>
         <dd {% if filter == "walk" %}class="active"{% endif %}><a href="?filter=walk">Следить за прогулкой</a></dd>
         <dd {% if filter == "friends" %}class="active"{% endif %}><a href="?filter=friends">Нахождение друзей</a></dd>
         <dd {% if filter == "enemies" %}class="active"{% endif %}><a href="?filter=enemies">Нахождение врагов</a></dd>
-        <dd {% if filter == "all" %}class="active"{% endif %}><a href="?filter=all">Всё</a></dd>
     </dl>
     <div class="map-wrapper">
         <div id="map" style="width: 100%; height: 400px"></div>

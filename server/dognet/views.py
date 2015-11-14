@@ -100,7 +100,7 @@ def maps(request):
     dog = models.Dog.objects.get(id=dogId) if dogId else None
     ownDogs = models.Dog.objects.filter(user=request.user)
 
-    filter = params.get("filter", "home")
+    filter = params.get("filter", "all")
 
     return render_to_response(
         "map.html",
