@@ -365,6 +365,8 @@ def addWalkPoint(request):
             if nearestHome:
                 dog.createWalkPoint(walkInProgress, time, deviceTime, nearestHome.lat, nearestHome.lon)
         else:
+            walkInProgress.lastTime = time
+            walkInProgress.save()
             lastWalkPoint = models.WalkPoint.objects.filter(walk=walkInProgress).latest("eventCounter")
             distanceFromLast = distance(
                 Point(float(lastWalkPoint.lat), float(lastWalkPoint.lon)),
@@ -643,7 +645,5 @@ def getDogEvents(request):
         ]
 
     response = fillResponseWithField(fields, "likes", models.Like, "comment__dog", dog, eventCounter, currentEventCounter, response)
-
-    print response
 
     return JsonResponse(response)
