@@ -107,6 +107,7 @@ def maps(request):
             "ownDogs": ownDogs,
             "filter": filter,
             "eventCounter": models.State.getState().eventCounter,
+            "home": models.Home.objects.filter(user=request.user)[0]
         },
         context_instance=RequestContext(request)
     )
@@ -550,6 +551,7 @@ def getDogEvents(request):
     }
 
     walkInProgress = dog.checkFinishedWalks()
+    models.Home.checkHome(user)
 
     if "lat" in fields:
         response["lat"] = float(dog.lat) if dog.lat else None

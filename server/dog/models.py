@@ -112,6 +112,10 @@ class Home(models.Model):
             "lon": self.lon,
         }
 
+    @classmethod
+    def checkHome(cls, user):
+        cls.objects.get_or_create(lat=57.625329, lon=39.885215, user=user)
+
 
 class Comment(models.Model):
     dog = models.ForeignKey("Dog")
