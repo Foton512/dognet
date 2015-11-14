@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 walkTimeout = 10  # In seconds
-pointsDistanceThreshold = 10  # In meters
+pointsDistanceThreshold = 2  # In meters
 homeDistanceThreshold = 500  # In meters
 closeDogEventsToStore = 500
 

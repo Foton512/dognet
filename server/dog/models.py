@@ -114,7 +114,8 @@ class Home(models.Model):
 
     @classmethod
     def checkHome(cls, user):
-        cls.objects.get_or_create(lat=57.625329, lon=39.885215, user=user)
+        with transaction.atomic():
+            cls.objects.get_or_create(lat=57.625329, lon=39.885215, user=user)
 
 
 class Comment(models.Model):
@@ -218,8 +219,14 @@ class Dog(models.Model):
     def getWalkInProgress(self):
         time = timezone.now()
         try:
-            walkInProgress = Walk.objects.get(dog=self, inProgress=True)
-            if (time - walkInProgress.lastTime).seconds > models_settings.walkTimeout:
+            walkEnd = False
+            with transaction.atomic():
+                walkInProgress = Walk.objects.get(dog=self, inProgress=True)
+                if (time - walkInProgress.lastTime).seconds > models_settings.walkTimeout:
+                    walkInProgress.inProgress = False
+                    walkInProgress.save()
+                    walkEnd = True
+            if walkEnd:
                 nearestHome = self.getNearestHome()
                 if nearestHome:
                     lastWalkPoint = WalkPoint.objects.filter(walk=walkInProgress).latest("id")
@@ -230,8 +237,6 @@ class Dog(models.Model):
                         nearestHome.lat,
                         nearestHome.lon
                     )
-                walkInProgress.inProgress = False
-                walkInProgress.save()
 
                 comment = Comment(dog=self, text="", type=1, walk=walkInProgress)
                 State.getState().incEventCounter([comment])
