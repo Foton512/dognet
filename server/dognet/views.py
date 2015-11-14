@@ -24,6 +24,7 @@ import settings
 def main(request):
     user = request.user
     if user.is_authenticated():
+        models.Home.checkHome(user)
         if "currentDogId" in request.session:
             return redirect("/dog/{}/".format(request.session["currentDogId"]))
         else:
@@ -74,6 +75,7 @@ def edit(request, dogId):
 def add(request):
     dogId = request.session.get("currentDogId", None)
     dog = models.Dog.objects.get(id=dogId) if dogId else None
+    models.Home.checkHome(request.user)
     return render_to_response(
         "addDog.html",
         context={
@@ -568,7 +570,7 @@ def getDogEvents(request):
                                                                  ]).order_by("eventCounter")
             response["close_dogs_events"] = [
                 {
-                    "dog": closeDogRelation.relatedDog.toDict(),
+                    "dog": closeDogEvent.relatedDog.toDict(),
                     "became_close": closeDogEvent.added,
                     "status": closeDogEvent.status,
                 } for closeDogEvent in closeDogEvents
