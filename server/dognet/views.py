@@ -171,6 +171,7 @@ def achievements(request):
             "achievements": {
                 num: num in achievementNumbers for num in xrange(1, 5)
             },
+            "descriptions": models_settings.achievementDescriptions,
             "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)

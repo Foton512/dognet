@@ -5,6 +5,16 @@ pointsDistanceThreshold = 2  # In meters
 closeDogsDistanceThreshold = 10 # In meters
 homeDistanceThreshold = 500  # In meters
 closeDogEventsToStore = 500
+achievementDescriptions = {
+    1: u"Бро",
+    2: u"Первая кровь",
+    3: u"Гуляка",
+    4: u"Боевое крещение",
+    5: u"Бро x10",
+    6: u"Бро x100",
+    7: u"Первая кровь x10",
+    8: u"Первая кровь x100",
+}
 
 breeds = [
     u"Австралийская борзая (кенгуровая собака)",

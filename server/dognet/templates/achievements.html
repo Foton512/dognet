@@ -3,18 +3,44 @@
 {% block title %}Достижения{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <img src="/static/img/achievements/1.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.1 %}opacity: 0.2;{% endif %}">
-        <img src="/static/img/achievements/5.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
-        <img src="/static/img/achievements/6.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
+    <div class="row text-center">
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/1.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.1 %}opacity: 0.2;{% endif %}"><br>
+            <strong>{{ descriptions.1 }}</strong>
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/5.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;"><br>
+            <strong>{{ descriptions.5 }}</strong>
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/6.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;"><br>
+            <strong>{{ descriptions.6 }}</strong>
+        </div>
     </div>
-    <div class="row">
-        <img src="/static/img/achievements/2.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.2 %}opacity: 0.2;{% endif %}">
-        <img src="/static/img/achievements/7.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
-        <img src="/static/img/achievements/8.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
+    <div class="row text-center">
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/2.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.2 %}opacity: 0.2;{% endif %}"><br>
+            <strong>{{ descriptions.2 }}</strong>
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/7.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;"><br>
+            <strong>{{ descriptions.7 }}</strong>
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/8.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;"><br>
+            <strong>{{ descriptions.8 }}</strong>
+        </div>
     </div>
-    <div class="row">
-        <img src="/static/img/achievements/3.png" width="150px;" height="150px;" style="margin: 5px; vertical-align: top; {% if not achievements.3 %}opacity: 0.2;{% endif %}">
-        <img src="/static/img/achievements/4.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.4 %}opacity: 0.2;{% endif %}">
+    <div class="row text-center">
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/3.png" width="150px;" height="150px;" style="margin: 5px; vertical-align: top; {% if not achievements.3 %}opacity: 0.2;{% endif %}"><br>
+            <strong>{{ descriptions.3 }}</strong>
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+            <img src="/static/img/achievements/4.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.4 %}opacity: 0.2;{% endif %}"><br>
+            <strong>{{ descriptions.4 }}</strong>
+        </div>
+        <div class="columns small-4 medium-4 large-4">
+        </div>
     </div>
 {% endblock %}

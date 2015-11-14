@@ -61,12 +61,7 @@ class Achievement(models.Model):
     eventCounter = models.PositiveIntegerField(default=0)
 
     def getDescription(self):
-        return {
-            1: u"Бро",
-            2: u"Первая кровь",
-            3: u"Гуляка",
-            4: u"Боевое крещение",
-        }[self.type]
+        return models_settings.achievementDescriptions[self.type]
 
     def toDict(self):
         return {

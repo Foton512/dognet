@@ -4,7 +4,7 @@
 {% elif comment.type == 1 %}
     <p>Прогулочка</p>
     <p>
-        Длина: {{ comment.walk.length }}м. Маршрут:
+        Пройдено: {{ comment.walk.length|floatformat:"0" }}м.
         <div class="map-wrapper">
             <div id="map{{ comment.id }}" style="width: 100%; height: 300px"></div>
         </div>
@@ -63,8 +63,8 @@
         <div class="done">
             <img src="/static/img/achievements/{{ comment.achievement.type }}.png">
         </div>
-        <div class="description">
-            <p>{{ comment.achievement.description }}</p>
+        <div>
+            <p><strong>{{ comment.achievement.getDescription }}</strong></p>
         </div>
     </div>
 {% endif %}
