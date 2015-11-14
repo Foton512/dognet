@@ -15,10 +15,10 @@
         <div id="map" style="width: 100%; height: 400px"></div>
     </div>
     <div class="hide">
-        <form id="newsUpdateForm" enctype="multipart/form-data">
+        <form id="mapForm" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="id" value="{{ dog.id }}">
-            <input type="hidden" name="fields" value="comments,event_counter">
+            <input type="hidden" name="fields" value="lat,lon,walk,event_counter">
             <input type="hidden" name="event_counter" value="{{ eventCounter }}">
         </form>
     </div>
@@ -36,7 +36,7 @@
                 zoom: 15
             });
 
-             home = new ymaps.Placemark([57.62545757, 39.88520444],
+             home = new ymaps.Placemark([{{ home.lat }}, {{ home.lon }}],
                     {
                         hintContent: 'Дом!'
                     },
@@ -108,27 +108,51 @@
             map.controls.remove('trafficControl');
             map.controls.remove('geolocationControl');
         }
-        var updateWalk = function() {
-            map.geoObjects.remove(walk);
-            walk = new ymaps.Polyline([
-                [57.62604755, 39.88513470],
-                [57.62552952, 39.88591254],
-                [57.62572234, 39.88755405]
-            ], { }, {
-                balloonCloseButton: false,
-                strokeColor: "#0F7FA4",
-                strokeWidth: 4,
-                strokeOpacity: 0.7
-            });
-            map.geoObjects.add(walk);
+        var updateWalk = function(points) {
+            if (points.length > 0) {
+                var arr = new Array();
+                points.achievements.forEach(function (point) {
+                    arr.add([point[0], point[1]]);
+                });
+                map.geoObjects.remove(walk);
+                walk = new ymaps.Polyline([
+                    arr
+                ], {}, {
+                    balloonCloseButton: false,
+                    strokeColor: "#0F7FA4",
+                    strokeWidth: 4,
+                    strokeOpacity: 0.7
+                });
+            }
         }
         var setCenter = function(lat, lon) {
-            var point = new Object([lat, lon]);
-            map.setCenter(point);
+            if (lat && lon) {
+                var point = new Object([lat, lon]);
+                map.setCenter(point);
+            }
         }
 
-        var getNews = function(event_counter) {
-            var data = new FormData($('#newsUpdateForm').get(0));
+        var updateMyDog = function(lat, lon) {
+            if(lat && lon) {
+                setCenter(lat, lon);
+                map.geoObjects.remove(myDog);
+                myDog = new ymaps.Placemark([lat, lon],
+                        {
+                            hintContent: '{{ dog.nick }}'
+                        },
+                        {
+                            iconLayout: 'default#image',
+                            iconImageHref: '/static/img/dog.gif',
+                            iconImageSize: [42, 34],
+                            iconImageOffset: [-21, -24]
+                        }
+                );
+                map.geoObjects.add(myDog);
+            }
+        }
+
+        var getData = function(event_counter) {
+            var data = new FormData($('#mapForm').get(0));
             if(event_counter)
                 data.append("event_counter", event_counter);
             $.ajax({
@@ -140,10 +164,15 @@
                 processData: false,
                 contentType: false,
             }).done(function(data) {
-                setTimeout(getNews(data.event_counter), 1000);
-                updateNewsList(data);
+                setTimeout(getData(data.event_counter), 1000);
+                {% if filter == "home" %}  {% endif %}
+                {% if filter == "walk" %} {% comment %}updateWalk(data.walk);{% endcomment %} updateMyDog(data.lat, data.lon); {% endif %}
+                {% if filter == "friends" %}  {% endif %}
+                {% if filter == "enemies" %}  {% endif %}
+                {% if filter == "all" %} {% comment %}updateWalk(data.walk);{% endcomment %} updateMyDog(data.lat, data.lon); {% endif %}
             });
         };
+        getData();
     </script>
 {% endblock %}
 
