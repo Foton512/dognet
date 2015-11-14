@@ -3,121 +3,16 @@
 {% block title %}Достижения{% endblock %}
 
 {% block content %}
-{% comment %}
-    Вот что-то вроде этого над заделать ну ров конечно из цыкла вынести
     {% for achievement in achievements %}
         <div class="row achivments">
             <div class="large-3 columns">
                 <div class="{{ achievement.status }}">
-                    <div class="achiv-{{ achievement.type }} "></div>
+                    <img src="/media/achivments/{{ achievement.type }}.png">
                 </div>
-                <div class="description">
+                <div class="description text-center">
                     {{ achievement.description }}
                 </div>
             </div>
         </div>
-    {% endfor %}{% endcomment %}
-
-    <div class="row achivments">
-        <div class="large-3 columns">
-            <div class="done">
-                <div class="achiv-1 "></div>
-            </div>
-            <div class="description">
-                Ты смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-2 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-3 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-4 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="done">
-                <div class="achiv-5 "></div>
-            </div>
-            <div class="description">
-                Ты смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-6 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-7 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-8 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-9 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-        <div class="large-3 columns">
-            <div class="process">
-                <div class="achiv-10 "></div>
-            </div>
-            <div class="description">
-                Ты НЕ смог ЁПТА!
-            </div>
-        </div>
-    </div>
-
-    {% comment %}{% for achievement in achievements %}
-        <div class="row">
-            <div class="large-2 columns small-3">
-                <img src="/media/none-img.png" width="80px" height="80px"/>
-            </div>
-            <div class="large-10 columns">
-                <strong>
-                    {% if achievement.type == 1 %}
-                        Первый друг
-                    {% elif achievement.type == 2 %}
-                        Первый враг
-                    {% elif achievement.type == 3 %}
-                        Пройдено 50 метров
-                    {% endif %}
-                </strong>
-            </div>
-        </div>
-        <hr/>
-    {% endfor %}{% endcomment %}
+    {% endfor %}
 {% endblock %}
