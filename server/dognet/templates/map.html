@@ -109,7 +109,7 @@
             if (points) {
                 map.geoObjects.remove(walk);
                 walk = new ymaps.Polyline(
-                    points
+                    JSON.parse(JSON.stringify(points))
                 , {}, {
                     balloonCloseButton: false,
                     strokeColor: "#0F7FA4",
