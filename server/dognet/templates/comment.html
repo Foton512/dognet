@@ -35,6 +35,13 @@
                 map.controls.remove('searchControl');
                 map.controls.remove('trafficControl');
                 map.controls.remove('geolocationControl');
+
+
+                var obj = ymaps.util.bounds.getCenterAndZoom(map.geoObjects.getBounds(), map.container.getSize());
+                if(obj.zoom < 18)
+                    map.setCenter(obj.center, obj.zoom);
+                else
+                    map.setCenter(obj.center, 18);
             }
         </script>
     </p>

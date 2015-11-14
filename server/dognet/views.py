@@ -561,6 +561,22 @@ def getDogEvents(request):
         response["lon"] = float(dog.lon) if dog.lon else None
     if "walk" in fields:
         response["walk"] = walkInProgress.getPath() if walkInProgress else []
+        friendDogs = [dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog, status=1)]
+        response["friends"] = [
+            {
+                "nick": dog.nick,
+                "lat": dog.lat,
+                "lon": dog.lon,
+            } for dog in friendDogs if dog.lat and dog.lon
+        ]
+        enemyDogs = [dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog, status=-1)]
+        response["enemies"] = [
+            {
+                "nick": dog.nick,
+                "lat": dog.lat,
+                "lon": dog.lon,
+            } for dog in enemyDogs if dog.lat and dog.lon
+            ]
     if "close_dogs_events" in fields:
         if eventCounter:
             closeDogEvents = models.CloseDogEvent.objects.filter(dog=dog,

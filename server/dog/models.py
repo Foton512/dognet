@@ -16,6 +16,26 @@ class Token(models.Model):
     user = models.ForeignKey(User)
 
 
+class State(models.Model):
+    eventCounter = models.PositiveIntegerField(default=0)
+
+    # relatedObjects must not be not saved yet
+    def incEventCounter(self, relatedObjects):
+        with transaction.atomic():
+            self.eventCounter = F('eventCounter') + 1
+            self.save()
+            self.refresh_from_db(fields=["eventCounter"])
+            for obj in relatedObjects:
+                obj.eventCounter = self.eventCounter
+                obj.save()
+
+    @classmethod
+    def getState(cls):
+        with transaction.atomic():
+            state = cls.objects.get_or_create(id=1)[0]
+        return state
+
+
 class CloseDogRelation(models.Model):
     dog = models.ForeignKey("Dog", related_name="+")
     relatedDog = models.ForeignKey("Dog", related_name="+")
@@ -31,6 +51,39 @@ class CloseDogEvent(models.Model):
     @classmethod
     def removeOldEvents(cls, eventCounter):
         cls.objects.filter(eventCounter__lte=eventCounter - models_settings.closeDogEventsToStore).delete()
+
+
+class Achievement(models.Model):
+    type = models.PositiveSmallIntegerField()  # 1 - First friend
+    # 2 - First enemy
+    # 3 - 50m length distance
+    dog = models.ForeignKey("Dog")
+    eventCounter = models.PositiveIntegerField(default=0)
+
+    def getDescription(self):
+        return {
+            1: u"Завел своего первого друга!",
+            2: u"Нажил первого врага!",
+            3: u"Преодолел 50 метров!",
+            4: u"Первая прогулка!",
+        }[self.type]
+
+    def toDict(self):
+        return {
+            "dog_id": self.dog_id,
+            "dog": self.dog.toDict(),
+            "type": self.type,
+            "description": self.getDescription(),
+        }
+
+    @classmethod
+    def addAchievement(cls, type, dog):
+        if cls.objects.filter(dog=dog, type=type).exists():
+            return
+        achievement = cls(dog=dog, type=type)
+        State.getState().incEventCounter([achievement])
+        comment = Comment(dog=dog, text="", type=4, achievement=achievement)
+        State.getState().incEventCounter([comment])
 
 
 class WalkPoint(models.Model):
@@ -147,26 +200,6 @@ class Comment(models.Model):
         return result
 
 
-class State(models.Model):
-    eventCounter = models.PositiveIntegerField(default=0)
-
-    # relatedObjects must not be not saved yet
-    def incEventCounter(self, relatedObjects):
-        with transaction.atomic():
-            self.eventCounter = F('eventCounter') + 1
-            self.save()
-            self.refresh_from_db(fields=["eventCounter"])
-            for obj in relatedObjects:
-                obj.eventCounter = self.eventCounter
-                obj.save()
-
-    @classmethod
-    def getState(cls):
-        with transaction.atomic():
-            state = cls.objects.get_or_create(id=1)[0]
-        return state
-
-
 class Dog(models.Model):
     nick = models.CharField(max_length=100)
     breed = models.CharField(max_length=100, null=True)
@@ -224,6 +257,7 @@ class Dog(models.Model):
 
                 comment = Comment(dog=self, text="", type=1, walk=walkInProgress)
                 State.getState().incEventCounter([comment])
+                Achievement.addAchievement(4, self)
 
                 return None
             else:
@@ -299,36 +333,3 @@ class Like(models.Model):
             "user_id": self.user_id,
             "comment": self.comment.toDict(),
         }
-
-
-class Achievement(models.Model):
-    type = models.PositiveSmallIntegerField()  # 1 - First friend
-                                               # 2 - First enemy
-                                               # 3 - 50m length distance
-    dog = models.ForeignKey(Dog)
-    eventCounter = models.PositiveIntegerField(default=0)
-
-    def getDescription(self):
-        return {
-            1: u"Завел своего первого друга!",
-            2: u"Нажил первого врага!",
-            3: u"Преодолел 50 метров!",
-            4: u"Первая прогулка!",
-        }[self.type]
-
-    def toDict(self):
-        return {
-            "dog_id": self.dog_id,
-            "dog": self.dog.toDict(),
-            "type": self.type,
-            "description": self.getDescription(),
-        }
-
-    @classmethod
-    def addAchievement(cls, type, dog):
-        if cls.objects.filter(dog=dog, type=type).exists():
-            return
-        achievement = cls(dog=dog, type=type)
-        State.getState().incEventCounter([achievement])
-        comment = Comment(dog=dog, text="", type=4, achievement=achievement)
-        State.getState().incEventCounter([comment])
