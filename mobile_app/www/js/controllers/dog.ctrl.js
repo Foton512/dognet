@@ -56,18 +56,18 @@
                         if (status.close_dogs_events) {
                             for (var count = 0; count < status.close_dogs_events.length; count++) {
                                 if (arrayObjectIndexOf(close_dogs, status.close_dogs_events[count])  == -1) {
-                                    if(status.close_dogs_events[count].became_close)
+                                    close_dogs.push(status.close_dogs_events[count]);
+                                    if(status.close_dogs_events[count].became_close == true)
                                     {
                                         if(status.close_dogs_events[count].status == 1)
                                         {
                                             alert("Friend: " + status.close_dogs_events[count].dog.nick);
                                         }
-                                        else
+                                        else if(status.close_dogs_events[count].status == -1)
                                         {
                                             alert("Enemy: " + status.close_dogs_events[count].dog.nick);
                                         }
                                     }
-                                    close_dogs.push(status.close_dogs_events[count]);
                                     ctrl.hidden = true;
                                     $rootScope["close_dogs"] = close_dogs;
                                 }
@@ -75,8 +75,7 @@
                         }
                     }
                 });
-
-            }, 1000);
+            }, 2000);
         };
 
         $scope.$on('$locationChangeStart', function() {
