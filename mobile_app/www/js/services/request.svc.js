@@ -37,7 +37,7 @@
         function getLastEvents(dogId, eventsCount){
             return $http({
                 method: 'GET',
-                url: $window.localStorage.getItem('serverAddress') + 'api/dog/get_events?id=' + dogId + '&fields=lat,lon,close_dogs_events,walk&event_counter=' + eventsCount,
+                url: $window.localStorage.getItem('serverAddress') + 'api/dog/get_events/?id=' + dogId + '&fields=lat,lon,close_dogs_events,walk&event_counter=' + eventsCount,
                 headers: {
                     'Authorization': window.localStorage.getItem('access_token')
                 }
