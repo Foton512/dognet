@@ -14,6 +14,14 @@
     <div class="map-wrapper">
         <div id="map" style="width: 100%; height: 400px"></div>
     </div>
+    <div class="hide">
+        <form id="newsUpdateForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{ dog.id }}">
+            <input type="hidden" name="fields" value="comments,event_counter">
+            <input type="hidden" name="event_counter" value="{{ eventCounter }}">
+        </form>
+    </div>
 {% endblock %}
 
 {% block script-block %}
@@ -34,7 +42,7 @@
                     },
                     {
                         iconLayout: 'default#image',
-                        iconImageHref: '/media/dog-house.png',
+                        iconImageHref: '/static/img/dog-house.png',
                         iconImageSize: [32, 32],
                         iconImageOffset: [-16, -16]
                     }
@@ -46,7 +54,7 @@
                     },
                     {
                         iconLayout: 'default#image',
-                        iconImageHref: '/media/dog.gif',
+                        iconImageHref: '/static/img/dog.gif',
                         iconImageSize: [42, 34],
                         iconImageOffset: [-21, -24]
                     }
@@ -58,7 +66,7 @@
                     },
                     {
                         iconLayout: 'default#image',
-                        iconImageHref: '/media/friend.png',
+                        iconImageHref: '/static/img/friend.png',
                         iconImageSize: [36, 30],
                         iconImageOffset: [-18, -15]
                     }
@@ -70,7 +78,7 @@
                     },
                     {
                         iconLayout: 'default#image',
-                        iconImageHref: '/media/enemy.gif',
+                        iconImageHref: '/static/img/enemy.gif',
                         iconImageSize: [32, 32],
                         iconImageOffset: [-16, -16]
                     }
@@ -118,6 +126,24 @@
             var point = new Object([lat, lon]);
             map.setCenter(point);
         }
+
+        var getNews = function(event_counter) {
+            var data = new FormData($('#newsUpdateForm').get(0));
+            if(event_counter)
+                data.append("event_counter", event_counter);
+            $.ajax({
+                url: "/api/dog/get_events/",
+                type: "POST",
+                data: data,
+                dataType: "json",
+                cache: false,
+                processData: false,
+                contentType: false,
+            }).done(function(data) {
+                setTimeout(getNews(data.event_counter), 1000);
+                updateNewsList(data);
+            });
+        };
     </script>
 {% endblock %}
 

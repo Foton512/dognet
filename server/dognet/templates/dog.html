@@ -8,7 +8,7 @@
             {% if dog.avatarFile %}
                 <img src="{{ dog.avatarFile.url }}" width="200px" height="200px"/>
             {%  else %}
-                <img src="/media/none-img.png" width="200px" height="200px"/>
+                <img src="/static/img/none-img.png" width="200px" height="200px"/>
             {% endif %}
         </div>
         <div class='medium-8 columns small-6'>
@@ -71,7 +71,7 @@
                         {% if comment.dog.avatarFile %}
                             src="{{ comment.dog.avatarFile.url }}"
                         {% else %}
-                            src="/media/none-img.png"
+                            src="/static/img/none-img.png"
                         {% endif %}
                             width="80px" height="80px"/>
                 </div>
@@ -90,7 +90,7 @@
                                         {% if reply.dog.avatarFile %}
                                             src="{{ reply.dog.avatarFile.url }}"
                                         {% else %}
-                                            src="/media/none-img.png"
+                                            src="/static/img/none-img.png"
                                         {% endif %}
                                             width="50px" height="50px"/>
                             </div>
@@ -137,7 +137,7 @@
                         "<input type=\"hidden\" name=\"id\" value=\"{{ dog.id }}\">" +
                         "<input type=\"hidden\" name=\"parent_comment_id\" value=\""+ $(parentComment).attr('id') +"\">" +
                         "<div class=\"row commenting-field\"><div class=\"medium-2 columns small-3 img-container\"><img " +
-                        {% if dog.avatarFile %} "src=\"{{ dog.avatarFile.url }}\"" {% else %} "src=\"/media/none-img.png\"" {% endif %} +
+                        {% if dog.avatarFile %} "src=\"{{ dog.avatarFile.url }}\"" {% else %} "src=\"/static/img/none-img.png\"" {% endif %} +
                         "/></div><div class=\"medium-10 columns small-9 textarea-wrapper\"><textarea name=\"text\" placeholder=\"Ваш комментарий\"></textarea>" +
                         "<div class=\"control-row\"><button class=\"button tiny success\" type=\"submit\">Отправить</button>" +
                         "<button data-dropdown=\"drop{{ dog.id }}\" aria-controls=\"drop\" aria-expanded=\"false\" class=\"tiny button dropdown\">Прикрепить</button>" +

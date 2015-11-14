@@ -13,7 +13,7 @@
             <ul class="clearing-thumbs main-img" data-clearing>
               <li>
                   <a href=" " data-tooltip aria-haspopup="true" class="has-tip" title="{{ dog.nick }}">
-                      <img src="/media/none-img.png">
+                      <img src="/static/img/none-img.png">
                   </a>
               </li>
             </ul>
@@ -26,7 +26,7 @@
                         {% if d.id != dog.id %}
                             <li>
                                 <a data-tooltip aria-haspopup="true" class="has-tip th" title="{{ d.nick }}" href="/dog/{{ d.id }}">
-                                    <img src="{% if d.avatarFile %}{{ d.avatarFile.url }}{% else %}/media/none-img.png{% endif %}">
+                                    <img src="{% if d.avatarFile %}{{ d.avatarFile.url }}{% else %}/static/img/none-img.png{% endif %}">
                                 </a>
                             </li>
                         {% endif %}

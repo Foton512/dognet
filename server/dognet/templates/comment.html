@@ -51,13 +51,13 @@
         <p>Новый враг - {{ comment.relation.relatedDog.nick }}</p>
     {% endif %}
     <div class="new-relation-img">
-        <img src="{% if comment.relation.relatedDog.avatarFile %}{{ comment.relation.relatedDog.avatarFile.url }}{% else %}/media/none-img.png{% endif %}">
+        <img src="{% if comment.relation.relatedDog.avatarFile %}{{ comment.relation.relatedDog.avatarFile.url }}{% else %}/static/img/none-img.png{% endif %}">
     </div>
 {% elif comment.type == 4 %}
     <p>Ачивка</p>
     <div class="achivments text-center">
         <div class="done">
-            <img src="/media/achivments/{{ comment.achievement.type }}.png">
+            <img src="/static/img/achivments/{{ comment.achievement.type }}.png">
         </div>
         <div class="description">
             <p>{{ comment.achievement.description }}</p>

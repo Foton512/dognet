@@ -70,17 +70,15 @@
                     {% if user.is_authenticated %}
                         <div><h3>Учавствуй в жизни своего питомца</h3></div>
                         {% if dog.id %}
-                            <a class="button" href="/news"><i class="fa fa-hacker-news fa-2x right"></i> Посмотреть что нового у {{ dog.nick }}</a>
+                            <a class="button" href="/news"><i class="fa fa-hacker-news fa-2x"></i> Посмотреть что нового у {{ dog.nick }}</a>
                         {% else %}
-                            <a class="button" href="/dog/add"><i class="fa fa-plus-circle fa-2x right"></i> У меня есть питомец</a>
+                            <a class="button" href="/dog/add"><i class="fa fa-plus-circle fa-2x"></i> У меня есть питомец</a>
                         {% endif %}
                     {% else %}
                         <div><h3>Авторизуйтесь плизки</h3></div>
                         <a href="/login/vk-oauth2"><button class="vk left-icon button split"> <span></span> войти через ВКонтакте</button></a>
                         <a href="/login/facebook-oauth2"> <button class="fb left-icon button split"> <span></span> войти через Facebook</button></a>
                         <a href=" "> <button class="win left-icon button split"> <span></span> войти через LiveID</button></a>
-                        {% comment %}<a class="btn btn-vk" href="/login/vk-oauth2"><i class="fa fa-vk fa-2x"></i> ВКонтакте</a>
-                        <a class="btn btn-fb" href="/login/facebook-oauth2"><i class="fa fa-facebook-official fa-2x"></i> Facebook</a>{% endcomment %}
                     {% endif %}
 
                 </div>
