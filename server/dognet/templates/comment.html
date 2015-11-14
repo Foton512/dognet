@@ -17,7 +17,7 @@
             var walk;
 
             function init{{ comment.id }}() {
-                var arr = JSON.stringify([{% for point in comment.walk.getPath %}[{{ point.0 }}, {{ point.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}]);
+                var arr = [{% for point in comment.walk.getPath %}[{{ point.0 }}, {{ point.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}];
                 map = new ymaps.Map("map{{ comment.id }}", {
                     center: [{{ comment.walk.getPath.first.0 }}, {{ comment.walk.getPath.first.1 }}],
                     zoom: 15
