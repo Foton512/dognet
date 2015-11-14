@@ -564,18 +564,18 @@ def getDogEvents(request):
         friendDogs = [dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog, status=1)]
         response["friends"] = [
             {
-                "nick": dog.nick,
-                "lat": dog.lat,
-                "lon": dog.lon,
-            } for dog in friendDogs if dog.lat and dog.lon
+                "nick": friend.nick,
+                "lat": friend.lat,
+                "lon": friend.lon,
+            } for friend in friendDogs if friend.lat and friend.lon
         ]
         enemyDogs = [dogRelation.relatedDog for dogRelation in models.DogRelation.objects.filter(dog=dog, status=-1)]
         response["enemies"] = [
             {
-                "nick": dog.nick,
-                "lat": dog.lat,
-                "lon": dog.lon,
-            } for dog in enemyDogs if dog.lat and dog.lon
+                "nick": enemy.nick,
+                "lat": enemy.lat,
+                "lon": enemy.lon,
+            } for enemy in enemyDogs if enemy.lat and enemy.lon
             ]
     if "close_dogs_events" in fields:
         if eventCounter:

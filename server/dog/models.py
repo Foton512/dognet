@@ -62,10 +62,10 @@ class Achievement(models.Model):
 
     def getDescription(self):
         return {
-            1: u"Завел своего первого друга!",
-            2: u"Нажил первого врага!",
-            3: u"Преодолел 50 метров!",
-            4: u"Первая прогулка!",
+            1: u"Бро",
+            2: u"Первая кровь",
+            3: u"Гуляка",
+            4: u"Боевое крещение",
         }[self.type]
 
     def toDict(self):
