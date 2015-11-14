@@ -63,7 +63,7 @@ def edit(request, dogId):
         context={
             "dog": dog,
             "ownDogs": ownDogs,
-            "dogForm": forms.DogForm(instance=dog),
+            "dogForm": forms.DogForm(instance=dog, initial={"breed": "Сиба Ину"}),
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
             "eventCounter": models.State.getState().eventCounter,
         },
@@ -79,6 +79,7 @@ def add(request):
         context={
             "dog": dog,
             "eventCounter": models.State.getState().eventCounter,
+            "dogForm": forms.DogForm(initial={"breed": "Сиба Ину"}),
         },
         context_instance=RequestContext(request)
     )
@@ -529,7 +530,19 @@ def getDogEvents(request):
     params = request.REQUEST
     eventCounter = int(params["event_counter"]) if "event_counter" in params else None
     fields = params["fields"].split(",")
-    dog = models.Dog.objects.get(id=params["id"])
+    try:
+        dog = models.Dog.objects.get(id=params["id"])
+    except:
+        return JsonResponse({
+            "lat": None,
+            "lon": None,
+            "walk": None,
+            "close_dog_events": [],
+            "comments": [],
+            "replies": [],
+            "achievements": [],
+            "likes": [],
+        })
     if dog.user != request.user:
         return JsonResponse({
             "error": "You don't have rights to execute this method",
@@ -540,8 +553,7 @@ def getDogEvents(request):
         "event_counter": currentEventCounter,
     }
 
-    if "lat" in fields or "lon" in fields or "walk" in fields:
-        walkInProgress = dog.checkFinishedWalks()
+    walkInProgress = dog.checkFinishedWalks()
 
     if "lat" in fields:
         response["lat"] = float(dog.lat) if dog.lat else None
