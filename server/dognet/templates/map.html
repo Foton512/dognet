@@ -85,12 +85,7 @@
             );
 
             walk = new ymaps.Polyline([
-                [57.62545757, 39.88520444],
-                [57.62539426, 39.88437295],
-                [57.62586624, 39.88408327],
-                [57.62604755, 39.88513470],
-                [57.62552952, 39.88591254],
-                [57.62572234, 39.88755405]
+                [{{ home.lat }}, {{ home.lon }}]
             ], { }, {
                 balloonCloseButton: false,
                 strokeColor: "#0F7FA4",
@@ -111,15 +106,11 @@
             getData();
         }
         var updateWalk = function(points) {
-            if (points.length > 0) {
-                var arr = new Array();
-                points.achievements.forEach(function (point) {
-                    arr.add([point[0], point[1]]);
-                });
+            if (points) {
                 map.geoObjects.remove(walk);
-                walk = new ymaps.Polyline([
-                    arr
-                ], {}, {
+                walk = new ymaps.Polyline(
+                    points
+                , {}, {
                     balloonCloseButton: false,
                     strokeColor: "#0F7FA4",
                     strokeWidth: 4,
