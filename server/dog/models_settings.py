@@ -2,6 +2,7 @@
 
 walkTimeout = 10  # In seconds
 pointsDistanceThreshold = 2  # In meters
+closeDogsDistanceThreshold = 10 # In meters
 homeDistanceThreshold = 500  # In meters
 closeDogEventsToStore = 500
 

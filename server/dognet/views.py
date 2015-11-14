@@ -396,7 +396,7 @@ def addWalkPoint(request):
             closeCandidate for closeCandidate in closeCandidates if distance(
                 Point(lat, lon),
                 Point(closeCandidate.lat, closeCandidate.lon)
-            ).meters <= models_settings.pointsDistanceThreshold
+            ).meters <= models_settings.closeDogsDistanceThreshold
         ]
         oldCloseDogs = [
             closeDogRelation.relatedDog for closeDogRelation in models.CloseDogRelation.objects.filter(dog=dog)
@@ -568,7 +568,7 @@ def getDogEvents(request):
                                                                  ]).order_by("eventCounter")
             response["close_dogs_events"] = [
                 {
-                    "dog_id": closeDogEvent.relatedDog_id,
+                    "dog": closeDogRelation.relatedDog.toDict(),
                     "became_close": closeDogEvent.added,
                     "status": closeDogEvent.status,
                 } for closeDogEvent in closeDogEvents
