@@ -1,9 +1,10 @@
 <div class="app">
-KJHKJHHHGHJIK
     <div ng-repeat="relation in vm.relations" ng-show="vm.hidden">
         <ul>
-            <li>ID: {{relation.id}}</li>
-            <li>Статус: {{relation.status}}</li>
+            <li>Name: {{relation.dog.nick}}</li>
+            <li>Status: {{relation.status}}</li>
+            <li ng-show="vm.setVisible(relation.status, 1)"><input type="button" ng-click="vm.setRelation(vm.dog.id, relation.dog.id, 1)" value="Add to Friends"></li>
+            <li ng-show="vm.setVisible(relation.status, -1)"><input type="button" ng-click="vm.setRelation(vm.dog.id, relation.dog.id, -1)" value="Add to Enemy"></li>
         </ul>
     </div>
 </div>

@@ -3,9 +3,9 @@
 
     angular
         .module('app.controllers')
-        .controller('RelationsCtrl', ['dog', '$document', '$scope', '$interval', 'DogService', RelationsCtrl]);
+        .controller('RelationsCtrl', ['$rootScope', 'dog', '$scope', '$document', '$interval', 'DogService', RelationsCtrl]);
 
-    function RelationsCtrl(dog, $document, $scope, $interval, DogService) {
+    function RelationsCtrl($rootScope, dog, $scope, $document, $interval, DogService) {
         console.log('Controller: RelationsCtrl');
 
         if(!dog) {
@@ -15,31 +15,58 @@
         var event = 0;
         var status;
         var refresh;
+        var close_dogs = new Array();
+
         $document.ready(function () {
-            ctrl.hidden = false;
-            if(!window.localStorage.getItem('access_token')){
-                $state.go('app.auth');
-            }else{
-                $scope.fight();
-            }
+            ctrl.hidden = true;
+            ctrl.relations = $rootScope['test'];
+            ctrl.dog = dog;
+            console.log(ctrl.relations[0].dog_id);
+            $scope.fight();
         });
 
+        function setRelation(dogId, relationDogId, statusValue){
+            DogService.changeRelation(dogId, relationDogId, statusValue);
+        }
+
+        function setVisible(statusValue, statusButton){
+            if(statusButton == statusValue){
+                return false
+            }
+            else if(statusButton == -statusValue){
+                return true;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        function getDogById(id)
+        {
+            return DogService.getById(id);
+        }
+
         $scope.fight = function() {
-            if ( angular.isDefined(refresh) ) return;
-            refresh = $interval(function() {
-                DogService.getLastEvents(dog.id, event).then(function success(response){
+            if (angular.isDefined(refresh)) return;
+            refresh = $interval(function () {
+                DogService.getLastEvents(dog.id, event).then(function success(response) {
                     status = response.data;
                     event = status.event_counter;
-                    if(status.close_dogs_events){
-                        console.log(status.close_dogs_events.length);
-                        ctrl.relations = status.close_dogs_events;
-                        ctrl.hidden = true;
-                    }else{
-                        ctrl.hidden = false;
+                    if(status.walk != null){
+                        if (status.close_dogs_events) {
+                            for (var count = 0; count < status.close_dogs_events.length; count++) {
+                                if (arrayObjectIndexOf(close_dogs, status.close_dogs_events[count])  == -1) {
+                                    close_dogs.push(status.close_dogs_events[count]);
+                                    ctrl.hidden = true;
+                                    $rootScope["test"] = close_dogs;
+                                    ctrl.relations = $rootScope['test'];
+                                }
+                            }
+                        };
                     }
-                });
-
-            }, 1000);
+                }, 1000);
+            })
         };
 
         $scope.$on('$locationChangeStart', function() {
@@ -53,7 +80,23 @@
             }
         };
 
+        function arrayObjectIndexOf(myArray, searchTerm) {
+            for(var i = 0, len = myArray.length; i < len; i++) {
+                if (myArray[i].dog.id == searchTerm.dog.id) {
+                    myArray[i] = searchTerm;
+                    return 0;
+                }
+            }
+            return -1;
+        }
+
         var ctrl = this;
+
+        ctrl = {
+            setRelation : setRelation,
+            setVisible : setVisible,
+            getDogById : getDogById
+        };
 
         return ctrl;
     }

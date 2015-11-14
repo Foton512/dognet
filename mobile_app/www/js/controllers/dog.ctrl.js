@@ -3,9 +3,9 @@
 
     angular
         .module('app.controllers')
-        .controller('DogCtrl', ['$location','$interval', '$document','$scope', 'dog', 'DogService', 'MapService', DogCtrl]);
+        .controller('DogCtrl', ['$rootScope', '$location','$interval', '$document','$scope', 'dog', 'DogService', 'MapService', DogCtrl]);
 
-    function DogCtrl($location ,$interval, $document, $scope, dog, DogService, MapService) {
+    function DogCtrl($rootScope, $location ,$interval, $document, $scope, dog, DogService, MapService) {
         console.log('Controller: DogCtrl');
 
         if(!dog) {
@@ -16,7 +16,9 @@
         var refresh,
             map,
             status,
-            current_dog_id;
+            current_dog_id,
+            close_dogs = new Array();
+
         var ctrl = this;
         var event = 0;
         ctrl = {
@@ -47,13 +49,19 @@
                 DogService.getLastEvents(dog.id, event).then(function success(response){
                     status = response.data;
                     event = status.event_counter;
-                    if(status.walk.path.length != 0){
-                        setCenter([status.walk.path[0].lat, status.walk.path[0].lon])
-                    }
-                    if(status.close_dogs_events.lenght != 0 && status.close_dogs_events.lenght){
-                        ctrl.hidden = true;
-                    }else{
-                        ctrl.hidden = false;
+                    if(status.walk != null){
+                        if(status.walk.length != 0){
+                            setCenter(status.walk[status.walk.length - 1]);
+                        }
+                        if (status.close_dogs_events) {
+                            for (var count = 0; count < status.close_dogs_events.length; count++) {
+                                if (arrayObjectIndexOf(close_dogs, status.close_dogs_events[count])  == -1) {
+                                    close_dogs.push(status.close_dogs_events[count]);
+                                    ctrl.hidden = true;
+                                    $rootScope["test"] = close_dogs;
+                                }
+                            }
+                        };
                     }
                 });
 
@@ -71,6 +79,16 @@
                 refresh = undefined;
             }
         };
+
+        function arrayObjectIndexOf(myArray, searchTerm) {
+            for(var i = 0, len = myArray.length; i < len; i++) {
+                if (myArray[i].dog.id == searchTerm.dog.id) {
+                    myArray[i] = searchTerm;
+                    return 0;
+                }
+            }
+            return -1;
+        }
 
         function setCenter(coords){
             MapService.setCenter(map, coords);

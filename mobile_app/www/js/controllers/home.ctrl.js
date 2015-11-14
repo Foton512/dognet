@@ -25,12 +25,10 @@
         $scope.fight = function() {
             if ( angular.isDefined(refresh) ) return;
             refresh = $interval(function() {
-                console.log(1111);
                 RequestService.getMyDogs().then(function successCallback(response) {
                     tmp = response.data;
                     if(tmp == ""){
                         ctrl.hidden = true;
-                        console.log(ctrl.hidden);
                     }else{
                         ctrl.dogs = tmp;
                         ctrl.hidden = false;

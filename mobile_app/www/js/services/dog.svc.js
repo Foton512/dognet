@@ -9,7 +9,8 @@
         var svc = this;
         svc = {
             getById : getById,
-            getLastEvents: getLastEvents
+            getLastEvents: getLastEvents,
+            changeRelation : changeRelation
         };
 
         function getById(id){
@@ -20,6 +21,14 @@
 
         function getLastEvents(dogId, eventCount){
             return RequestService.getLastEvents(dogId, eventCount);
+        }
+
+        function changeRelation(dogId, relatedDogId, statusValue)
+        {
+            return RequestService.setRelation(dogId, relatedDogId, statusValue)
+                .then(function successCallback(response)
+                {
+                });
         }
 
         return svc;
