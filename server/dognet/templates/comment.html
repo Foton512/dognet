@@ -37,7 +37,7 @@
                 map.controls.remove('geolocationControl');
 
 
-                var obj = util.bounds.getCenterAndZoom(map.geoObjects.getBounds());
+                var obj = ymaps.util.bounds.getCenterAndZoom(map.geoObjects.getBounds());
                 map.setCenter(obj.center, obj.zoom);
             }
         </script>
