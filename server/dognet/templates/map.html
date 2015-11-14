@@ -32,7 +32,7 @@
 
         function init() {
             map = new ymaps.Map("map", {
-                center: [57.62545757, 39.88520444],
+                center: [{{ home.lat }}, {{ home.lon }}],
                 zoom: 17
             });
 
@@ -166,10 +166,10 @@
             }).done(function(data) {
                 setTimeout(getData(data.event_counter), 1000);
                 {% if filter == "home" %}  {% endif %}
-                {% if filter == "walk" %} {% comment %}updateWalk(data.walk);{% endcomment %} updateMyDog(data.lat, data.lon); {% endif %}
+                {% if filter == "walk" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
                 {% if filter == "friends" %}  {% endif %}
                 {% if filter == "enemies" %}  {% endif %}
-                {% if filter == "all" %} {% comment %}updateWalk(data.walk);{% endcomment %} updateMyDog(data.lat, data.lon); {% endif %}
+                {% if filter == "all" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
             });
         };
         getData();
