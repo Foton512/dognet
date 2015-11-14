@@ -23,9 +23,7 @@
                     zoom: 15
                 });
                 walk = new ymaps.Polyline([
-                    {% for point in comment.walk.getPath %}
-                        [{{ point.0 }}, {{ point.1 }}],
-                    {% endfor %}
+                    {% for point in comment.walk.getPath %}[{{ point.0 }}, {{ point.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}
                 ], {}, {
                     balloonCloseButton: false,
                     strokeColor: "#0F7FA4",
