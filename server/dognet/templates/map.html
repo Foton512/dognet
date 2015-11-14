@@ -107,6 +107,8 @@
             map.controls.remove('searchControl');
             map.controls.remove('trafficControl');
             map.controls.remove('geolocationControl');
+
+            getData();
         }
         var updateWalk = function(points) {
             if (points.length > 0) {
@@ -172,7 +174,7 @@
                 {% if filter == "all" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
             });
         };
-        getData();
+
     </script>
 {% endblock %}
 
