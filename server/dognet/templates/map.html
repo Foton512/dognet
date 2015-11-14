@@ -118,6 +118,8 @@
                 });
             }
             map.geoObjects.add(walk);
+            var obj = ymaps.util.bounds.getCenterAndZoom(map.geoObjects.getBounds(), map.container.getSize());
+            map.setCenter(obj.center, obj.zoom);
         }
         var setCenter = function(lat, lon) {
             if (lat && lon) {
