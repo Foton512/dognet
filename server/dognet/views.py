@@ -584,7 +584,7 @@ def getDogEvents(request):
             }
             response["close_dogs_events"] = [
                 {
-                    "dog_id": closeDogRelation.relatedDog_id,
+                    "dog": closeDogRelation.relatedDog.toDict(),
                     "became_close": True,
                     "status": getDogStatus(closeDogRelation.relatedDog_id, closeDogIdToStatus)
                 } for closeDogRelation in closeDogRelations
