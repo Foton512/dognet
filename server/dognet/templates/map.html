@@ -48,7 +48,7 @@
                     }
             );
 
-            myDog = new ymaps.Placemark({{ home.lat }}, {{ home.lon }},
+            myDog = new ymaps.Placemark([{{ home.lat }}, {{ home.lon }}],
                     {
                         hintContent: '{{ dog.nick }}'
                     },
@@ -109,7 +109,7 @@
             if (points) {
                 map.geoObjects.remove(walk);
                 walk = new ymaps.Polyline(
-                    JSON.stringify(points)
+                    JSON.parse(JSON.stringify(points))
                 , {}, {
                     balloonCloseButton: false,
                     strokeColor: "#0F7FA4",
