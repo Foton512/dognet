@@ -10,7 +10,8 @@
         svc = {
             getMyDogs : getMyDogs,
             getById : getById,
-            getLastEvents : getLastEvents
+            getLastEvents : getLastEvents,
+            setRelation : setRelation
         }
 
         function getMyDogs(){
@@ -37,6 +38,16 @@
             return $http({
                 method: 'GET',
                 url: $window.localStorage.getItem('serverAddress') + 'api/dog/get_events?id=' + dogId + '&fields=lat,lon,close_dogs_events,walk&event_counter=' + eventsCount,
+                headers: {
+                    'Authorization': window.localStorage.getItem('access_token')
+                }
+            })
+        }
+
+        function setRelation(dogId, relatedDogID, statusValue){
+            return $http({
+                method: 'GET',
+                url: $window.localStorage.getItem('serverAddress') + 'api/dog/set_relation/?id=' + dogId + '&related_id=' + relatedDogID + '&status=' + statusValue,
                 headers: {
                     'Authorization': window.localStorage.getItem('access_token')
                 }
