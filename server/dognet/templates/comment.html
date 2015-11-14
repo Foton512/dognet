@@ -17,13 +17,14 @@
             var walk;
 
             function init{{ comment.id }}() {
+                var arr = new Array();
+                arr = {% for point in comment.walk.getPath %}[{{ point.0 }}, {{ point.1 }}]{% if not forloop.last %},{% endif %}{% endfor %};
                 map = new ymaps.Map("map{{ comment.id }}", {
                     center: [{{ comment.walk.getPath.first.0 }}, {{ comment.walk.getPath.first.1 }}],
                     zoom: 15
                 });
-                walk = new ymaps.Polyline([
-                    {% for point in comment.walk.getPath %}[{{ point.0 }}, {{ point.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}
-                ], {}, {
+                walk = new ymaps.Polyline( arr
+                , {}, {
                     balloonCloseButton: false,
                     strokeColor: "#0F7FA4",
                     strokeWidth: 4,
