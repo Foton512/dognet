@@ -18,8 +18,9 @@
 
             function init{{ comment.id }}() {
                 var arr = [{% for point in comment.walk.getPath %}[{{ point.0 }}, {{ point.1 }}]{% if not forloop.last %},{% endif %}{% endfor %}];
+                var first = comment.walk.getPath[0];
                 map = new ymaps.Map("map{{ comment.id }}", {
-                    center: [57.625379, 39.885215],
+                    center: [ {{ comment.walk.getPath.0.point.0 }}, {{ comment.walk.getPath.0.point.1 }}],
                     zoom: 15
                 });
                 walk = new ymaps.Polyline( arr
