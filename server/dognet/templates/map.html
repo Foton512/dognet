@@ -158,7 +158,7 @@
                 processData: false,
                 contentType: false,
             }).done(function(data) {
-                setTimeout(getData(data.event_counter), 1000);
+                setTimeout(function(){getData(data.event_counter);}, 1000);
                 {% if filter == "home" %}  {% endif %}
                 {% if filter == "walk" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
                 {% if filter == "friends" %}  {% endif %}

@@ -115,7 +115,7 @@
                 processData: false,
                 contentType: false,
             }).done(function(data) {
-                setTimeout(getNoty(data.event_counter), 1000);
+                setTimeout(function(){getNoty(data.event_counter);}, 1000);
                 addNoty(data);
             });
         };
