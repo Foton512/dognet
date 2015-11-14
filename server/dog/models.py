@@ -83,6 +83,15 @@ class Walk(models.Model):
             (float(point.lat), float(point.lon)) for point in walkPoints
         ]
 
+    def getCenter(self):
+        walkPoints = WalkPoint.objects.filter(walk=self)
+        xPoints = [float(point.lat) for point in walkPoints]
+        yPoints = [float(point.lat) for point in walkPoints]
+        xMean = reduce(lambda x, y: x + y, xPoints) / len(xPoints)
+        yMean = reduce(lambda x, y: x + y, yPoints) / len(yPoints)
+        return [xMean, yMean]
+
+
     def toDict(self):
         return {
             "dog": self.dog.toDict(),
