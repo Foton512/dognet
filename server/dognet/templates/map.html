@@ -107,7 +107,7 @@
         }
         var updateWalk = function(points) {
             if (points) {
-                {% comment %}map.geoObjects.remove(walk);{% endcomment %}
+                map.geoObjects.remove(walk);
                 walk = new ymaps.Polyline(
                     points
                 , {}, {
@@ -129,7 +129,7 @@
         var updateMyDog = function(lat, lon) {
             if(lat && lon) {
                 setCenter(lat, lon);
-                {% comment %}map.geoObjects.remove(myDog);{% endcomment %}
+                map.geoObjects.remove(myDog);
                 myDog = new ymaps.Placemark([lat, lon],
                         {
                             hintContent: '{{ dog.nick }}'
