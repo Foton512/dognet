@@ -19800,6 +19800,9 @@ html, body {
     max-height: 300px; }
 
 /*** Achivments ***/
+.achivments img {
+  max-height: 250px; }
+
 .achivments .process {
   opacity: 0.5; }
 

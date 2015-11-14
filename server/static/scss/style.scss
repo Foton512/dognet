@@ -52,6 +52,9 @@ html, body {
 /*** Achivments ***/
 
 .achivments {
+  img {
+    max-height: 250px;
+  }
   .process {
     opacity: 0.5;
   }
