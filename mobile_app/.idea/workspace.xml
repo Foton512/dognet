@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c01d7ff0-7a68-4c5c-804e-a09c7034c939" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/www/index.html" afterPath="$PROJECT_DIR$/www/index.html" />
-    </list>
+    <list default="true" id="c01d7ff0-7a68-4c5c-804e-a09c7034c939" name="Default" comment="" />
     <ignored path="mobile_app.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -28,8 +26,8 @@
       <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/www/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="5.0801334" vertical-offset="0" max-vertical-offset="3179">
-              <caret line="179" column="7" selection-start-line="179" selection-start-column="7" selection-end-line="179" selection-end-column="7" />
+            <state vertical-scroll-proportion="0.39732888" vertical-offset="0" max-vertical-offset="3179">
+              <caret line="14" column="51" selection-start-line="14" selection-start-column="51" selection-end-line="14" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -851,8 +849,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/www/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="5.0801334" vertical-offset="0" max-vertical-offset="3179">
-          <caret line="179" column="7" selection-start-line="179" selection-start-column="7" selection-end-line="179" selection-end-column="7" />
+        <state vertical-scroll-proportion="0.39732888" vertical-offset="0" max-vertical-offset="3179">
+          <caret line="14" column="51" selection-start-line="14" selection-start-column="51" selection-end-line="14" selection-end-column="51" />
           <folding />
         </state>
       </provider>
