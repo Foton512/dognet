@@ -157,7 +157,7 @@ def achievements(request):
     dog = models.Dog.objects.get(id=dogId) if dogId else None
     ownDogs = models.Dog.objects.filter(user=user)
 
-    achievements = models.Achievement.objects.filter(dog=dog)
+    achievementNumbers = [achievement.type for achievement in models.Achievement.objects.filter(dog=dog)]
 
     return render_to_response(
         "achievements.html",
@@ -165,7 +165,9 @@ def achievements(request):
             "dog": dog,
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
-            "achievements": achievements,
+            "achievements": {
+                num: num in achievementNumbers for num in xrange(1, 5)
+            },
             "eventCounter": models.State.getState().eventCounter,
         },
         context_instance=RequestContext(request)
@@ -210,6 +212,7 @@ def dog(request, dogId):
             "ownDogs": ownDogs,
             "birthDate": dateToStr(dog.birthDate) if dog.birthDate else "",
             "comments": comments,
+            "ownDog": dog.user == request.user,
         },
         context_instance=RequestContext(request)
     )

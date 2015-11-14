@@ -41,26 +41,28 @@
             </div>
         </div>
     </div>
-    <div class="panel add-comment clearfix" style="margin-top: 20px; margin-bottom: 20px;">
-        <form id="addNewsForm" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="hidden" name="id" value="{{ dog.id }}">
-            <div class="row commenting-field">
-                <div class="medium-0 columns small-0 img-container">
-                </div>
-                <div class="medium-12 columns small-12 textarea-wrapper">
-                    <textarea id="addNew" name="text" placeholder="Что у вашего питомца нового..."></textarea>
-                    <div class="control-row" style="display: none;">
-                        <button class="button tiny success" type="submit">Отправить</button>
-                        <button data-dropdown="drop" aria-controls="drop" aria-expanded="false" class="tiny button dropdown">Прикрепить</button>
-                        <ul id="drop" data-dropdown-content class="f-dropdown" aria-hidden="true">
-                            <li><a href="#">Загрузить фотаньку</a></li>
-                        </ul>
+    {%  if ownDog %}
+        <div class="panel add-comment clearfix" style="margin-top: 20px; margin-bottom: 20px;">
+            <form id="addNewsForm" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ dog.id }}">
+                <div class="row commenting-field">
+                    <div class="medium-0 columns small-0 img-container">
+                    </div>
+                    <div class="medium-12 columns small-12 textarea-wrapper">
+                        <textarea id="addNew" name="text" placeholder="Что у вашего питомца нового..."></textarea>
+                        <div class="control-row" style="display: none;">
+                            <button class="button tiny success" type="submit">Отправить</button>
+                            <button data-dropdown="drop" aria-controls="drop" aria-expanded="false" class="tiny button dropdown">Прикрепить</button>
+                            <ul id="drop" data-dropdown-content class="f-dropdown" aria-hidden="true">
+                                <li><a href="#">Загрузить фотаньку</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+    {% endif %}
     {% for comment in comments %}
         {% if not comment.parentComment %}
             <div class="row post">

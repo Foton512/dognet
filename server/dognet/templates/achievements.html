@@ -3,16 +3,18 @@
 {% block title %}Достижения{% endblock %}
 
 {% block content %}
-    {% for achievement in achievements %}
-        <div class="row achivments">
-            <div class="large-3 columns">
-                <div class="{{ achievement.status }}">
-                    <img src="/media/achivments/{{ achievement.type }}.png">
-                </div>
-                <div class="description text-center">
-                    {{ achievement.description }}
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+    <div class="row">
+        <img src="/static/img/achievements/1.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.1 %}opacity: 0.2;{% endif %}">
+        <img src="/static/img/achievements/5.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
+        <img src="/static/img/achievements/6.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
+    </div>
+    <div class="row">
+        <img src="/static/img/achievements/2.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.2 %}opacity: 0.2;{% endif %}">
+        <img src="/static/img/achievements/7.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
+        <img src="/static/img/achievements/8.png" width="150px;" height="150px;" style="margin: 5px; opacity: 0.2;">
+    </div>
+    <div class="row">
+        <img src="/static/img/achievements/3.png" width="150px;" height="150px;" style="margin: 5px; vertical-align: top; {% if not achievements.3 %}opacity: 0.2;{% endif %}">
+        <img src="/static/img/achievements/4.png" width="150px;" height="150px;" style="margin: 5px; {% if not achievements.4 %}opacity: 0.2;{% endif %}">
+    </div>
 {% endblock %}
