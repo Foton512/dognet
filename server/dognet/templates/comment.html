@@ -11,13 +11,12 @@
         {% comment %}{% for point in comment.walk.getPath %}
             ({{ point.0 }}, {{ point.1 }}),
         {% endfor %}{% endcomment %}
-        <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
         <script type="text/javascript">
-            ymaps.ready(init);
+            ymaps.ready(init{{ comment.id }});
             var map;
             var walk;
 
-            function init() {
+            function init{{ comment.id }}() {
                 map = new ymaps.Map("map{{ comment.id }}", {
                     center: [{{ comment.walk.getPath.first.0 }}, {{ comment.walk.getPath.first.1 }}],
                     zoom: 15
