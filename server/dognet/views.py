@@ -558,10 +558,7 @@ def getDogEvents(request):
     if "lon" in fields:
         response["lon"] = float(dog.lon) if dog.lon else None
     if "walk" in fields:
-        response["walk"] = {
-            "id": walkInProgress.id,
-            "path": walkInProgress.getPathWithinPeriod(eventCounter, currentEventCounter),
-        } if walkInProgress else None
+        response["walk"] = walkInProgress.getPath() if walkInProgress else []
     if "close_dogs_events" in fields:
         if eventCounter:
             closeDogEvents = models.CloseDogEvent.objects.filter(dog=dog,

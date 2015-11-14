@@ -61,26 +61,10 @@ class Walk(models.Model):
     class Meta:
         index_together = ["dog", "inProgress"]
 
-    def getPathWithinPeriod(self, lowEventCounter, highEventCounter):
-        if lowEventCounter is None:
-            lowEventCounter = 0
-        else:
-            lowEventCounter += 1
-
-        walkPoints = WalkPoint.objects.filter(walk=self,
-                                              eventCounter__gte=lowEventCounter,
-                                              eventCounter__lte=highEventCounter).order_by("eventCounter")
-        return [
-            {
-                "lat": walkPoint.lat,
-                "lon": walkPoint.lon,
-            } for walkPoint in walkPoints
-        ]
-
     def getPath(self):
-        walkPoints = WalkPoint.objects.filter(walk=self)
+        walkPoints = WalkPoint.objects.filter(walk=self).order_by("eventCounter")
         return [
-            (float(point.lat), float(point.lon)) for point in walkPoints
+            [float(point.lat), float(point.lon)] for point in walkPoints
         ]
 
     def getCenter(self):
