@@ -28,7 +28,7 @@
     <script type="text/javascript">
         ymaps.ready(init);
         var map;
-        var home, myDog, friends, enemy, walk;
+        var home, myDog, enemy, walk, friendsCollection;
 
         function init() {
             map = new ymaps.Map("map", {
@@ -60,7 +60,7 @@
                     }
             );
 
-            friends = new ymaps.Placemark([57.62632958, 39.88450170],
+            {% comment %}friend = new ymaps.Placemark([57.62632958, 39.88450170],
                     {
                         hintContent: 'Друг'
                     },
@@ -70,7 +70,8 @@
                         iconImageSize: [36, 30],
                         iconImageOffset: [-18, -15]
                     }
-            );
+            );{% endcomment %}
+            friendsCollection = new ymaps.GeoObjectCollection();
 
             enemy = new ymaps.Placemark([57.62645045, 39.88343418],
                     {
@@ -95,9 +96,9 @@
 
             {% if filter == "home" %} map.geoObjects.add(home); {% endif %}
             {% if filter == "walk" %} map.geoObjects.add(walk).add(myDog); {% endif %}
-            {% if filter == "friends" %} map.geoObjects.add(friends); {% endif %}
+            {% if filter == "friends" %} map.geoObjects.add(friendsCollection); {% endif %}
             {% if filter == "enemies" %} map.geoObjects.add(enemy); {% endif %}
-            {% if filter == "all" %} map.geoObjects.add(walk).add(myDog).add(home).add(friends).add(enemy); {% endif %}
+            {% if filter == "all" %} map.geoObjects.add(walk).add(myDog).add(home).add(friendsCollection).add(enemy); {% endif %}
 
             map.controls.remove('searchControl');
             map.controls.remove('trafficControl');
@@ -142,6 +143,26 @@
                         }
                 );
                 map.geoObjects.add(myDog);
+            }
+        }
+
+        var updateFriends = function(friends) {
+            if(friends) {
+                map.geoObjects.remove(friendsCollection);
+                friends.forEach(function(f) {
+                    friendsCollection.add(new ymaps.Placemark([f.lat, f.lon],
+                        {
+                            hintContent: 'friend.nick'
+                        },
+                        {
+                            iconLayout: 'default#image',
+                            iconImageHref: '/static/img/friend.png',
+                            iconImageSize: [36, 30],
+                            iconImageOffset: [-18, -15]
+                        }
+                    ))
+                });
+                map.geoObjects.add(friendsCollection);
             }
         }
 
