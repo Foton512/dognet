@@ -182,7 +182,7 @@
                 setTimeout(function(){getData(data.event_counter);}, 1000);
                 {% if filter == "home" %}  {% endif %}
                 {% if filter == "walk" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
-                {% if filter == "friends" %}  {% endif %}
+                {% if filter == "friends" %} updateFriends(data.friends); {% endif %}
                 {% if filter == "enemies" %}  {% endif %}
                 {% if filter == "all" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
             });
