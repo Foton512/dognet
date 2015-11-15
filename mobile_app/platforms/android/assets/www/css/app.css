@@ -1,0 +1,676 @@
+/* Application styles */
+
+/*
+ * Common styles
+ */
+* {
+    -ms-content-zooming: none;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.no-padding-right {
+    padding-right: 0;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.horizontal-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.horizontal-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+}
+
+.horizontal-scroll > br {
+    display: none;
+}
+
+.selectable {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+.padded {
+    padding: 20px;
+}
+
+.rounded-corners {
+    border-radius: 5px;
+}
+
+.center-text {
+    text-align: center;
+}
+
+#scrollToMe {
+    background-color: red;
+}
+
+.highlight {
+    background-color: #FFFF88;
+}
+
+tr {
+    border: 1px solid;
+}
+
+tr:only-child {
+    border: none;
+}
+
+td:nth-child(odd),
+th:nth-child(odd) {
+    background: #dfefef;
+}
+
+tr:only-child > td,
+tr:only-child > th {
+    background: transparent;
+}
+
+.fa-info {
+    padding-left: 6px;
+    padding-right: 7px;
+}
+
+.no-actions {
+    pointer-events: none;
+}
+
+/*
+ * Progress Wheel
+ */
+.app-content-loading {
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background: #fff;
+    position: relative;
+}
+
+.loading-spinner {
+    position: absolute;
+    font-size: 50px;
+    left: 50%;
+    top: 50%;
+    margin-left: -25px;
+    margin-top: -25px;
+    z-index: 6;
+}
+
+.spinner-white {
+    color: white;
+}
+
+/*
+ * Swiper
+ */
+.swipe-starter {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 16%;
+    padding-top: 51px;
+    z-index: 4;
+}
+
+/*
+ * navbar styles
+ */
+.navbar.navbar-app.navbar-absolute-top .btn-group.pull-right .btn {
+    padding: 0 17px;
+}
+
+.navbar.navbar-app.navbar-absolute-top .btn-group .btn:empty {
+    display: none;
+}
+
+.navbar.navbar-app.navbar-absolute-top .btn-group {
+    background: transparent;
+    min-height: 50px;
+}
+
+.navbar.navbar-app.navbar-absolute-top .btn-group .input-group {
+    padding-top: 8px;
+    padding-right: 10px;
+}
+
+.navbar.navbar-app.navbar-absolute-top .btn-group .input-group-addon {
+    border: none;
+}
+
+.navbar.navbar-app.navbar-absolute-top .navbar-brand.navbar-brand-center {
+    text-align: left;
+    padding-left: 45px;
+    padding-right: 145px;
+}
+
+.navbar.navbar-app.navbar-absolute-top .input-group .search-input {
+    padding-top: 7px;
+}
+
+/*
+ * side-menu.html styles
+ */
+#sidemenu .input-group {
+    margin: 10px;
+}
+
+#sidemenu .input-group input {
+    background-color: #ffffff;
+}
+
+#sidemenu .input-group-addon {
+    border: none;
+}
+
+#sidemenu .media {
+    margin: 0 15px;
+    padding-top: 10px;
+    color: white;
+}
+
+.side-menu-header {
+    z-index: 0;
+}
+
+.side-menu-scrollable {
+    padding-top: 125px;
+}
+
+.icon-item {
+    padding-left: 45px;
+}
+
+.icon-item > i:first-child {
+    position: absolute;
+    left: 16px;
+}
+
+/**
+ * home.html styles
+ */
+.home .form-group .btn-group h3 {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.modal-adv {
+    width: 100%;
+    margin: 5% auto auto;
+}
+
+.modal-adv h2 {
+    text-align: center;
+}
+
+/**
+ * article-detail.html styles
+ */
+.article {
+    padding: 20px;
+}
+
+.article-infobox font {
+    color: #333;
+}
+
+.article img {
+    height: auto;
+}
+
+.article ol,
+.article ul {
+    list-style: disc;
+    margin-left: 20px;
+}
+
+.article h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.article p {
+    font-size: 16px;
+}
+
+.article button {
+    font-weight: bold;
+    border-top-width: 0;
+    text-align: left;
+    padding: 0;
+}
+
+.article button.icon-left:before {
+    padding-right: 15px;
+}
+
+.article-table {
+    border-color: #000000 !important;
+    empty-cells: hide;
+    background-color: transparent;
+    float: none;
+    margin: 0 auto;
+}
+
+.article-table td {
+    border-color: #000000 !important;
+    padding: 2px;
+    vertical-align: middle;
+}
+
+.article-table th {
+    border-color: #000000 !important;
+    padding: 2px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.article-infobox table {
+    width: 100%;
+    border-spacing: 2px;
+    border: 1px outset black;
+    border-collapse: collapse;
+}
+
+.article-infobox td,
+.article-infobox th {
+    border: 1px outset black;
+    border-collapse: collapse;
+}
+
+.fa-2x {
+    margin-top: 10px;
+}
+
+.preview-img {
+    margin-top: -41px;
+}
+
+/**
+ * category-list.html styles
+ */
+.category-list {
+    padding: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.category-list .section {
+    float: left;
+}
+
+.category-list .item {
+    border-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    height: 43px;
+}
+
+.category-list a {
+    text-align: center;
+}
+
+.category-list button {
+    margin-bottom: 0;
+    margin-top: 0;
+    padding: 0;
+    border-top-width: 0;
+    text-align: left;
+}
+
+.category-list button.icon-left:before {
+    padding-left: 15px;
+}
+
+/**
+ * image-list.html styles
+ */
+.image-list li {
+    padding: 10px 20px;
+}
+
+/**
+ * image-full.html styles
+ */
+.image-full {
+    background-color: #3f3f3f;
+    height: 100%;
+    text-align: center;
+}
+
+.image-full .btn {
+    color: white
+}
+
+.image-full img {
+    max-height: 100%;
+    max-width: 100%;
+    top: 0;
+    position: relative;
+    z-index: 5;
+}
+
+.image-full .img-container {
+    height: 100%;
+    width: 100%;
+    padding-bottom: 55px;
+}
+
+.image-full .img-wrapper {
+    height: 100%;
+    width: 100%;
+}
+
+.prev-next-bar {
+    background-color: #3F3F3F;
+    border-width: 0;
+}
+
+/**
+ * about-us.html styles
+ */
+.logo {
+    background: url(../img/akvelon_logo_white.png) no-repeat center;
+    background-size: contain;
+    width: 100%;
+    height: 100px;
+    margin-top: -35px;
+}
+
+.powered-by p {
+    margin: 15px 0 0;
+}
+
+.button-positive.visit-company-web-site,
+.button-positive.visit-company-web-site:hover,
+.button-positive.visit-company-web-site:active {
+    color: #000000;
+    text-decoration: none;
+}
+
+/**
+ * favourites-list.html styles
+ */
+.favourite-link {
+    border: 0;
+    width: 90%;
+    display: inline-block;
+    padding: 5px;
+    background-color: inherit !important;
+}
+
+.repeat-item:active {
+    background-color: #7b7b7b;
+}
+
+.repeat-item.ng-leave {
+    -webkit-transition: 0.5s linear all;
+    transition: 0.5s linear all;
+}
+
+.repeat-item.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+/**
+ * feedback.html styles
+ */
+.feedback-area {
+    margin: 10px auto;
+    width: 90%;
+    background: #333;
+}
+
+/**
+ * settings.html styles
+ */
+.change-text {
+    line-height: 42px;
+}
+
+.change-text .button {
+    color: inherit;
+}
+
+/**
+ * search.html styles
+ */
+.search-header {
+    background: #f7f7f7;
+    min-height: 50px;
+}
+
+.search-header .btn {
+    color: #007aff;
+    margin-top: -7px;
+}
+
+.search-header .input-group {
+    padding-top: 8px;
+    padding-right: 10px;
+}
+
+.search-header .input-group-addon {
+    border: none;
+}
+
+.search-results {
+    background: url(../img/search.png) no-repeat center;
+}
+
+.search-results h4 {
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+.context-search-buttons {
+    padding: 5px;
+}
+
+/**
+*  error.html styles
+*/
+.error-msg {
+    text-align: center;
+}
+
+/**
+ * wikis.html styles
+ */
+.wiki-link {
+    height: 100%;
+    width: 100%;
+}
+
+.other-app-title {
+    text-align: left;
+    padding-left: 10px;
+    background: #FFF;
+}
+
+.other-app-block {
+    margin-bottom: 5%;
+    border: 1px solid;
+}
+
+.app-advertisement-list {
+    text-align: center;
+    width: 75%;
+    margin: 5% auto;
+}
+
+/**
+ * copyright-bottom.drv.js
+ */
+.content-wrapper {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.footer {
+    text-align: center;
+    font-size: 10px;
+    color: black;
+    position: absolute;
+    background: lightgray;
+    width: 100%;
+    bottom: 0;
+}
+
+/**
+ * add-to-favourites.drv.js
+ */
+.add-to-favourites button {
+    margin-top: 5px;
+    border: none;
+}
+
+.icon-gold {
+    color: gold;
+}
+
+/**
+ * modal-view.drv.js
+ */
+.modal-view-drv {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.modal-view-drv .modal-window {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 101;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+.modal-view-drv .modal-close-button {
+    margin: auto;
+    width: 150px;
+    height: 40px;
+    position: absolute;
+    right: 0;
+    bottom: 10px;
+    left: 0;
+    border-radius: 5px;
+    font-weight: 700;
+    color: rgb(162, 162, 162);
+    font-size: 19px;
+    background: rgb(34, 34, 34);
+}
+
+.modal-view-drv .modal-transclude {
+    position: absolute;
+    top: 0;
+    bottom: 50px;
+    width: 100%;
+}
+
+/**
+ * share-button.drv.js
+ */
+.share-list{
+   padding-right: 10px;
+}
+
+.share-list li {
+    margin: 2%;
+    display: inline-block;
+    float: right;
+    max-width: 20%;
+}
+
+.share-modal-dialog{
+    position: relative;
+    margin-top: 40px;
+    margin-right: 10px;
+    float: right;
+    border-radius: 20px;
+    max-width: 85%;
+    width: 310px;
+    height: 95px;
+    border: 1px solid rgb(204, 204, 204);
+    background-color: rgba(247, 247, 247, 0.9);
+}
+
+.share-modal-dialog .modal-close-button {
+    display: none;
+}
+
+.share-icon-box.dialog-shown:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: relative;
+    border-style: solid;
+    border-color: rgba(204, 204, 204, 0.9) transparent;
+    bottom: 100%;
+    margin-right: -16px;
+    right: 16px;
+    border-width: 0 8px 8px 8px;
+}
+
+/**
+ * Optional common styles (should be here because order is important)
+ */
+.list-bottom {
+    position: fixed;
+    top: 90%;
+    color: #145fd7;
+    z-index: 3;
+}
+
+div .item {
+    color: inherit;
+    text-decoration: none;
+}
+
+div.item:hover, div.item:focus {
+    text-decoration: none;
+}
+
+.category-item:active {
+    background-color: #888888;
+}
+
+@media (min-width: 992px) {
+    .swipe-starter {
+        display: none;
+    }
+}
+html, body, #map
+{
+    height: 430px;
+}
+#map
+{
+    width: 100%;
+}

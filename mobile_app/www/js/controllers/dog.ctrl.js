@@ -17,8 +17,10 @@
             map,
             status,
             current_dog_id,
-            close_dogs = new Array();
-
+            home,
+            myDog,
+            close_dogs = new Array(),
+            way;
         var ctrl = this;
         var event = 0;
         ctrl = {
@@ -38,9 +40,15 @@
 
         function init() {
             map = new ymaps.Map(document.getElementById("map"), {
-                center: [57.789939, 47.879478],
+                center: [57.689631, 39.778299],
                 zoom: 17
             });
+
+
+            map.geoObjects.add(home);
+            map.controls.remove('searchControl');
+            map.controls.remove('trafficControl');
+            map.controls.remove('geolocationControl');
         }
 
         $scope.fight = function() {
@@ -52,6 +60,21 @@
                     if(status.walk != null){
                         if(status.walk.length != 0){
                             setCenter(status.walk[status.walk.length - 1]);
+                            home = new ymaps.Placemark([57.689631, 39.778299],
+                                {
+                                    hintContent: dog.nick
+                                }
+                            );
+
+                            map.geoObjects.remove(myDog);
+                            map.geoObjects.remove(way);
+
+                            myDog  = new ymaps.Placemark(status.walk[status.walk.length - 1]);
+                            way = new ymaps.Polyline(
+                                status.walk
+                            );
+                            map.geoObjects.add(myDog);
+                            map.geoObjects.add(way);
                         }
                         if (status.close_dogs_events) {
                             for (var count = 0; count < status.close_dogs_events.length; count++) {
