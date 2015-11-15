@@ -60,8 +60,28 @@
                     }
             );
 
-            friendsCollection = new ymaps.GeoObjectCollection();
-            enemiesCollection = new ymaps.GeoObjectCollection();
+            friendsCollection = new ymaps.GeoObjectCollection(new ymaps.Placemark([{{ home.lat }}, {{ home.lon }}],
+                    {
+                        hintContent: '{{ dog.nick }}'
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: '/static/img/dog.gif',
+                        iconImageSize: [42, 34],
+                        iconImageOffset: [-21, -24]
+                    }
+            ));
+            enemiesCollection = new ymaps.GeoObjectCollection(new ymaps.Placemark([{{ home.lat }}, {{ home.lon }}],
+                    {
+                        hintContent: '{{ dog.nick }}'
+                    },
+                    {
+                        iconLayout: 'default#image',
+                        iconImageHref: '/static/img/dog.gif',
+                        iconImageSize: [42, 34],
+                        iconImageOffset: [-21, -24]
+                    }
+            ));
 
             walk = new ymaps.Polyline([
                 [{{ home.lat }}, {{ home.lon }}]
