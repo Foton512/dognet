@@ -60,28 +60,8 @@
                     }
             );
 
-            friendsCollection = new ymaps.GeoObjectCollection(new ymaps.Placemark([{{ home.lat }}, {{ home.lon }}],
-                    {
-                        hintContent: '{{ dog.nick }}'
-                    },
-                    {
-                        iconLayout: 'default#image',
-                        iconImageHref: '/static/img/dog.gif',
-                        iconImageSize: [42, 34],
-                        iconImageOffset: [-21, -24]
-                    }
-            ));
-            enemiesCollection = new ymaps.GeoObjectCollection(new ymaps.Placemark([{{ home.lat }}, {{ home.lon }}],
-                    {
-                        hintContent: '{{ dog.nick }}'
-                    },
-                    {
-                        iconLayout: 'default#image',
-                        iconImageHref: '/static/img/dog.gif',
-                        iconImageSize: [42, 34],
-                        iconImageOffset: [-21, -24]
-                    }
-            ));
+            friendsCollection = new ymaps.GeoObjectCollection();
+            enemiesCollection = new ymaps.GeoObjectCollection();
 
             walk = new ymaps.Polyline([
                 [{{ home.lat }}, {{ home.lon }}]
@@ -147,6 +127,7 @@
         var updateFriends = function(friends) {
             if(friends) {
                 map.geoObjects.remove(friendsCollection);
+                friendsCollection.removeAll();
                 friends.forEach(function(f) {
                     friendsCollection.add(new ymaps.Placemark([f.lat, f.lon],
                         {
@@ -167,6 +148,7 @@
         var updateEnemies = function(enemies) {
             if(enemies) {
                 map.geoObjects.remove(enemiesCollection);
+                enemiesCollection.removeAll();
                 enemies.forEach(function(e) {
                     enemiesCollection.add(new ymaps.Placemark([e.lat, e.lon],
                         {
