@@ -28,7 +28,7 @@
     <script type="text/javascript">
         ymaps.ready(init);
         var map;
-        var home, myDog, friends, enemy, walk;
+        var home, myDog, enemiesCollection, walk, friendsCollection;
 
         function init() {
             map = new ymaps.Map("map", {
@@ -60,29 +60,8 @@
                     }
             );
 
-            friends = new ymaps.Placemark([57.62632958, 39.88450170],
-                    {
-                        hintContent: 'Друг'
-                    },
-                    {
-                        iconLayout: 'default#image',
-                        iconImageHref: '/static/img/friend.png',
-                        iconImageSize: [36, 30],
-                        iconImageOffset: [-18, -15]
-                    }
-            );
-
-            enemy = new ymaps.Placemark([57.62645045, 39.88343418],
-                    {
-                        hintContent: 'Враг'
-                    },
-                    {
-                        iconLayout: 'default#image',
-                        iconImageHref: '/static/img/enemy.gif',
-                        iconImageSize: [32, 32],
-                        iconImageOffset: [-16, -16]
-                    }
-            );
+            friendsCollection = new ymaps.GeoObjectCollection();
+            enemiesCollection = new ymaps.GeoObjectCollection();
 
             walk = new ymaps.Polyline([
                 [{{ home.lat }}, {{ home.lon }}]
@@ -95,9 +74,9 @@
 
             {% if filter == "home" %} map.geoObjects.add(home); {% endif %}
             {% if filter == "walk" %} map.geoObjects.add(walk).add(myDog); {% endif %}
-            {% if filter == "friends" %} map.geoObjects.add(friends); {% endif %}
-            {% if filter == "enemies" %} map.geoObjects.add(enemy); {% endif %}
-            {% if filter == "all" %} map.geoObjects.add(walk).add(myDog).add(home).add(friends).add(enemy); {% endif %}
+            {% if filter == "friends" %} map.geoObjects.add(friendsCollection); {% endif %}
+            {% if filter == "enemies" %} map.geoObjects.add(enemiesCollection); {% endif %}
+            {% if filter == "all" %} map.geoObjects.add(walk).add(myDog).add(home).add(friendsCollection).add(enemiesCollection); {% endif %}
 
             map.controls.remove('searchControl');
             map.controls.remove('trafficControl');
@@ -145,6 +124,48 @@
             }
         }
 
+        var updateFriends = function(friends) {
+            if(friends) {
+                map.geoObjects.remove(friendsCollection);
+                friendsCollection.removeAll();
+                friends.forEach(function(f) {
+                    friendsCollection.add(new ymaps.Placemark([f.lat, f.lon],
+                        {
+                            hintContent: f.nick
+                        },
+                        {
+                            iconLayout: 'default#image',
+                            iconImageHref: '/static/img/friend.png',
+                            iconImageSize: [36, 30],
+                            iconImageOffset: [-18, -15]
+                        }
+                    ))
+                });
+                map.geoObjects.add(friendsCollection);
+            }
+        }
+
+        var updateEnemies = function(enemies) {
+            if(enemies) {
+                map.geoObjects.remove(enemiesCollection);
+                enemiesCollection.removeAll();
+                enemies.forEach(function(e) {
+                    enemiesCollection.add(new ymaps.Placemark([e.lat, e.lon],
+                        {
+                            hintContent: e.nick
+                        },
+                        {
+                            iconLayout: 'default#image',
+                            iconImageHref: '/static/img/friend.png',
+                            iconImageSize: [36, 30],
+                            iconImageOffset: [-18, -15]
+                        }
+                    ))
+                });
+                map.geoObjects.add(enemiesCollection);
+            }
+        }
+
         var getData = function(event_counter) {
             var data = new FormData($('#mapForm').get(0));
             if(event_counter)
@@ -161,9 +182,14 @@
                 setTimeout(function(){getData(data.event_counter);}, 1000);
                 {% if filter == "home" %}  {% endif %}
                 {% if filter == "walk" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
-                {% if filter == "friends" %}  {% endif %}
-                {% if filter == "enemies" %}  {% endif %}
-                {% if filter == "all" %} updateWalk(data.walk); updateMyDog(data.lat, data.lon); {% endif %}
+                {% if filter == "friends" %} updateFriends(data.friends); {% endif %}
+                {% if filter == "enemies" %} updateEnemies(data.enemies); {% endif %}
+                {% if filter == "all" %}
+                    updateWalk(data.walk);
+                    updateMyDog(data.lat, data.lon);
+                    updateFriends(data.friends);
+                    updateEnemies(data.enemies);
+                {% endif %}
             });
         };
 
